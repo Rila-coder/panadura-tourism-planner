@@ -7,7 +7,7 @@ const { testConnection } = require('./src/config/database');
 
 // Import routes (will create these later)
 const placeRoutes = require('./src/routes/placeRoutes');
-// const categoryRoutes = require('./src/routes/categoryRoutes');
+const categoryRoutes = require('./src/routes/categoryRoutes');
 // const plannerRoutes = require('./src/routes/plannerRoutes');
 // const adminRoutes = require('./src/routes/adminRoutes');
 
@@ -39,6 +39,7 @@ app.use((req, res, next) => {
 // =============================================
 
 app.use('/api/places', placeRoutes);
+app.use('/api/categories', categoryRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
