@@ -223,4 +223,126 @@ router.post('/places', async (req, res) => {
     }
 });
 
+
+// src/routes/adminRoutes.js - Add these new endpoints
+
+// PUT: Update a place (Admin only)
+router.put('/places/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const {
+            title,
+            description,
+            category_id,
+            latitude,
+            longitude,
+            address,
+            entry_fee,
+            est_food_cost,
+            avg_duration,
+            best_time,
+            has_parking,
+            image_url,
+            opening_time,
+            closing_time,
+            rating,
+            is_featured
+        } = req.body;
+
+        // Check if place exists
+        const [check] = await pool.query('SELECT place_id FROM places WHERE place_id = ?', [id]);
+        if (check.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Place not found'
+            });
+        }
+
+        const sql = `
+            UPDATE places SET
+                title = ?,
+                description = ?,
+                category_id = ?,
+                latitude = ?,
+                longitude = ?,
+                address = ?,
+                entry_fee = ?,
+                est_food_cost = ?,
+                avg_duration = ?,
+                best_time = ?,
+                has_parking = ?,
+                image_url = ?,
+                opening_time = ?,
+                closing_time = ?,
+                rating = ?,
+                is_featured = ?
+            WHERE place_id = ?
+        `;
+
+        await pool.query(sql, [
+            title || null,
+            description || null,
+            category_id || null,
+            latitude || null,
+            longitude || null,
+            address || null,
+            entry_fee || 0,
+            est_food_cost || 0,
+            avg_duration || 60,
+            best_time || null,
+            has_parking || 1,
+            image_url || null,
+            opening_time || null,
+            closing_time || null,
+            rating || 0,
+            is_featured || 0,
+            id
+        ]);
+
+        res.json({
+            success: true,
+            message: 'Place updated successfully'
+        });
+
+    } catch (error) {
+        console.error('Error updating place:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to update place',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+});
+
+// DELETE: Delete a place (Admin only)
+router.delete('/places/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Check if place exists
+        const [check] = await pool.query('SELECT place_id FROM places WHERE place_id = ?', [id]);
+        if (check.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Place not found'
+            });
+        }
+
+        await pool.query('DELETE FROM places WHERE place_id = ?', [id]);
+
+        res.json({
+            success: true,
+            message: 'Place deleted successfully'
+        });
+
+    } catch (error) {
+        console.error('Error deleting place:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to delete place',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+});
+
 module.exports = router;
