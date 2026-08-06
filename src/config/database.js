@@ -15,10 +15,10 @@ const pool = mysql.createPool({
     charset: 'utf8mb4'
 });
 
-// Convert to promise-based for async/await
+// Get promise version
 const promisePool = pool.promise();
 
-// Test database connection
+// Test connection function
 async function testConnection() {
     try {
         const [rows] = await promisePool.query('SELECT 1 + 1 AS result');
@@ -30,17 +30,8 @@ async function testConnection() {
     }
 }
 
-// Get connection info
-function getConnectionInfo() {
-    return {
-        host: process.env.DB_HOST || 'localhost',
-        database: process.env.DB_NAME || 'tourist_planner_db',
-        user: process.env.DB_USER || 'root'
-    };
-}
-
+// Export everything properly
 module.exports = {
     pool: promisePool,
-    testConnection,
-    getConnectionInfo
+    testConnection: testConnection  // Make sure this is exported
 };

@@ -40,3 +40,31 @@ mysql -u root -p < src/config/setup.sql
 
 # Start development server
 npm run dev
+
+
+
+
+
+```
+panadura-tourism-planner
+├─ package-lock.json
+├─ package.json
+├─ public
+│  ├─ assets
+│  │  └─ images
+│  ├─ css
+│  ├─ index.html
+│  └─ js
+├─ README.md
+├─ server.js
+└─ src
+   ├─ config
+   │  ├─ database.js
+   │  └─ setup.sql
+   ├─ controllers
+   ├─ middleware
+   ├─ models
+   └─ routes
+      └─ placeRoutes.js
+
+```
