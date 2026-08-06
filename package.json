@@ -14,7 +14,7 @@
     "sri-lanka"
   ],
   "author": "E2410047 - MFF Rushda",
-  "license": "MIT",
+  "license": "BIT",
   "dependencies": {
     "express": "^4.18.2",
     "mysql2": "^3.6.0",
