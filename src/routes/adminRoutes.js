@@ -122,25 +122,38 @@ router.post('/upload-image', upload.single('image'), async (req, res) => {
 });
 
 // =============================================
-// ADMIN LOGIN - FIXED WITH PASSWORD VERIFICATION
+// ADMIN LOGIN - WITH DEBUG LOGS
 // =============================================
 router.post('/login', async (req, res) => {
     try {
+        console.log('========================================');
+        console.log('🔐 LOGIN ATTEMPT');
+        console.log('========================================');
+
         const { username, password } = req.body;
 
+        console.log('📝 Username received:', username);
+        console.log('📝 Password received:', password);
+
         if (!username || !password) {
+            console.log('❌ Missing username or password');
             return res.status(400).json({
                 success: false,
                 message: 'Username and password are required'
             });
         }
 
+        console.log('🔍 Querying database for username:', username);
+
         const [users] = await pool.query(
             'SELECT * FROM admin_users WHERE username = ?',
             [username]
         );
 
+        console.log('📊 Users found:', users.length);
+
         if (users.length === 0) {
+            console.log('❌ No user found with username:', username);
             return res.status(401).json({
                 success: false,
                 message: 'Invalid username or password'
@@ -148,16 +161,31 @@ router.post('/login', async (req, res) => {
         }
 
         const admin = users[0];
+        console.log('✅ User found:', {
+            id: admin.user_id,
+            username: admin.username,
+            email: admin.email,
+            password_hash: admin.password_hash ? 'HASH PRESENT' : 'HASH MISSING'
+        });
+
+        console.log('🔑 Comparing password with hash...');
+        console.log('   Input password:', password);
+        console.log('   Stored hash:', admin.password_hash);
 
         // ✅ VERIFY PASSWORD with bcrypt
         const isValidPassword = await bcrypt.compare(password, admin.password_hash);
         
+        console.log('🔐 Password valid?', isValidPassword);
+
         if (!isValidPassword) {
+            console.log('❌ Invalid password for user:', username);
             return res.status(401).json({
                 success: false,
                 message: 'Invalid username or password'
             });
         }
+
+        console.log('✅ Password verified successfully!');
 
         const token = jwt.sign(
             { 
@@ -168,6 +196,11 @@ router.post('/login', async (req, res) => {
             process.env.JWT_SECRET || 'your-secret-key',
             { expiresIn: '24h' }
         );
+
+        console.log('🎫 JWT token generated successfully');
+        console.log('========================================');
+        console.log('✅ LOGIN SUCCESSFUL!');
+        console.log('========================================');
 
         res.json({
             success: true,
@@ -184,7 +217,8 @@ router.post('/login', async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Login error:', error);
+        console.error('❌ Login error:', error);
+        console.error('❌ Error stack:', error.stack);
         res.status(500).json({
             success: false,
             message: 'Login failed',
