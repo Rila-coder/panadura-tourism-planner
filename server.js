@@ -9,7 +9,7 @@ const { testConnection } = require('./src/config/database');
 const placeRoutes = require('./src/routes/placeRoutes');
 const categoryRoutes = require('./src/routes/categoryRoutes');
 const plannerRoutes = require('./src/routes/plannerRoutes');
-// const adminRoutes = require('./src/routes/adminRoutes');
+const adminRoutes = require('./src/routes/adminRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -41,6 +41,7 @@ app.use((req, res, next) => {
 app.use('/api/places', placeRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/planner', plannerRoutes);
+app.use('/api/admin', adminRoutes);
 
 
 // Health check endpoint
