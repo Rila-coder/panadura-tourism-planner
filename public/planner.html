@@ -76,22 +76,68 @@
             background: repeating-linear-gradient(45deg, #f9f9ff, #f9f9ff 10px, #f0f3ff 10px, #f0f3ff 20px);
         }
         
-        .route-line {
-            position: relative;
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 9999;
+            padding: 16px 24px;
+            border-radius: 16px;
+            min-width: 300px;
+            max-width: 450px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            transform: translateX(120%);
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            backdrop-filter: blur(20px);
         }
-        .route-line::before {
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: linear-gradient(to bottom, #003fb1, #1a56db);
-            transform: translateX(-50%);
+        .toast.show {
+            transform: translateX(0);
+        }
+        .toast.success {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            border: 1px solid #6ee7b7;
+            color: #065f46;
+        }
+        .toast.error {
+            background: linear-gradient(135deg, #fecaca, #fca5a5);
+            border: 1px solid #f87171;
+            color: #991b1b;
+        }
+        .toast.info {
+            background: linear-gradient(135deg, #dbeafe, #93c5fd);
+            border: 1px solid #60a5fa;
+            color: #1e40af;
+        }
+        .toast .toast-icon {
+            font-size: 24px;
+            margin-right: 12px;
+        }
+        .toast .toast-close {
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+        .toast .toast-close:hover {
+            background: rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 <body class="bg-[#f9f9ff] text-[#111c2d] min-h-screen flex flex-col antialiased">
+
+    <!-- ============================================= -->
+    <!-- TOAST NOTIFICATION -->
+    <!-- ============================================= -->
+    <div id="toast" class="toast">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center">
+                <span id="toast-icon" class="toast-icon material-symbols-outlined">check_circle</span>
+                <span id="toast-message" class="font-medium">Success!</span>
+            </div>
+            <span id="toast-close" class="toast-close material-symbols-outlined text-sm">close</span>
+        </div>
+    </div>
 
     <!-- ============================================= -->
     <!-- HEADER - Loaded from components -->
@@ -117,7 +163,7 @@
             <div class="flex-1">
                 <label class="block text-sm font-semibold text-[#434654] mb-1 flex items-center gap-1">
                     <span class="material-symbols-outlined text-[#003fb1] text-sm">person</span>
-                    Your Name
+                    Your Name <span class="required-star text-red-500">*</span>
                 </label>
                 <input id="user-name" type="text"
                     class="w-full border border-[#e7eeff] rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#003fb1] focus:border-transparent transition-all"
@@ -125,8 +171,17 @@
             </div>
             <div class="flex-1">
                 <label class="block text-sm font-semibold text-[#434654] mb-1 flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[#003fb1] text-sm">phone</span>
+                    Phone Number <span class="required-star text-red-500">*</span>
+                </label>
+                <input id="user-phone" type="tel"
+                    class="w-full border border-[#e7eeff] rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#003fb1] focus:border-transparent transition-all"
+                    placeholder="Enter your phone number">
+            </div>
+            <div class="flex-1">
+                <label class="block text-sm font-semibold text-[#434654] mb-1 flex items-center gap-1">
                     <span class="material-symbols-outlined text-[#003fb1] text-sm">calendar_today</span>
-                    Visit Date
+                    Visit Date <span class="required-star text-red-500">*</span>
                 </label>
                 <input id="visit-date" type="date"
                     class="w-full border border-[#e7eeff] rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#003fb1] focus:border-transparent transition-all">
@@ -221,25 +276,6 @@
     </section>
 
     <!-- ============================================= -->
-    <!-- SAVED PLANS -->
-    <!-- ============================================= -->
-    <section class="px-4 md:px-16 py-8 max-w-7xl mx-auto w-full">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-2xl font-bold text-[#111c2d] flex items-center gap-2">
-                <span class="material-symbols-outlined text-[#003fb1]">folder</span>
-                My Saved Plans
-            </h2>
-        </div>
-        <div id="saved-plans" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="col-span-full text-center py-12 text-[#434654] bg-white rounded-2xl border border-[#e7eeff]">
-                <span class="material-symbols-outlined text-4xl text-[#737686]">inbox</span>
-                <p class="mt-2">No saved plans yet</p>
-                <p class="text-sm">Create your first itinerary above</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============================================= -->
     <!-- FOOTER - Loaded from components -->
     <!-- ============================================= -->
     <div id="footer-placeholder"></div>
@@ -249,7 +285,39 @@
     <!-- ============================================= -->
     <script>
         // =============================================
-        // 1. Load Header Component
+        // 1. Toast Notification System
+        // =============================================
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            const toastIcon = document.getElementById('toast-icon');
+            
+            toast.classList.remove('success', 'error', 'info', 'show');
+            toast.classList.add(type);
+            
+            const icons = {
+                success: 'check_circle',
+                error: 'error',
+                info: 'info'
+            };
+            toastIcon.textContent = icons[type] || 'check_circle';
+            toastMessage.textContent = message;
+            
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+
+        document.getElementById('toast-close').addEventListener('click', function() {
+            document.getElementById('toast').classList.remove('show');
+        });
+
+        // =============================================
+        // 2. Load Header Component
         // =============================================
         fetch('/components/header.html')
             .then(res => res.text())
@@ -274,7 +342,7 @@
             .catch(() => console.error('Failed to load header'));
 
         // =============================================
-        // 2. Load Footer Component
+        // 3. Load Footer Component
         // =============================================
         fetch('/components/footer.html')
             .then(res => res.text())
@@ -284,26 +352,26 @@
             .catch(() => console.error('Failed to load footer'));
 
         // =============================================
-        // 3. State
+        // 4. State
         // =============================================
         let allPlaces = [];
         let selectedPlaces = [];
 
         // =============================================
-        // 4. DOM Elements
+        // 5. DOM Elements
         // =============================================
         const placesList = document.getElementById('places-list');
         const itinerary = document.getElementById('itinerary');
         const summary = document.getElementById('summary');
-        const savedPlans = document.getElementById('saved-plans');
         const userName = document.getElementById('user-name');
+        const userPhone = document.getElementById('user-phone');
         const visitDate = document.getElementById('visit-date');
         const placeCount = document.getElementById('place-count');
         const itineraryCount = document.getElementById('itinerary-count');
         const clearAllBtn = document.getElementById('clear-all');
 
         // =============================================
-        // 5. Fetch Places
+        // 6. Fetch Places
         // =============================================
         async function fetchPlaces() {
             try {
@@ -316,11 +384,34 @@
             } catch (error) {
                 console.error('Error:', error);
                 placesList.innerHTML = '<div class="text-center py-8 text-red-500">Failed to load places.</div>';
+                showToast('Failed to load places', 'error');
             }
         }
 
         // =============================================
-        // 6. Render Available Places
+        // 7. Load from localStorage (from place details page)
+        // =============================================
+        function loadFromLocalStorage() {
+            const storedPlaces = JSON.parse(localStorage.getItem('itineraryPlaces')) || [];
+            
+            if (storedPlaces.length > 0) {
+                storedPlaces.forEach(place => {
+                    const exists = selectedPlaces.some(p => p.place_id === place.place_id);
+                    if (!exists) {
+                        selectedPlaces.push(place);
+                    }
+                });
+                localStorage.removeItem('itineraryPlaces');
+                
+                renderPlaces();
+                renderItinerary();
+                updateCounts();
+                showToast(`✅ ${storedPlaces.length} place(s) added from details page!`, 'success');
+            }
+        }
+
+        // =============================================
+        // 8. Render Available Places
         // =============================================
         function renderPlaces() {
             let html = '';
@@ -356,7 +447,7 @@
         }
 
         // =============================================
-        // 7. Toggle Place Selection
+        // 9. Toggle Place Selection
         // =============================================
         function togglePlace(placeId) {
             const place = allPlaces.find(p => p.place_id === placeId);
@@ -375,7 +466,7 @@
         }
 
         // =============================================
-        // 8. Render Itinerary
+        // 10. Render Itinerary
         // =============================================
         function renderItinerary() {
             if (selectedPlaces.length === 0) {
@@ -417,7 +508,7 @@
         }
 
         // =============================================
-        // 9. Remove Place from Itinerary
+        // 11. Remove Place from Itinerary
         // =============================================
         function removePlace(placeId) {
             selectedPlaces = selectedPlaces.filter(p => p.place_id !== placeId);
@@ -427,26 +518,27 @@
         }
 
         // =============================================
-        // 10. Clear All
+        // 12. Clear All
         // =============================================
         clearAllBtn.addEventListener('click', function() {
-            if (selectedPlaces.length > 0 && confirm('Clear all places from itinerary?')) {
+            if (selectedPlaces.length > 0 && confirm('Clear all places from your itinerary?')) {
                 selectedPlaces = [];
                 renderPlaces();
                 renderItinerary();
                 updateCounts();
+                showToast('🗑️ Itinerary cleared', 'info');
             }
         });
 
         // =============================================
-        // 11. Update Counts
+        // 13. Update Counts
         // =============================================
         function updateCounts() {
             itineraryCount.textContent = '(' + selectedPlaces.length + ')';
         }
 
         // =============================================
-        // 12. Update Summary
+        // 14. Update Summary
         // =============================================
         function updateSummary() {
             const count = selectedPlaces.length;
@@ -461,16 +553,15 @@
                 const fee = parseFloat(place.entry_fee || 0);
                 const food = parseFloat(place.est_food_cost || 0);
                 totalBudget += fee + food;
-                totalTransport += fee * 0.4; // Approximate transport
+                totalTransport += fee * 0.4;
                 totalFood += food;
-                totalActivity += fee * 0.6; // Approximate activity cost
+                totalActivity += fee * 0.6;
             });
 
             document.getElementById('summary-places').textContent = count;
             document.getElementById('summary-duration').textContent = totalDuration + ' min';
             document.getElementById('summary-budget').textContent = 'Rs. ' + totalBudget;
 
-            // Update budget breakdown bars
             const total = totalTransport + totalFood + totalActivity || 1;
             document.getElementById('transport-bar').style.width = Math.round((totalTransport / total) * 100) + '%';
             document.getElementById('food-bar').style.width = Math.round((totalFood / total) * 100) + '%';
@@ -478,24 +569,42 @@
         }
 
         // =============================================
-        // 13. Save Plan
+        // 15. Save Plan
         // =============================================
         async function savePlan() {
-            const name = userName.value.trim() || 'Anonymous';
-            const date = visitDate.value || new Date().toISOString().split('T')[0];
-            const placeIds = selectedPlaces.map(p => p.place_id);
+            const name = userName.value.trim();
+            const phone = userPhone.value.trim();
+            const date = visitDate.value;
 
-            if (placeIds.length === 0) {
-                alert('Please add at least one place to your itinerary.');
+            // Validation
+            if (!name) {
+                showToast('❌ Please enter your name', 'error');
+                userName.focus();
                 return;
             }
+            if (!phone) {
+                showToast('❌ Please enter your phone number', 'error');
+                userPhone.focus();
+                return;
+            }
+            if (!date) {
+                showToast('❌ Please select a visit date', 'error');
+                visitDate.focus();
+                return;
+            }
+            if (selectedPlaces.length === 0) {
+                showToast('❌ Please add at least one place to your itinerary', 'error');
+                return;
+            }
+
+            const placeIds = selectedPlaces.map(p => p.place_id);
 
             try {
                 const res = await fetch('/api/planner', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        user_name: name,
+                        user_name: name + ' (' + phone + ')',
                         visit_date: date,
                         place_ids: placeIds,
                         total_distance: 0,
@@ -506,101 +615,43 @@
 
                 const data = await res.json();
                 if (data.success) {
-                    alert('✅ Plan saved successfully!');
+                    showToast('✅ Plan saved successfully!', 'success');
                     selectedPlaces = [];
                     renderPlaces();
                     renderItinerary();
                     updateCounts();
-                    fetchSavedPlans();
                 } else {
-                    alert('Failed to save plan: ' + data.message);
+                    showToast('❌ Failed to save plan: ' + data.message, 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Failed to save plan.');
+                showToast('❌ Failed to save plan', 'error');
             }
         }
 
         // =============================================
-        // 14. Fetch Saved Plans
-        // =============================================
-        async function fetchSavedPlans() {
-            try {
-                const res = await fetch('/api/planner');
-                const data = await res.json();
-                if (data.success && data.data.length > 0) {
-                    renderSavedPlans(data.data);
-                } else {
-                    savedPlans.innerHTML = `
-                        <div class="col-span-full text-center py-12 text-[#434654] bg-white rounded-2xl border border-[#e7eeff]">
-                            <span class="material-symbols-outlined text-4xl text-[#737686]">inbox</span>
-                            <p class="mt-2">No saved plans yet</p>
-                            <p class="text-sm">Create your first itinerary above</p>
-                        </div>
-                    `;
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        }
-
-        // =============================================
-        // 15. Render Saved Plans
-        // =============================================
-        function renderSavedPlans(plans) {
-            let html = '';
-            plans.forEach(plan => {
-                html += `
-                    <div class="bg-white rounded-2xl p-5 shadow-sm border border-[#e7eeff] card-hover">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <h3 class="font-bold text-[#111c2d]">${plan.user_name}</h3>
-                                <p class="text-sm text-[#434654]">📅 ${plan.visit_date}</p>
-                                <div class="flex gap-4 mt-2 text-sm">
-                                    <span class="bg-[#f0f3ff] px-2 py-1 rounded-full">📍 ${plan.total_places} places</span>
-                                    <span class="bg-[#f0f3ff] px-2 py-1 rounded-full">⏱️ ${plan.total_duration || 0} min</span>
-                                    <span class="bg-[#f0f3ff] px-2 py-1 rounded-full">💰 Rs. ${plan.total_budget || 0}</span>
-                                </div>
-                            </div>
-                            <button onclick="viewPlan(${plan.plan_id})" class="text-[#003fb1] hover:underline text-sm font-semibold">
-                                View →
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-            savedPlans.innerHTML = html;
-        }
-
-        // =============================================
-        // 16. View Plan
-        // =============================================
-        function viewPlan(planId) {
-            alert('📋 Plan #' + planId + ' - Details coming soon!');
-        }
-
-        // =============================================
-        // 17. Event Listeners
+        // 16. Event Listeners
         // =============================================
         document.getElementById('save-plan').addEventListener('click', savePlan);
 
         // =============================================
-        // 18. Initialize
+        // 17. Initialize
         // =============================================
         document.addEventListener('DOMContentLoaded', function() {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('visit-date').value = today;
 
             fetchPlaces();
-            fetchSavedPlans();
             updateCounts();
+            
+            setTimeout(loadFromLocalStorage, 500);
         });
 
         // Make functions globally accessible
         window.togglePlace = togglePlace;
         window.removePlace = removePlace;
-        window.viewPlan = viewPlan;
         window.savePlan = savePlan;
+        window.showToast = showToast;
     </script>
 
 </body>

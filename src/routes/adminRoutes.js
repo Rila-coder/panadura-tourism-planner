@@ -24,7 +24,6 @@ const storage = multer.diskStorage({
         cb(null, uploadDir);
     },
     filename: function (req, file, cb) {
-        // Generate unique filename: timestamp-originalname
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         const ext = path.extname(file.originalname);
         cb(null, uniqueSuffix + ext);
@@ -45,7 +44,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
     storage: storage,
     limits: {
-        fileSize: 5 * 1024 * 1024 // 5MB limit
+        fileSize: 5 * 1024 * 1024
     },
     fileFilter: fileFilter
 });
@@ -56,15 +55,11 @@ const upload = multer({
 function deleteImageFile(imageUrl) {
     if (!imageUrl) return false;
     
-    // Extract filename from URL
-    // e.g., /uploads/123456789-image.jpg -> 123456789-image.jpg
     const filename = path.basename(imageUrl);
     if (!filename) return false;
     
-    // Check if file exists in uploads folder
     const filePath = path.join(uploadDir, filename);
     
-    // Only delete if file exists and is in uploads folder
     if (fs.existsSync(filePath)) {
         try {
             fs.unlinkSync(filePath);
@@ -106,7 +101,6 @@ router.post('/upload-image', upload.single('image'), async (req, res) => {
             });
         }
 
-        // Return the URL of the uploaded image
         const imageUrl = '/uploads/' + req.file.filename;
         
         res.json({
@@ -128,7 +122,7 @@ router.post('/upload-image', upload.single('image'), async (req, res) => {
 });
 
 // =============================================
-// ADMIN LOGIN
+// ADMIN LOGIN - FIXED WITH PASSWORD VERIFICATION
 // =============================================
 router.post('/login', async (req, res) => {
     try {
@@ -154,6 +148,16 @@ router.post('/login', async (req, res) => {
         }
 
         const admin = users[0];
+
+        // ✅ VERIFY PASSWORD with bcrypt
+        const isValidPassword = await bcrypt.compare(password, admin.password_hash);
+        
+        if (!isValidPassword) {
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid username or password'
+            });
+        }
 
         const token = jwt.sign(
             { 
@@ -285,7 +289,6 @@ router.post('/places', async (req, res) => {
             rating
         } = req.body;
 
-        // Validate required fields
         if (!title || !description || !category_id || !latitude || !longitude || !address) {
             return res.status(400).json({
                 success: false,
@@ -361,7 +364,6 @@ router.put('/places/:id', async (req, res) => {
             is_featured
         } = req.body;
 
-        // Check if place exists
         const [check] = await pool.query('SELECT place_id FROM places WHERE place_id = ?', [id]);
         if (check.length === 0) {
             return res.status(404).json({
@@ -370,12 +372,9 @@ router.put('/places/:id', async (req, res) => {
             });
         }
 
-        // Get old image URL before update
         const oldImageUrl = await getOldImageUrl(id);
 
-        // If new image is provided and different from old, delete old image
         if (image_url && oldImageUrl && image_url !== oldImageUrl) {
-            // Check if old image is in uploads folder (not default assets)
             if (oldImageUrl && oldImageUrl.startsWith('/uploads/')) {
                 deleteImageFile(oldImageUrl);
             }
@@ -447,7 +446,6 @@ router.delete('/places/:id', async (req, res) => {
     try {
         const { id } = req.params;
 
-        // Check if place exists and get image URL
         const [check] = await pool.query(
             'SELECT place_id, image_url FROM places WHERE place_id = ?',
             [id]
@@ -461,12 +459,10 @@ router.delete('/places/:id', async (req, res) => {
 
         const imageUrl = check[0].image_url;
 
-        // Delete the image file if it exists in uploads folder
         if (imageUrl && imageUrl.startsWith('/uploads/')) {
             deleteImageFile(imageUrl);
         }
 
-        // Delete from database
         await pool.query('DELETE FROM places WHERE place_id = ?', [id]);
 
         res.json({
@@ -581,7 +577,6 @@ router.delete('/categories/:id', async (req, res) => {
     try {
         const { id } = req.params;
 
-        // Check if category has places
         const [check] = await pool.query(
             'SELECT COUNT(*) as count FROM places WHERE category_id = ?',
             [id]
@@ -661,7 +656,6 @@ router.get('/plans/:id', async (req, res) => {
     try {
         const { id } = req.params;
         
-        // Get plan details
         const [plan] = await pool.query(`
             SELECT 
                 p.plan_id,
@@ -683,7 +677,6 @@ router.get('/plans/:id', async (req, res) => {
             });
         }
         
-        // Get places in this plan
         const [places] = await pool.query(`
             SELECT 
                 pp.stop_order,
@@ -723,7 +716,6 @@ router.delete('/plans/:id', async (req, res) => {
     try {
         const { id } = req.params;
         
-        // Check if plan exists
         const [check] = await pool.query(
             'SELECT plan_id FROM user_plans WHERE plan_id = ?',
             [id]
@@ -735,7 +727,6 @@ router.delete('/plans/:id', async (req, res) => {
             });
         }
         
-        // Delete plan (cascade will delete plan_places)
         await pool.query('DELETE FROM user_plans WHERE plan_id = ?', [id]);
         
         res.json({
