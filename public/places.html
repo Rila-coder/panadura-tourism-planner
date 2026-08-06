@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Places List - Panadura Day Planner</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0,63,177,0.15);
+        }
+        .filter-btn.active {
+            background: #003fb1;
+            color: white;
+        }
+        .filter-btn {
+            background: #e7eeff;
+            color: #111c2d;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 9999px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+        }
+        .filter-btn:hover {
+            background: #1a56db;
+            color: white;
+        }
+        .bg-purple-100 { background: #f3e8ff; }
+        .text-purple-800 { color: #6b21a8; }
+        .bg-green-100 { background: #d1fae5; }
+        .text-green-800 { color: #065f46; }
+        .bg-orange-100 { background: #ffedd5; }
+        .text-orange-800 { color: #9a3412; }
+        .bg-blue-100 { background: #dbeafe; }
+        .text-blue-800 { color: #1e40af; }
+        .bg-yellow-100 { background: #fef3c7; }
+        .text-yellow-800 { color: #854d0e; }
+        .bg-gray-100 { background: #f3f4f6; }
+        .text-gray-800 { color: #1f2937; }
+        .line-clamp-1 {
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-[#f9f9ff] text-[#111c2d] min-h-screen flex flex-col antialiased">
+
+<!-- TopNavBar -->
+<header class="bg-white/80 backdrop-blur-md fixed top-0 w-full z-50 border-b border-white/10 shadow-sm">
+    <div class="flex justify-between items-center px-4 md:px-16 max-w-7xl mx-auto h-20">
+        <a class="text-2xl font-bold text-[#003fb1] tracking-tight flex items-center gap-2" href="/">
+            <span class="material-symbols-outlined text-[32px]">map</span>
+            Panadura Planner
+        </a>
+        <nav class="hidden md:flex gap-6 items-center">
+            <a class="text-[#003fb1] border-b-2 border-[#003fb1] pb-1 font-semibold" href="/places">Destinations</a>
+            <a class="text-[#434654] hover:text-[#003fb1] transition-colors" href="/planner">Itineraries</a>
+            <a class="text-[#434654] hover:text-[#003fb1] transition-colors" href="/admin">Admin</a>
+        </nav>
+        <button class="bg-[#003fb1] text-white px-4 py-2 rounded-lg hover:bg-[#1a56db] transition-colors hidden md:block">
+            Plan Your Trip
+        </button>
+        <button class="md:hidden text-[#434654]">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
+    </div>
+</header>
+
+<!-- Page Header -->
+<section class="bg-gradient-to-b from-[#e7eeff] to-[#f9f9ff] pt-24 pb-8 px-4 md:px-16">
+    <div class="max-w-7xl mx-auto text-center">
+        <h1 class="text-3xl md:text-5xl font-bold text-[#003fb1] mb-2">All Places in Panadura</h1>
+        <p class="text-lg text-[#434654] max-w-2xl mx-auto">Discover amazing places within 25km. Curated spots for nature lovers, foodies, and culture enthusiasts.</p>
+    </div>
+</section>
+
+<!-- Filter Bar -->
+<section class="px-4 md:px-16 py-4 sticky top-20 bg-[#f9f9ff]/95 backdrop-blur-sm z-40 border-b border-[#e7eeff]">
+    <div class="max-w-7xl mx-auto flex flex-wrap gap-2">
+        <button class="filter-btn active" data-category="all">All</button>
+        <div id="category-filters" class="flex flex-wrap gap-2"></div>
+    </div>
+</section>
+
+<!-- Places Grid -->
+<section class="px-4 md:px-16 py-8 max-w-7xl mx-auto">
+    <div id="places-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div id="loading" class="col-span-full text-center py-12">
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-[#003fb1] border-t-transparent"></div>
+            <p class="mt-4 text-[#434654]">Loading places...</p>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-[#e7eeff] mt-auto">
+    <div class="px-4 md:px-16 py-8 max-w-7xl mx-auto">
+        <p class="text-[#434654]">© 2024 Panadura Day Planner. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
+    // =============================================
+    // Simplified JavaScript
+    // =============================================
+
+    let allPlaces = [];
+    let currentCategory = 'all';
+
+    const placesGrid = document.getElementById('places-grid');
+    const loadingEl = document.getElementById('loading');
+    const categoryFilters = document.getElementById('category-filters');
+
+    // SVG Placeholder
+    const PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23e7eeff\'/%3E%3Ctext x=\'200\' y=\'150\' font-family=\'Arial\' font-size=\'20\' fill=\'%23737686\' text-anchor=\'middle\'%3ENo Image%3C/text%3E%3C/svg%3E';
+
+    // =============================================
+    // Fetch Categories
+    // =============================================
+    async function fetchCategories() {
+        try {
+            const res = await fetch('/api/categories');
+            const data = await res.json();
+            if (data.success) {
+                categoryFilters.innerHTML = '';
+                data.data.forEach(cat => {
+                    const btn = document.createElement('button');
+                    btn.className = 'filter-btn';
+                    btn.dataset.category = cat.category_id;
+                    btn.textContent = cat.name + ' (' + cat.place_count + ')';
+                    btn.onclick = function() {
+                        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                        currentCategory = this.dataset.category;
+                        renderPlaces();
+                    };
+                    categoryFilters.appendChild(btn);
+                });
+            }
+        } catch (e) {
+            console.error('Error fetching categories:', e);
+        }
+    }
+
+    // =============================================
+    // Fetch Places
+    // =============================================
+    async function fetchPlaces() {
+        try {
+            const res = await fetch('/api/places');
+            const data = await res.json();
+            if (data.success) {
+                allPlaces = data.data;
+                renderPlaces();
+            } else {
+                throw new Error(data.message);
+            }
+        } catch (e) {
+            console.error('Error fetching places:', e);
+            placesGrid.innerHTML = '<div class="col-span-full text-center py-12 text-red-500">Failed to load places. Please refresh.</div>';
+        }
+    }
+
+    // =============================================
+    // Render Places
+    // =============================================
+    function renderPlaces() {
+        let filtered = allPlaces;
+        if (currentCategory !== 'all') {
+            filtered = allPlaces.filter(p => p.category_id == currentCategory);
+        }
+
+        if (filtered.length === 0) {
+            placesGrid.innerHTML = '<div class="col-span-full text-center py-12 text-[#434654]">No places found.</div>';
+            return;
+        }
+
+        let html = '';
+        filtered.forEach(place => {
+            const colors = {
+                'Religious': 'bg-purple-100 text-purple-800',
+                'Nature': 'bg-green-100 text-green-800',
+                'Dining': 'bg-orange-100 text-orange-800',
+                'Sports': 'bg-blue-100 text-blue-800',
+                'Heritage': 'bg-yellow-100 text-yellow-800'
+            };
+            const color = colors[place.category_name] || 'bg-gray-100 text-gray-800';
+            const fee = place.entry_fee > 0 ? 'Rs. ' + place.entry_fee : 'Free Entry';
+            const rating = place.rating || 0;
+            const stars = '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rating));
+
+            html += `
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm card-hover transition-all duration-300 flex flex-col border border-[#e7eeff]">
+                    <div class="relative h-56 w-full overflow-hidden">
+                        <img class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" 
+                             src="${PLACEHOLDER}" 
+                             alt="${place.title}">
+                        <div class="absolute top-3 left-3">
+                            <span class="${color} px-3 py-1 rounded-full text-xs font-semibold">${place.category_name || 'Uncategorized'}</span>
+                        </div>
+                        ${place.is_featured ? '<div class="absolute top-3 right-3"><span class="bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-xs font-bold">★ Featured</span></div>' : ''}
+                    </div>
+                    <div class="p-4 flex-grow flex flex-col bg-white">
+                        <h2 class="text-xl font-semibold text-[#111c2d] mb-1 line-clamp-1">${place.title}</h2>
+                        <p class="text-sm text-[#434654] mb-3 line-clamp-2 flex-grow">${place.description || 'No description'}</p>
+                        <div class="flex flex-wrap items-center gap-2 text-xs text-[#434654] mb-3 bg-[#f0f3ff] p-2 rounded-lg">
+                            <span>⭐ ${rating} (${place.total_reviews || 0})</span>
+                            <span class="ml-auto font-medium text-[#006c4a]">${fee}</span>
+                        </div>
+                        <a href="/place/${place.place_id}" class="w-full bg-[#1a56db] text-white text-center font-semibold py-2 rounded-lg hover:bg-[#003fb1] transition-colors">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            `;
+        });
+
+        placesGrid.innerHTML = html;
+        loadingEl.style.display = 'none';
+    }
+
+    // =============================================
+    // Initialize
+    // =============================================
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchCategories();
+        fetchPlaces();
+    });
+</script>
+
+</body>
+</html>
