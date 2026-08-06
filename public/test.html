@@ -1,0 +1,20 @@
+<input id="location" placeholder="Search destination">
+
+<div id="results"></div>
+
+<script>
+const input = document.getElementById("location");
+
+input.addEventListener("input", async () => {
+    if(input.value.length < 3) return;
+
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/search?q=${input.value}&format=json&limit=5`
+    );
+
+    const data = await res.json();
+
+    document.getElementById("results").innerHTML =
+      data.map(place => `<p>${place.display_name}</p>`).join("");
+});
+</script>

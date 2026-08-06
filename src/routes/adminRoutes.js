@@ -4,13 +4,136 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { pool } = require('../config/database');
+const fs = require('fs');
+const path = require('path');
+const multer = require('multer');
 
-// POST: Admin Login
+// =============================================
+// MULTER CONFIGURATION - File Upload
+// =============================================
+
+// Ensure upload directory exists
+const uploadDir = path.join(__dirname, '../../public/uploads');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// Configure storage
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, uploadDir);
+    },
+    filename: function (req, file, cb) {
+        // Generate unique filename: timestamp-originalname
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = path.extname(file.originalname);
+        cb(null, uniqueSuffix + ext);
+    }
+});
+
+// File filter
+const fileFilter = (req, file, cb) => {
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+    if (allowedTypes.includes(file.mimetype)) {
+        cb(null, true);
+    } else {
+        cb(new Error('Invalid file type. Only JPEG, PNG, WEBP, and GIF are allowed.'), false);
+    }
+};
+
+// Multer upload instance
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 5 * 1024 * 1024 // 5MB limit
+    },
+    fileFilter: fileFilter
+});
+
+// =============================================
+// HELPER: Delete image file from server
+// =============================================
+function deleteImageFile(imageUrl) {
+    if (!imageUrl) return false;
+    
+    // Extract filename from URL
+    // e.g., /uploads/123456789-image.jpg -> 123456789-image.jpg
+    const filename = path.basename(imageUrl);
+    if (!filename) return false;
+    
+    // Check if file exists in uploads folder
+    const filePath = path.join(uploadDir, filename);
+    
+    // Only delete if file exists and is in uploads folder
+    if (fs.existsSync(filePath)) {
+        try {
+            fs.unlinkSync(filePath);
+            console.log(`🗑️ Deleted image: ${filename}`);
+            return true;
+        } catch (error) {
+            console.error('Error deleting image:', error);
+            return false;
+        }
+    }
+    return false;
+}
+
+// =============================================
+// HELPER: Get old image URL before update
+// =============================================
+async function getOldImageUrl(placeId) {
+    try {
+        const [rows] = await pool.query(
+            'SELECT image_url FROM places WHERE place_id = ?',
+            [placeId]
+        );
+        return rows.length > 0 ? rows[0].image_url : null;
+    } catch (error) {
+        console.error('Error fetching old image:', error);
+        return null;
+    }
+}
+
+// =============================================
+// UPLOAD IMAGE ENDPOINT
+// =============================================
+router.post('/upload-image', upload.single('image'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({
+                success: false,
+                message: 'No file uploaded'
+            });
+        }
+
+        // Return the URL of the uploaded image
+        const imageUrl = '/uploads/' + req.file.filename;
+        
+        res.json({
+            success: true,
+            message: 'Image uploaded successfully',
+            data: {
+                image_url: imageUrl,
+                filename: req.file.filename,
+                size: req.file.size
+            }
+        });
+    } catch (error) {
+        console.error('Upload error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to upload image: ' + error.message
+        });
+    }
+});
+
+// =============================================
+// ADMIN LOGIN
+// =============================================
 router.post('/login', async (req, res) => {
     try {
         const { username, password } = req.body;
 
-        // Check if username and password provided
         if (!username || !password) {
             return res.status(400).json({
                 success: false,
@@ -18,7 +141,6 @@ router.post('/login', async (req, res) => {
             });
         }
 
-        // Find admin user
         const [users] = await pool.query(
             'SELECT * FROM admin_users WHERE username = ?',
             [username]
@@ -33,19 +155,6 @@ router.post('/login', async (req, res) => {
 
         const admin = users[0];
 
-        // Compare password (temporary - we'll update password hash later)
-        // For now, accept any password since we're testing
-        // In production, uncomment bcrypt check below
-        
-        // const isValidPassword = await bcrypt.compare(password, admin.password_hash);
-        // if (!isValidPassword) {
-        //     return res.status(401).json({
-        //         success: false,
-        //         message: 'Invalid username or password'
-        //     });
-        // }
-
-        // Create JWT token
         const token = jwt.sign(
             { 
                 id: admin.user_id, 
@@ -80,7 +189,9 @@ router.post('/login', async (req, res) => {
     }
 });
 
-// GET: Verify token
+// =============================================
+// VERIFY TOKEN
+// =============================================
 router.get('/verify', async (req, res) => {
     try {
         const token = req.headers.authorization?.split(' ')[1];
@@ -109,7 +220,9 @@ router.get('/verify', async (req, res) => {
     }
 });
 
-// GET: Admin profile
+// =============================================
+// ADMIN PROFILE
+// =============================================
 router.get('/profile', async (req, res) => {
     try {
         const token = req.headers.authorization?.split(' ')[1];
@@ -149,9 +262,9 @@ router.get('/profile', async (req, res) => {
     }
 });
 
-// src/routes/adminRoutes.js - Add these new endpoints
-
-// POST: Add new place (Admin only)
+// =============================================
+// ADD NEW PLACE (With Image Handling)
+// =============================================
 router.post('/places', async (req, res) => {
     try {
         const {
@@ -223,10 +336,9 @@ router.post('/places', async (req, res) => {
     }
 });
 
-
-// src/routes/adminRoutes.js - Add these new endpoints
-
-// PUT: Update a place (Admin only)
+// =============================================
+// UPDATE PLACE (With Image Cleanup)
+// =============================================
 router.put('/places/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -256,6 +368,17 @@ router.put('/places/:id', async (req, res) => {
                 success: false,
                 message: 'Place not found'
             });
+        }
+
+        // Get old image URL before update
+        const oldImageUrl = await getOldImageUrl(id);
+
+        // If new image is provided and different from old, delete old image
+        if (image_url && oldImageUrl && image_url !== oldImageUrl) {
+            // Check if old image is in uploads folder (not default assets)
+            if (oldImageUrl && oldImageUrl.startsWith('/uploads/')) {
+                deleteImageFile(oldImageUrl);
+            }
         }
 
         const sql = `
@@ -301,7 +424,10 @@ router.put('/places/:id', async (req, res) => {
 
         res.json({
             success: true,
-            message: 'Place updated successfully'
+            message: 'Place updated successfully',
+            data: {
+                old_image_deleted: oldImageUrl && image_url && oldImageUrl !== image_url ? true : false
+            }
         });
 
     } catch (error) {
@@ -314,13 +440,18 @@ router.put('/places/:id', async (req, res) => {
     }
 });
 
-// DELETE: Delete a place (Admin only)
+// =============================================
+// DELETE PLACE (With Image Cleanup)
+// =============================================
 router.delete('/places/:id', async (req, res) => {
     try {
         const { id } = req.params;
 
-        // Check if place exists
-        const [check] = await pool.query('SELECT place_id FROM places WHERE place_id = ?', [id]);
+        // Check if place exists and get image URL
+        const [check] = await pool.query(
+            'SELECT place_id, image_url FROM places WHERE place_id = ?',
+            [id]
+        );
         if (check.length === 0) {
             return res.status(404).json({
                 success: false,
@@ -328,11 +459,22 @@ router.delete('/places/:id', async (req, res) => {
             });
         }
 
+        const imageUrl = check[0].image_url;
+
+        // Delete the image file if it exists in uploads folder
+        if (imageUrl && imageUrl.startsWith('/uploads/')) {
+            deleteImageFile(imageUrl);
+        }
+
+        // Delete from database
         await pool.query('DELETE FROM places WHERE place_id = ?', [id]);
 
         res.json({
             success: true,
-            message: 'Place deleted successfully'
+            message: 'Place deleted successfully',
+            data: {
+                image_deleted: imageUrl && imageUrl.startsWith('/uploads/') ? true : false
+            }
         });
 
     } catch (error) {
@@ -341,6 +483,270 @@ router.delete('/places/:id', async (req, res) => {
             success: false,
             message: 'Failed to delete place',
             error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+});
+
+// =============================================
+// CATEGORY MANAGEMENT
+// =============================================
+
+// GET: Get all categories
+router.get('/categories', async (req, res) => {
+    try {
+        const [rows] = await pool.query(
+            'SELECT * FROM categories ORDER BY name ASC'
+        );
+        res.json({
+            success: true,
+            data: rows
+        });
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch categories'
+        });
+    }
+});
+
+// POST: Add new category
+router.post('/categories', async (req, res) => {
+    try {
+        const { name, description, icon } = req.body;
+        
+        if (!name) {
+            return res.status(400).json({
+                success: false,
+                message: 'Category name is required'
+            });
+        }
+
+        const [result] = await pool.query(
+            'INSERT INTO categories (name, description, icon) VALUES (?, ?, ?)',
+            [name, description || null, icon || null]
+        );
+
+        res.status(201).json({
+            success: true,
+            message: 'Category added successfully',
+            data: { category_id: result.insertId }
+        });
+    } catch (error) {
+        console.error('Error adding category:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to add category'
+        });
+    }
+});
+
+// PUT: Update category
+router.put('/categories/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, description, icon } = req.body;
+
+        const [check] = await pool.query(
+            'SELECT category_id FROM categories WHERE category_id = ?',
+            [id]
+        );
+        if (check.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Category not found'
+            });
+        }
+
+        await pool.query(
+            'UPDATE categories SET name = ?, description = ?, icon = ? WHERE category_id = ?',
+            [name, description || null, icon || null, id]
+        );
+
+        res.json({
+            success: true,
+            message: 'Category updated successfully'
+        });
+    } catch (error) {
+        console.error('Error updating category:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to update category'
+        });
+    }
+});
+
+// DELETE: Delete category
+router.delete('/categories/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Check if category has places
+        const [check] = await pool.query(
+            'SELECT COUNT(*) as count FROM places WHERE category_id = ?',
+            [id]
+        );
+        if (check[0].count > 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Cannot delete category with existing places. Remove places first.'
+            });
+        }
+
+        const [result] = await pool.query(
+            'DELETE FROM categories WHERE category_id = ?',
+            [id]
+        );
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Category not found'
+            });
+        }
+
+        res.json({
+            success: true,
+            message: 'Category deleted successfully'
+        });
+    } catch (error) {
+        console.error('Error deleting category:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to delete category'
+        });
+    }
+});
+
+// =============================================
+// USER PLANS MANAGEMENT (Admin only)
+// =============================================
+
+// GET: Get all user plans
+router.get('/plans', async (req, res) => {
+    try {
+        const [rows] = await pool.query(`
+            SELECT 
+                p.plan_id,
+                p.user_name,
+                p.visit_date,
+                p.total_places,
+                p.total_distance,
+                p.total_duration,
+                p.total_budget,
+                p.created_at,
+                GROUP_CONCAT(pl.title SEPARATOR ', ') as place_titles
+            FROM user_plans p
+            LEFT JOIN plan_places pp ON p.plan_id = pp.plan_id
+            LEFT JOIN places pl ON pp.place_id = pl.place_id
+            GROUP BY p.plan_id
+            ORDER BY p.created_at DESC
+        `);
+        
+        res.json({
+            success: true,
+            count: rows.length,
+            data: rows
+        });
+    } catch (error) {
+        console.error('Error fetching plans:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch plans'
+        });
+    }
+});
+
+// GET: Get single plan with all details
+router.get('/plans/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        // Get plan details
+        const [plan] = await pool.query(`
+            SELECT 
+                p.plan_id,
+                p.user_name,
+                p.visit_date,
+                p.total_places,
+                p.total_distance,
+                p.total_duration,
+                p.total_budget,
+                p.created_at
+            FROM user_plans p
+            WHERE p.plan_id = ?
+        `, [id]);
+        
+        if (plan.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Plan not found'
+            });
+        }
+        
+        // Get places in this plan
+        const [places] = await pool.query(`
+            SELECT 
+                pp.stop_order,
+                pp.estimated_duration,
+                pl.place_id,
+                pl.title,
+                pl.description,
+                pl.address,
+                pl.entry_fee,
+                pl.image_url,
+                c.name as category_name
+            FROM plan_places pp
+            JOIN places pl ON pp.place_id = pl.place_id
+            LEFT JOIN categories c ON pl.category_id = c.category_id
+            WHERE pp.plan_id = ?
+            ORDER BY pp.stop_order ASC
+        `, [id]);
+        
+        res.json({
+            success: true,
+            data: {
+                ...plan[0],
+                places: places
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching plan details:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch plan details'
+        });
+    }
+});
+
+// DELETE: Delete a user plan
+router.delete('/plans/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        // Check if plan exists
+        const [check] = await pool.query(
+            'SELECT plan_id FROM user_plans WHERE plan_id = ?',
+            [id]
+        );
+        if (check.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Plan not found'
+            });
+        }
+        
+        // Delete plan (cascade will delete plan_places)
+        await pool.query('DELETE FROM user_plans WHERE plan_id = ?', [id]);
+        
+        res.json({
+            success: true,
+            message: 'Plan deleted successfully'
+        });
+    } catch (error) {
+        console.error('Error deleting plan:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to delete plan'
         });
     }
 });
