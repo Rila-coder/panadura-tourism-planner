@@ -1,156 +1,296 @@
 <!DOCTYPE html>
 <html class="light" lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Trip Planner - Panadura Day Planner</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <style>
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
-
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
         .card-hover:hover {
             transform: translateY(-4px);
             box-shadow: 0 10px 30px rgba(0, 63, 177, 0.15);
         }
-
-        .selected {
+        
+        .place-item {
+            transition: all 0.3s ease;
+        }
+        .place-item:hover {
+            background: #f0f3ff;
+            transform: translateX(4px);
+        }
+        .place-item.selected {
             background: #003fb1 !important;
             color: white !important;
         }
-
-        .selected .text-\[\#434654\] {
+        .place-item.selected .text-\[\#434654\] {
             color: white !important;
+        }
+        
+        .itinerary-item {
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .badge-pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #c3c5d7;
+            border-radius: 20px;
+        }
+        
+        .empty-state {
+            background: repeating-linear-gradient(45deg, #f9f9ff, #f9f9ff 10px, #f0f3ff 10px, #f0f3ff 20px);
+        }
+        
+        .route-line {
+            position: relative;
+        }
+        .route-line::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #003fb1, #1a56db);
+            transform: translateX(-50%);
         }
     </style>
 </head>
-
 <body class="bg-[#f9f9ff] text-[#111c2d] min-h-screen flex flex-col antialiased">
 
-    <!-- TopNavBar -->
-    <header class="bg-white/80 backdrop-blur-md fixed top-0 w-full z-50 border-b border-white/10 shadow-sm">
-        <div class="flex justify-between items-center px-4 md:px-16 max-w-7xl mx-auto h-20">
-            <a class="text-2xl font-bold text-[#003fb1] tracking-tight flex items-center gap-2" href="/">
-                <span class="material-symbols-outlined text-[32px]">map</span>
-                Panadura Planner
-            </a>
-            <nav class="hidden md:flex gap-6 items-center">
-                <a class="text-[#434654] hover:text-[#003fb1] transition-colors" href="/places">Destinations</a>
-                <a class="text-[#003fb1] border-b-2 border-[#003fb1] pb-1 font-semibold" href="/planner">Itineraries</a>
-                <a class="text-[#434654] hover:text-[#003fb1] transition-colors" href="/admin">Admin</a>
-            </nav>
-            <button
-                class="bg-[#003fb1] text-white px-4 py-2 rounded-lg hover:bg-[#1a56db] transition-colors hidden md:block">
-                Plan Your Trip
-            </button>
-            <button class="md:hidden text-[#434654]">
-                <span class="material-symbols-outlined">menu</span>
-            </button>
+    <!-- ============================================= -->
+    <!-- HEADER - Loaded from components -->
+    <!-- ============================================= -->
+    <div id="header-placeholder"></div>
+
+    <!-- ============================================= -->
+    <!-- PAGE HEADER -->
+    <!-- ============================================= -->
+    <section class="bg-gradient-to-b from-[#e7eeff] to-[#f9f9ff] pt-28 pb-8 px-4 md:px-16">
+        <div class="max-w-7xl mx-auto">
+            <span class="text-[#003fb1] font-semibold text-sm tracking-wider uppercase">Plan Your Trip</span>
+            <h1 class="text-3xl md:text-5xl font-extrabold text-[#003fb1] mt-1">Plan Your One-Day Trip</h1>
+            <p class="text-lg text-[#434654] mt-2">Select places and build your perfect itinerary</p>
         </div>
-    </header>
+    </section>
 
-    <!-- Main Content -->
-    <main class="flex-grow pt-20">
-        <!-- Page Header -->
-        <section class="bg-gradient-to-b from-[#e7eeff] to-[#f9f9ff] pt-8 pb-6 px-4 md:px-16">
-            <div class="max-w-7xl mx-auto">
-                <h1 class="text-3xl md:text-4xl font-bold text-[#003fb1]">Plan Your One-Day Trip</h1>
-                <p class="text-[#434654] mt-1">Select places and build your perfect itinerary</p>
+    <!-- ============================================= -->
+    <!-- USER DETAILS -->
+    <!-- ============================================= -->
+    <section class="px-4 md:px-16 py-4 max-w-7xl mx-auto w-full">
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-[#e7eeff] flex flex-col md:flex-row gap-4 card-hover">
+            <div class="flex-1">
+                <label class="block text-sm font-semibold text-[#434654] mb-1 flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[#003fb1] text-sm">person</span>
+                    Your Name
+                </label>
+                <input id="user-name" type="text"
+                    class="w-full border border-[#e7eeff] rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#003fb1] focus:border-transparent transition-all"
+                    placeholder="Enter your name">
             </div>
-        </section>
+            <div class="flex-1">
+                <label class="block text-sm font-semibold text-[#434654] mb-1 flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[#003fb1] text-sm">calendar_today</span>
+                    Visit Date
+                </label>
+                <input id="visit-date" type="date"
+                    class="w-full border border-[#e7eeff] rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#003fb1] focus:border-transparent transition-all">
+            </div>
+        </div>
+    </section>
 
-        <!-- User Details -->
-        <section class="px-4 md:px-16 py-4 max-w-7xl mx-auto w-full">
-            <div class="bg-white rounded-xl p-4 shadow-sm border border-[#e7eeff] flex flex-col md:flex-row gap-4">
-                <div class="flex-1">
-                    <label class="block text-sm font-semibold text-[#434654] mb-1">Your Name</label>
-                    <input id="user-name" type="text"
-                        class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]"
-                        placeholder="Enter your name">
-                </div>
-                <div class="flex-1">
-                    <label class="block text-sm font-semibold text-[#434654] mb-1">Visit Date</label>
-                    <input id="visit-date" type="date"
-                        class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]">
+    <!-- ============================================= -->
+    <!-- MAIN LAYOUT -->
+    <!-- ============================================= -->
+    <section class="px-4 md:px-16 py-4 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left: Available Places -->
+        <div class="lg:col-span-7">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-[#111c2d] flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[#003fb1]">place</span>
+                    Available Places
+                    <span id="place-count" class="text-sm font-normal text-[#434654]">(0)</span>
+                </h2>
+                <span class="text-xs text-[#434654]">Click to add</span>
+            </div>
+            <div id="places-list" class="space-y-2 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+                <div class="text-center py-8 text-[#434654]">Loading places...</div>
+            </div>
+        </div>
+
+        <!-- Right: Your Itinerary -->
+        <div class="lg:col-span-5">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-[#111c2d] flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[#003fb1]">list_alt</span>
+                    Your Itinerary
+                    <span id="itinerary-count" class="text-sm font-normal text-[#434654]">(0)</span>
+                </h2>
+                <button id="clear-all" class="text-xs text-red-500 hover:text-red-700 font-semibold hidden">
+                    Clear All
+                </button>
+            </div>
+            
+            <div id="itinerary" class="bg-white rounded-2xl p-4 shadow-sm border border-[#e7eeff] min-h-[300px]">
+                <div class="text-center py-12 text-[#434654] empty-state rounded-xl">
+                    <span class="material-symbols-outlined text-5xl text-[#737686]">add_circle</span>
+                    <p class="mt-3 font-medium">Click on places to add them</p>
+                    <p class="text-sm mt-1">Build your perfect day trip</p>
                 </div>
             </div>
-        </section>
 
-        <!-- Main Layout -->
-        <section class="px-4 md:px-16 py-4 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
-
-            <!-- Left: Available Places -->
-            <div class="lg:col-span-7">
-                <h2 class="text-xl font-semibold mb-4">Available Places</h2>
-                <div id="places-list" class="space-y-3 max-h-[600px] overflow-y-auto pr-2">
-                    <div class="text-center py-8 text-[#434654]">Loading places...</div>
-                </div>
-            </div>
-
-            <!-- Right: Your Itinerary -->
-            <div class="lg:col-span-5">
-                <h2 class="text-xl font-semibold mb-4">Your Itinerary</h2>
-                <div id="itinerary" class="bg-white rounded-xl p-4 shadow-sm border border-[#e7eeff] min-h-[300px]">
-                    <div class="text-center py-8 text-[#434654]">
-                        <span class="material-symbols-outlined text-4xl">add_circle</span>
-                        <p class="mt-2">Click on places to add them</p>
+            <!-- Summary -->
+            <div id="summary" class="mt-4 bg-white rounded-2xl p-5 shadow-sm border border-[#e7eeff] hidden card-hover">
+                <h3 class="font-bold text-[#111c2d] mb-3 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[#003fb1]">analytics</span>
+                    Trip Summary
+                </h3>
+                <div class="grid grid-cols-3 gap-3 text-center">
+                    <div class="bg-[#f9f9ff] rounded-xl p-3">
+                        <p class="text-xs text-[#434654]">Places</p>
+                        <p id="summary-places" class="text-2xl font-bold text-[#003fb1]">0</p>
+                    </div>
+                    <div class="bg-[#f9f9ff] rounded-xl p-3">
+                        <p class="text-xs text-[#434654]">Duration</p>
+                        <p id="summary-duration" class="text-2xl font-bold text-[#003fb1]">0 min</p>
+                    </div>
+                    <div class="bg-[#f9f9ff] rounded-xl p-3">
+                        <p class="text-xs text-[#434654]">Budget</p>
+                        <p id="summary-budget" class="text-2xl font-bold text-[#006c4a]">Rs. 0</p>
                     </div>
                 </div>
-
-                <!-- Summary -->
-                <div id="summary" class="mt-4 bg-white rounded-xl p-4 shadow-sm border border-[#e7eeff] hidden">
-                    <div class="grid grid-cols-3 gap-2 text-center">
-                        <div>
-                            <p class="text-xs text-[#434654]">Places</p>
-                            <p id="summary-places" class="text-xl font-bold text-[#003fb1]">0</p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-[#434654]">Est. Duration</p>
-                            <p id="summary-duration" class="text-xl font-bold text-[#003fb1]">0 min</p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-[#434654]">Budget</p>
-                            <p id="summary-budget" class="text-xl font-bold text-[#006c4a]">Rs. 0</p>
-                        </div>
+                
+                <!-- Budget Breakdown -->
+                <div class="mt-3">
+                    <p class="text-xs text-[#434654] mb-1">Budget Breakdown</p>
+                    <div class="h-2 w-full rounded-full flex overflow-hidden">
+                        <div id="transport-bar" class="bg-[#003fb1] h-full" style="width: 40%;"></div>
+                        <div id="food-bar" class="bg-[#006c4a] h-full" style="width: 35%;"></div>
+                        <div id="activity-bar" class="bg-[#694100] h-full" style="width: 25%;"></div>
                     </div>
-                    <button id="save-plan"
-                        class="w-full mt-4 bg-[#003fb1] text-white py-2 rounded-lg font-semibold hover:bg-[#1a56db] transition-colors">
-                        Save Plan
-                    </button>
+                    <div class="flex gap-3 mt-1 text-xs text-[#434654]">
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#003fb1]"></span> Transport</span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#006c4a]"></span> Food</span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#694100]"></span> Activities</span>
+                    </div>
                 </div>
+                
+                <button id="save-plan"
+                    class="w-full mt-4 bg-[#003fb1] text-white py-3 rounded-xl font-semibold hover:bg-[#1a56db] transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined">save</span>
+                    Save Plan
+                </button>
             </div>
-        </section>
-
-        <!-- My Saved Plans -->
-        <section class="px-4 md:px-16 py-8 max-w-7xl mx-auto w-full">
-            <h2 class="text-2xl font-bold mb-4">My Saved Plans</h2>
-            <div id="saved-plans" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="col-span-full text-center py-8 text-[#434654]">No saved plans yet.</div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-[#e7eeff] mt-auto">
-        <div class="px-4 md:px-16 py-8 max-w-7xl mx-auto">
-            <p class="text-[#434654]">© 2024 Panadura Day Planner. All rights reserved.</p>
         </div>
-    </footer>
+    </section>
 
+    <!-- ============================================= -->
+    <!-- SAVED PLANS -->
+    <!-- ============================================= -->
+    <section class="px-4 md:px-16 py-8 max-w-7xl mx-auto w-full">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-bold text-[#111c2d] flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#003fb1]">folder</span>
+                My Saved Plans
+            </h2>
+        </div>
+        <div id="saved-plans" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="col-span-full text-center py-12 text-[#434654] bg-white rounded-2xl border border-[#e7eeff]">
+                <span class="material-symbols-outlined text-4xl text-[#737686]">inbox</span>
+                <p class="mt-2">No saved plans yet</p>
+                <p class="text-sm">Create your first itinerary above</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- FOOTER - Loaded from components -->
+    <!-- ============================================= -->
+    <div id="footer-placeholder"></div>
+
+    <!-- ============================================= -->
+    <!-- SCRIPTS -->
+    <!-- ============================================= -->
     <script>
         // =============================================
-        // State
+        // 1. Load Header Component
+        // =============================================
+        fetch('/components/header.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('header-placeholder').innerHTML = html;
+                const script = document.createElement('script');
+                script.textContent = `
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const currentPath = window.location.pathname;
+                        const links = document.querySelectorAll('nav a');
+                        links.forEach(link => {
+                            const linkPath = link.getAttribute('href');
+                            if (currentPath === linkPath || (currentPath === '/planner' && linkPath === '/planner')) {
+                                link.classList.add('text-[#003fb1]', 'border-b-2', 'border-[#003fb1]', 'pb-1', 'font-semibold');
+                                link.classList.remove('text-[#434654]');
+                            }
+                        });
+                    });
+                `;
+                document.body.appendChild(script);
+            })
+            .catch(() => console.error('Failed to load header'));
+
+        // =============================================
+        // 2. Load Footer Component
+        // =============================================
+        fetch('/components/footer.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('footer-placeholder').innerHTML = html;
+            })
+            .catch(() => console.error('Failed to load footer'));
+
+        // =============================================
+        // 3. State
         // =============================================
         let allPlaces = [];
         let selectedPlaces = [];
 
         // =============================================
-        // DOM Elements
+        // 4. DOM Elements
         // =============================================
         const placesList = document.getElementById('places-list');
         const itinerary = document.getElementById('itinerary');
@@ -158,9 +298,12 @@
         const savedPlans = document.getElementById('saved-plans');
         const userName = document.getElementById('user-name');
         const visitDate = document.getElementById('visit-date');
+        const placeCount = document.getElementById('place-count');
+        const itineraryCount = document.getElementById('itinerary-count');
+        const clearAllBtn = document.getElementById('clear-all');
 
         // =============================================
-        // Fetch Places
+        // 5. Fetch Places
         // =============================================
         async function fetchPlaces() {
             try {
@@ -177,30 +320,43 @@
         }
 
         // =============================================
-        // Render Available Places
+        // 6. Render Available Places
         // =============================================
         function renderPlaces() {
             let html = '';
             allPlaces.forEach(place => {
                 const isSelected = selectedPlaces.some(p => p.place_id === place.place_id);
+                const categoryColors = {
+                    'Religious': 'bg-purple-100 text-purple-800',
+                    'Nature': 'bg-green-100 text-green-800',
+                    'Dining': 'bg-orange-100 text-orange-800',
+                    'Sports': 'bg-blue-100 text-blue-800',
+                    'Heritage': 'bg-yellow-100 text-yellow-800'
+                };
+                const color = categoryColors[place.category_name] || 'bg-gray-100 text-gray-800';
+                
                 html += `
-                <div class="bg-white rounded-xl p-3 shadow-sm border ${isSelected ? 'border-[#003fb1] bg-[#e7eeff]' : 'border-[#e7eeff]'} flex justify-between items-center card-hover transition-all cursor-pointer" 
-                     onclick="togglePlace(${place.place_id})">
-                    <div>
-                        <h3 class="font-semibold">${place.title}</h3>
-                        <p class="text-sm text-[#434654]">${place.category_name || ''} • ${place.entry_fee > 0 ? 'Rs.' + place.entry_fee : 'Free'}</p>
+                    <div class="place-item bg-white rounded-xl p-3 shadow-sm border ${isSelected ? 'border-[#003fb1] selected' : 'border-[#e7eeff]'} flex justify-between items-center cursor-pointer transition-all" 
+                         onclick="togglePlace(${place.place_id})">
+                        <div class="flex items-center gap-3">
+                            <span class="${color} px-2 py-0.5 rounded-full text-xs font-medium">${place.category_name || 'Other'}</span>
+                            <div>
+                                <h3 class="font-semibold">${place.title}</h3>
+                                <p class="text-xs text-[#434654]">${place.entry_fee > 0 ? 'Rs. ' + place.entry_fee : 'Free'} • ${place.avg_duration || 60} min</p>
+                            </div>
+                        </div>
+                        <span class="material-symbols-outlined ${isSelected ? 'text-white' : 'text-[#434654]'}">
+                            ${isSelected ? 'check_circle' : 'add_circle'}
+                        </span>
                     </div>
-                    <span class="material-symbols-outlined ${isSelected ? 'text-[#003fb1]' : 'text-[#434654]'}">
-                        ${isSelected ? 'check_circle' : 'add_circle'}
-                    </span>
-                </div>
-            `;
+                `;
             });
             placesList.innerHTML = html;
+            placeCount.textContent = '(' + allPlaces.length + ')';
         }
 
         // =============================================
-        // Toggle Place Selection
+        // 7. Toggle Place Selection
         // =============================================
         function togglePlace(placeId) {
             const place = allPlaces.find(p => p.place_id === placeId);
@@ -215,73 +371,114 @@
 
             renderPlaces();
             renderItinerary();
+            updateCounts();
         }
 
         // =============================================
-        // Render Itinerary
+        // 8. Render Itinerary
         // =============================================
         function renderItinerary() {
             if (selectedPlaces.length === 0) {
                 itinerary.innerHTML = `
-                <div class="text-center py-8 text-[#434654]">
-                    <span class="material-symbols-outlined text-4xl">add_circle</span>
-                    <p class="mt-2">Click on places to add them</p>
-                </div>
-            `;
+                    <div class="text-center py-12 text-[#434654] empty-state rounded-xl">
+                        <span class="material-symbols-outlined text-5xl text-[#737686]">add_circle</span>
+                        <p class="mt-3 font-medium">Click on places to add them</p>
+                        <p class="text-sm mt-1">Build your perfect day trip</p>
+                    </div>
+                `;
                 summary.classList.add('hidden');
+                clearAllBtn.classList.add('hidden');
                 return;
             }
 
-            let html = '';
+            let html = '<div class="space-y-2">';
             selectedPlaces.forEach((place, index) => {
+                const isLast = index === selectedPlaces.length - 1;
                 html += `
-                <div class="flex items-center gap-3 p-2 border-b border-[#e7eeff] last:border-0">
-                    <span class="w-6 h-6 rounded-full bg-[#003fb1] text-white text-xs flex items-center justify-center font-bold">${index + 1}</span>
-                    <div class="flex-1">
-                        <p class="font-semibold">${place.title}</p>
-                        <p class="text-xs text-[#434654]">${place.avg_duration || 60} min • ${place.entry_fee > 0 ? 'Rs.' + place.entry_fee : 'Free'}</p>
+                    <div class="itinerary-item flex items-center gap-3 p-3 bg-[#f9f9ff] rounded-xl hover:bg-[#f0f3ff] transition-colors">
+                        <span class="w-7 h-7 rounded-full bg-[#003fb1] text-white text-xs flex items-center justify-center font-bold flex-shrink-0">${index + 1}</span>
+                        <div class="flex-1">
+                            <p class="font-semibold text-[#111c2d]">${place.title}</p>
+                            <p class="text-xs text-[#434654]">${place.avg_duration || 60} min • ${place.entry_fee > 0 ? 'Rs. ' + place.entry_fee : 'Free'}</p>
+                        </div>
+                        <button onclick="removePlace(${place.place_id})" class="text-red-500 hover:text-red-700 hover:bg-red-50 p-1 rounded-full transition-colors">
+                            <span class="material-symbols-outlined text-sm">close</span>
+                        </button>
                     </div>
-                    <button onclick="removePlace(${place.place_id})" class="text-red-500 hover:text-red-700">
-                        <span class="material-symbols-outlined text-sm">close</span>
-                    </button>
-                </div>
-            `;
+                    ${!isLast ? '<div class="w-0.5 h-2 bg-[#c3c5d7] ml-3"></div>' : ''}
+                `;
             });
+            html += '</div>';
 
             itinerary.innerHTML = html;
-            updateSummary();
             summary.classList.remove('hidden');
+            clearAllBtn.classList.remove('hidden');
+            updateSummary();
         }
 
         // =============================================
-        // Remove Place from Itinerary
+        // 9. Remove Place from Itinerary
         // =============================================
         function removePlace(placeId) {
             selectedPlaces = selectedPlaces.filter(p => p.place_id !== placeId);
             renderPlaces();
             renderItinerary();
+            updateCounts();
         }
 
         // =============================================
-        // Update Summary
+        // 10. Clear All
+        // =============================================
+        clearAllBtn.addEventListener('click', function() {
+            if (selectedPlaces.length > 0 && confirm('Clear all places from itinerary?')) {
+                selectedPlaces = [];
+                renderPlaces();
+                renderItinerary();
+                updateCounts();
+            }
+        });
+
+        // =============================================
+        // 11. Update Counts
+        // =============================================
+        function updateCounts() {
+            itineraryCount.textContent = '(' + selectedPlaces.length + ')';
+        }
+
+        // =============================================
+        // 12. Update Summary
         // =============================================
         function updateSummary() {
             const count = selectedPlaces.length;
             let totalDuration = 0;
             let totalBudget = 0;
+            let totalTransport = 0;
+            let totalFood = 0;
+            let totalActivity = 0;
 
             selectedPlaces.forEach(place => {
                 totalDuration += place.avg_duration || 60;
-                totalBudget += parseFloat(place.entry_fee || 0) + parseFloat(place.est_food_cost || 0);
+                const fee = parseFloat(place.entry_fee || 0);
+                const food = parseFloat(place.est_food_cost || 0);
+                totalBudget += fee + food;
+                totalTransport += fee * 0.4; // Approximate transport
+                totalFood += food;
+                totalActivity += fee * 0.6; // Approximate activity cost
             });
 
             document.getElementById('summary-places').textContent = count;
             document.getElementById('summary-duration').textContent = totalDuration + ' min';
             document.getElementById('summary-budget').textContent = 'Rs. ' + totalBudget;
+
+            // Update budget breakdown bars
+            const total = totalTransport + totalFood + totalActivity || 1;
+            document.getElementById('transport-bar').style.width = Math.round((totalTransport / total) * 100) + '%';
+            document.getElementById('food-bar').style.width = Math.round((totalFood / total) * 100) + '%';
+            document.getElementById('activity-bar').style.width = Math.round((totalActivity / total) * 100) + '%';
         }
 
         // =============================================
-        // Save Plan
+        // 13. Save Plan
         // =============================================
         async function savePlan() {
             const name = userName.value.trim() || 'Anonymous';
@@ -309,10 +506,11 @@
 
                 const data = await res.json();
                 if (data.success) {
-                    alert('Plan saved successfully!');
+                    alert('✅ Plan saved successfully!');
                     selectedPlaces = [];
                     renderPlaces();
                     renderItinerary();
+                    updateCounts();
                     fetchSavedPlans();
                 } else {
                     alert('Failed to save plan: ' + data.message);
@@ -324,7 +522,7 @@
         }
 
         // =============================================
-        // Fetch Saved Plans
+        // 14. Fetch Saved Plans
         // =============================================
         async function fetchSavedPlans() {
             try {
@@ -333,7 +531,13 @@
                 if (data.success && data.data.length > 0) {
                     renderSavedPlans(data.data);
                 } else {
-                    savedPlans.innerHTML = '<div class="col-span-full text-center py-8 text-[#434654]">No saved plans yet.</div>';
+                    savedPlans.innerHTML = `
+                        <div class="col-span-full text-center py-12 text-[#434654] bg-white rounded-2xl border border-[#e7eeff]">
+                            <span class="material-symbols-outlined text-4xl text-[#737686]">inbox</span>
+                            <p class="mt-2">No saved plans yet</p>
+                            <p class="text-sm">Create your first itinerary above</p>
+                        </div>
+                    `;
                 }
             } catch (error) {
                 console.error('Error:', error);
@@ -341,63 +545,63 @@
         }
 
         // =============================================
-        // Render Saved Plans
+        // 15. Render Saved Plans
         // =============================================
         function renderSavedPlans(plans) {
             let html = '';
             plans.forEach(plan => {
                 html += `
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-[#e7eeff]">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="font-semibold">${plan.user_name}</h3>
-                            <p class="text-sm text-[#434654]">${plan.visit_date}</p>
-                            <div class="flex gap-4 mt-2 text-sm">
-                                <span>📍 ${plan.total_places} places</span>
-                                <span>⏱️ ${plan.total_duration || 0} min</span>
-                                <span>💰 Rs. ${plan.total_budget || 0}</span>
+                    <div class="bg-white rounded-2xl p-5 shadow-sm border border-[#e7eeff] card-hover">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="font-bold text-[#111c2d]">${plan.user_name}</h3>
+                                <p class="text-sm text-[#434654]">📅 ${plan.visit_date}</p>
+                                <div class="flex gap-4 mt-2 text-sm">
+                                    <span class="bg-[#f0f3ff] px-2 py-1 rounded-full">📍 ${plan.total_places} places</span>
+                                    <span class="bg-[#f0f3ff] px-2 py-1 rounded-full">⏱️ ${plan.total_duration || 0} min</span>
+                                    <span class="bg-[#f0f3ff] px-2 py-1 rounded-full">💰 Rs. ${plan.total_budget || 0}</span>
+                                </div>
                             </div>
+                            <button onclick="viewPlan(${plan.plan_id})" class="text-[#003fb1] hover:underline text-sm font-semibold">
+                                View →
+                            </button>
                         </div>
-                        <button onclick="viewPlan(${plan.plan_id})" class="text-[#003fb1] hover:underline text-sm font-semibold">
-                            View
-                        </button>
                     </div>
-                </div>
-            `;
+                `;
             });
             savedPlans.innerHTML = html;
         }
 
         // =============================================
-        // View Plan (placeholder)
+        // 16. View Plan
         // =============================================
         function viewPlan(planId) {
-            alert('Plan #' + planId + ' - Details coming soon!');
+            alert('📋 Plan #' + planId + ' - Details coming soon!');
         }
 
         // =============================================
-        // Save Plan Button
+        // 17. Event Listeners
         // =============================================
         document.getElementById('save-plan').addEventListener('click', savePlan);
 
         // =============================================
-        // Initialize
+        // 18. Initialize
         // =============================================
-        document.addEventListener('DOMContentLoaded', function () {
-            // Set default date to today
+        document.addEventListener('DOMContentLoaded', function() {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('visit-date').value = today;
 
             fetchPlaces();
             fetchSavedPlans();
+            updateCounts();
         });
 
         // Make functions globally accessible
         window.togglePlace = togglePlace;
         window.removePlace = removePlace;
         window.viewPlan = viewPlan;
+        window.savePlan = savePlan;
     </script>
 
 </body>
-
 </html>
