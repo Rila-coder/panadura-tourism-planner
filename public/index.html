@@ -5,16 +5,82 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Panadura Day Planner - Discover Local Places</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <style>
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
-        .card-hover:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 30px rgba(0,63,177,0.15);
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
         }
+        
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Card hover effects */
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 63, 177, 0.15);
+        }
+        
+        /* Category card hover */
+        .category-card {
+            transition: all 0.3s ease;
+        }
+        .category-card:hover {
+            transform: translateY(-4px) scale(1.02);
+        }
+        
+        /* Gradient text */
+        .gradient-text {
+            background: linear-gradient(135deg, #003fb1, #1a56db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Hero overlay gradient */
+        .hero-overlay {
+            background: linear-gradient(180deg, rgba(0, 63, 177, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
+        }
+        
+        /* Stats counter */
+        .stat-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        .stat-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+        
+        /* Featured image container */
+        .featured-image {
+            transition: all 0.5s ease;
+        }
+        .featured-image:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Badge pulse animation */
+        .badge-pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        /* Category icon colors */
         .bg-purple-100 { background: #f3e8ff; }
         .text-purple-800 { color: #6b21a8; }
         .bg-green-100 { background: #d1fae5; }
@@ -25,226 +91,411 @@
         .text-blue-800 { color: #1e40af; }
         .bg-yellow-100 { background: #fef3c7; }
         .text-yellow-800 { color: #854d0e; }
+        .bg-pink-100 { background: #fce7f3; }
+        .text-pink-800 { color: #9d174d; }
         .bg-gray-100 { background: #f3f4f6; }
         .text-gray-800 { color: #1f2937; }
+        
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
     </style>
 </head>
 <body class="bg-[#f9f9ff] text-[#111c2d] min-h-screen flex flex-col antialiased">
 
-<!-- TopNavBar -->
-<header class="bg-white/80 backdrop-blur-md fixed top-0 w-full z-50 border-b border-white/10 shadow-sm">
-    <div class="flex justify-between items-center px-4 md:px-16 max-w-7xl mx-auto h-20">
-        <a class="text-2xl font-bold text-[#003fb1] tracking-tight flex items-center gap-2" href="/">
-            <span class="material-symbols-outlined text-[32px]">map</span>
-            Panadura Planner
-        </a>
-        <nav class="hidden md:flex gap-6 items-center">
-            <a class="text-[#003fb1] border-b-2 border-[#003fb1] pb-1 font-semibold" href="/places">Destinations</a>
-            <a class="text-[#434654] hover:text-[#003fb1] transition-colors" href="/planner">Itineraries</a>
-            <a class="text-[#434654] hover:text-[#003fb1] transition-colors" href="/admin">Admin</a>
-        </nav>
-        <a href="/planner" class="bg-[#003fb1] text-white px-4 py-2 rounded-lg hover:bg-[#1a56db] transition-colors hidden md:block">
-            Plan Your Trip
-        </a>
-        <button class="md:hidden text-[#434654]">
-            <span class="material-symbols-outlined">menu</span>
-        </button>
-    </div>
-</header>
+    <!-- ============================================= -->
+    <!-- HEADER - Loaded from components -->
+    <!-- ============================================= -->
+    <div id="header-placeholder"></div>
 
-<!-- Hero Section -->
-<section class="relative pt-20 min-h-[70vh] flex items-center">
-    <div class="absolute inset-0 bg-gradient-to-br from-[#003fb1] to-[#1a56db] opacity-90"></div>
-    <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
-    
-    <div class="relative z-10 max-w-7xl mx-auto px-4 md:px-16 py-20 text-center text-white">
-        <h1 class="text-4xl md:text-6xl font-extrabold mb-4 drop-shadow-lg">
-            Discover Panadura
-        </h1>
-        <p class="text-lg md:text-xl text-white/90 max-w-2xl mx-auto mb-8">
-            Explore the best places within 25km. Curated experiences, seamless planning.
-        </p>
-        
-        <div class="flex flex-wrap justify-center gap-6 text-sm">
-            <div class="bg-white/10 backdrop-blur-sm rounded-lg px-6 py-3 border border-white/20">
-                <span class="font-bold text-2xl block">10+</span>
-                <span class="text-white/80">Places</span>
-            </div>
-            <div class="bg-white/10 backdrop-blur-sm rounded-lg px-6 py-3 border border-white/20">
-                <span class="font-bold text-2xl block">5</span>
-                <span class="text-white/80">Categories</span>
-            </div>
-            <div class="bg-white/10 backdrop-blur-sm rounded-lg px-6 py-3 border border-white/20">
-                <span class="font-bold text-2xl block">25km</span>
-                <span class="text-white/80">Radius</span>
-            </div>
+    <!-- ============================================= -->
+    <!-- HERO SECTION with Premium Design -->
+    <!-- ============================================= -->
+    <section class="relative pt-20 min-h-[85vh] flex items-center justify-center overflow-hidden">
+        <!-- Background Image -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=1920&h=1080&fit=crop" 
+                 alt="Panadura Scenic View" 
+                 class="w-full h-full object-cover object-center">
+            <div class="absolute inset-0 hero-overlay"></div>
         </div>
         
-        <div class="mt-8 flex flex-wrap justify-center gap-4">
-            <a href="/places" class="bg-white text-[#003fb1] px-8 py-3 rounded-lg font-semibold hover:bg-[#e7eeff] transition-colors">
-                Explore Places
-            </a>
-            <a href="/planner" class="bg-transparent border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors">
-                Plan Your Trip
-            </a>
+        <!-- Animated Gradient Overlay -->
+        <div class="absolute inset-0 z-1 opacity-30">
+            <div class="absolute inset-0 bg-gradient-to-tr from-[#003fb1]/40 via-transparent to-[#1a56db]/40 animate-pulse"></div>
         </div>
-    </div>
-</section>
 
-<!-- Categories Section -->
-<section class="py-12 px-4 md:px-16 max-w-7xl mx-auto w-full">
-    <h2 class="text-2xl font-bold text-center mb-8">Explore by Category</h2>
-    <div id="categories-grid" class="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <div class="text-center py-8 text-[#434654]">Loading categories...</div>
-    </div>
-</section>
-
-<!-- Featured Places Section -->
-<section class="py-12 px-4 md:px-16 max-w-7xl mx-auto w-full bg-white rounded-t-3xl">
-    <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold">Featured Places</h2>
-        <a href="/places" class="text-[#003fb1] font-semibold hover:underline">View All →</a>
-    </div>
-    <div id="featured-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="col-span-full text-center py-8 text-[#434654]">Loading featured places...</div>
-    </div>
-</section>
-
-<!-- Footer -->
-<footer class="bg-[#e7eeff] mt-auto">
-    <div class="px-4 md:px-16 py-8 max-w-7xl mx-auto">
-        <p class="text-[#434654]">© 2024 Panadura Day Planner. All rights reserved.</p>
-    </div>
-</footer>
-
-<script>
-    // =============================================
-    // Fetch Categories
-    // =============================================
-    async function fetchCategories() {
-        try {
-            const res = await fetch('/api/categories');
-            const data = await res.json();
-            if (data.success) {
-                renderCategories(data.data);
-            }
-        } catch (error) {
-            console.error('Error fetching categories:', error);
-        }
-    }
-
-    // =============================================
-    // Render Categories
-    // =============================================
-    function renderCategories(categories) {
-        const grid = document.getElementById('categories-grid');
-        
-        const icons = {
-            'Religious': 'account_balance',
-            'Nature': 'park',
-            'Dining': 'restaurant',
-            'Sports': 'sports_soccer',
-            'Heritage': 'castle'
-        };
-        
-        const colors = {
-            'Religious': 'bg-purple-100 text-purple-800',
-            'Nature': 'bg-green-100 text-green-800',
-            'Dining': 'bg-orange-100 text-orange-800',
-            'Sports': 'bg-blue-100 text-blue-800',
-            'Heritage': 'bg-yellow-100 text-yellow-800'
-        };
-
-        let html = '';
-        categories.forEach(cat => {
-            const icon = icons[cat.name] || 'category';
-            const color = colors[cat.name] || 'bg-gray-100 text-gray-800';
-            html += `
-                <a href="/places?category=${cat.category_id}" 
-                   class="bg-white rounded-xl p-4 text-center shadow-sm border border-[#e7eeff] card-hover transition-all duration-300 hover:no-underline">
-                    <div class="w-12 h-12 rounded-full ${color} flex items-center justify-center mx-auto mb-2">
-                        <span class="material-symbols-outlined">${icon}</span>
-                    </div>
-                    <h3 class="font-semibold text-sm">${cat.name}</h3>
-                    <p class="text-xs text-[#434654]">${cat.place_count} places</p>
-                </a>
-            `;
-        });
-
-        grid.innerHTML = html;
-    }
-
-    // =============================================
-    // Fetch Featured Places
-    // =============================================
-    async function fetchFeaturedPlaces() {
-        try {
-            const res = await fetch('/api/places?featured=true');
-            const data = await res.json();
-            if (data.success && data.data.length > 0) {
-                renderFeaturedPlaces(data.data);
-            } else {
-                document.getElementById('featured-grid').innerHTML = 
-                    '<div class="col-span-full text-center py-8 text-[#434654]">No featured places yet.</div>';
-            }
-        } catch (error) {
-            console.error('Error fetching featured places:', error);
-            document.getElementById('featured-grid').innerHTML = 
-                '<div class="col-span-full text-center py-8 text-red-500">Failed to load featured places.</div>';
-        }
-    }
-
-    // =============================================
-    // Render Featured Places
-    // =============================================
-    function renderFeaturedPlaces(places) {
-        const grid = document.getElementById('featured-grid');
-        
-        const colors = {
-            'Religious': 'bg-purple-100 text-purple-800',
-            'Nature': 'bg-green-100 text-green-800',
-            'Dining': 'bg-orange-100 text-orange-800',
-            'Sports': 'bg-blue-100 text-blue-800',
-            'Heritage': 'bg-yellow-100 text-yellow-800'
-        };
-
-        let html = '';
-        places.forEach(place => {
-            const color = colors[place.category_name] || 'bg-gray-100 text-gray-800';
-            const fee = place.entry_fee > 0 ? 'Rs. ' + place.entry_fee : 'Free';
+        <!-- Hero Content -->
+        <div class="relative z-10 text-center px-4 md:px-16 max-w-5xl mx-auto">
+            <!-- Badge -->
+            <div class="inline-block bg-white/10 backdrop-blur-sm rounded-full px-6 py-2 mb-6 border border-white/20">
+                <span class="text-white/90 text-sm font-medium tracking-wider">
+                    ✦ Explore Sri Lanka's Hidden Gems
+                </span>
+            </div>
             
-            html += `
-                <a href="/place/${place.place_id}" 
-                   class="bg-white rounded-xl overflow-hidden shadow-sm border border-[#e7eeff] card-hover transition-all duration-300 hover:no-underline">
-                    <div class="h-48 bg-[#e7eeff] flex items-center justify-center text-[#737686]">
-                        <span class="material-symbols-outlined text-4xl">place</span>
-                    </div>
-                    <div class="p-4">
-                        <div class="flex justify-between items-start">
-                            <h3 class="font-semibold text-[#111c2d]">${place.title}</h3>
-                            <span class="${color} px-2 py-0.5 rounded-full text-xs">${place.category_name || ''}</span>
-                        </div>
-                        <p class="text-sm text-[#434654] mt-1 line-clamp-2">${place.description || ''}</p>
-                        <div class="flex justify-between items-center mt-3">
-                            <span class="text-xs text-[#006c4a] font-medium">${fee}</span>
-                            <span class="text-xs text-[#434654]">⭐ ${place.rating || 0}</span>
-                        </div>
-                    </div>
-                </a>
-            `;
+            <!-- Heading -->
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white mb-4 drop-shadow-2xl leading-tight">
+                Discover <span class="gradient-text">Panadura</span>
+                <br>
+                <span class="text-3xl md:text-4xl lg:text-5xl font-light text-white/80">Your Perfect Day Trip Awaits</span>
+            </h1>
+            
+            <!-- Subtitle -->
+            <p class="text-lg md:text-xl text-white/90 max-w-2xl mx-auto mb-8 leading-relaxed drop-shadow-md">
+                Explore curated places within 25km. From serene temples to vibrant beaches, 
+                plan your perfect one-day adventure in Panadura.
+            </p>
+            
+            <!-- Search Bar -->
+            <div class="bg-white/95 backdrop-blur-xl rounded-2xl p-2 flex flex-col md:flex-row items-center gap-2 shadow-2xl max-w-2xl mx-auto border border-white/20">
+                <div class="relative w-full flex-grow flex items-center pl-4">
+                    <span class="material-symbols-outlined text-[#737686] absolute left-4">search</span>
+                    <input id="hero-search" type="text" 
+                           class="w-full pl-12 pr-4 py-3 border-none bg-transparent focus:ring-0 text-[#111c2d] placeholder:text-[#737686] outline-none" 
+                           placeholder="Search destinations, cafes, temples...">
+                </div>
+                <button onclick="searchPlace()" 
+                        class="w-full md:w-auto bg-[#003fb1] text-white px-8 py-3 rounded-xl font-semibold hover:bg-[#1a56db] transition-all duration-300 shadow-lg hover:shadow-xl whitespace-nowrap">
+                    Explore Now
+                </button>
+            </div>
+            
+            <!-- Stats -->
+            <div class="flex flex-wrap justify-center gap-4 mt-10">
+                <div class="stat-item rounded-xl px-6 py-3 text-center min-w-[100px]">
+                    <span class="text-2xl font-bold text-white block">10+</span>
+                    <span class="text-sm text-white/80">Places</span>
+                </div>
+                <div class="stat-item rounded-xl px-6 py-3 text-center min-w-[100px]">
+                    <span class="text-2xl font-bold text-white block">5</span>
+                    <span class="text-sm text-white/80">Categories</span>
+                </div>
+                <div class="stat-item rounded-xl px-6 py-3 text-center min-w-[100px]">
+                    <span class="text-2xl font-bold text-white block">25km</span>
+                    <span class="text-sm text-white/80">Radius</span>
+                </div>
+                <div class="stat-item rounded-xl px-6 py-3 text-center min-w-[100px]">
+                    <span class="text-2xl font-bold text-white block">⭐ 4.5</span>
+                    <span class="text-sm text-white/80">Avg Rating</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- CATEGORIES SECTION -->
+    <!-- ============================================= -->
+    <section class="py-16 px-4 md:px-16 max-w-7xl mx-auto w-full">
+        <div class="text-center mb-12">
+            <span class="text-[#003fb1] font-semibold text-sm tracking-wider uppercase">Categories</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-[#111c2d] mt-2">Explore by Category</h2>
+            <p class="text-[#434654] mt-2 max-w-2xl mx-auto">Find exactly what you're looking for in Panadura</p>
+        </div>
+        <div id="categories-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div class="col-span-full text-center py-8 text-[#434654]">Loading categories...</div>
+        </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- FEATURED PLACES SECTION -->
+    <!-- ============================================= -->
+    <section class="py-16 px-4 md:px-16 max-w-7xl mx-auto w-full bg-white rounded-3xl shadow-sm">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+            <div>
+                <span class="text-[#003fb1] font-semibold text-sm tracking-wider uppercase">Top Picks</span>
+                <h2 class="text-3xl font-bold text-[#111c2d] mt-1">Featured Places</h2>
+            </div>
+            <a href="/places" class="text-[#003fb1] font-semibold hover:underline flex items-center gap-1 mt-2 md:mt-0">
+                View All Places
+                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </a>
+        </div>
+        <div id="featured-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="col-span-full text-center py-8 text-[#434654]">Loading featured places...</div>
+        </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- WHY VISIT SECTION -->
+    <!-- ============================================= -->
+    <section class="py-16 px-4 md:px-16 max-w-7xl mx-auto w-full">
+        <div class="text-center mb-12">
+            <span class="text-[#003fb1] font-semibold text-sm tracking-wider uppercase">Why Visit</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-[#111c2d] mt-2">Why Panadura?</h2>
+            <p class="text-[#434654] mt-2 max-w-2xl mx-auto">Experience the best of Sri Lanka's coastal charm</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white rounded-2xl p-6 text-center shadow-sm border border-[#e7eeff] card-hover">
+                <div class="w-16 h-16 rounded-full bg-[#dbeafe] text-[#003fb1] flex items-center justify-center mx-auto mb-4">
+                    <span class="material-symbols-outlined text-3xl fill">diversity_3</span>
+                </div>
+                <h3 class="text-xl font-semibold text-[#111c2d] mb-2">Rich Culture</h3>
+                <p class="text-[#434654] text-sm leading-relaxed">Immerse yourself in Sri Lanka's vibrant heritage, from ancient temples to local traditions.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-6 text-center shadow-sm border border-[#e7eeff] card-hover">
+                <div class="w-16 h-16 rounded-full bg-[#d1fae5] text-[#006c4a] flex items-center justify-center mx-auto mb-4">
+                    <span class="material-symbols-outlined text-3xl fill">forest</span>
+                </div>
+                <h3 class="text-xl font-semibold text-[#111c2d] mb-2">Natural Beauty</h3>
+                <p class="text-[#434654] text-sm leading-relaxed">Discover pristine beaches, lush greenery, and breathtaking landscapes at every turn.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-6 text-center shadow-sm border border-[#e7eeff] card-hover">
+                <div class="w-16 h-16 rounded-full bg-[#ffedd5] text-[#9a3412] flex items-center justify-center mx-auto mb-4">
+                    <span class="material-symbols-outlined text-3xl fill">restaurant</span>
+                </div>
+                <h3 class="text-xl font-semibold text-[#111c2d] mb-2">Local Cuisine</h3>
+                <p class="text-[#434654] text-sm leading-relaxed">Savor authentic Sri Lankan flavors at local restaurants and street food spots.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- CTA SECTION -->
+    <!-- ============================================= -->
+    <section class="py-16 px-4 md:px-16 max-w-7xl mx-auto w-full">
+        <div class="bg-gradient-to-r from-[#003fb1] to-[#1a56db] rounded-3xl p-8 md:p-12 text-center relative overflow-hidden">
+            <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
+            <div class="relative z-10">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Ready to Explore?</h2>
+                <p class="text-white/90 max-w-2xl mx-auto mb-6">Start planning your perfect day trip to Panadura today.</p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="/places" class="bg-white text-[#003fb1] px-8 py-3 rounded-xl font-semibold hover:bg-[#e7eeff] transition-all shadow-lg hover:shadow-xl">
+                        Explore Places
+                    </a>
+                    <a href="/planner" class="bg-transparent border-2 border-white text-white px-8 py-3 rounded-xl font-semibold hover:bg-white/10 transition-all">
+                        Plan Your Trip
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- FOOTER - Loaded from components -->
+    <!-- ============================================= -->
+    <div id="footer-placeholder"></div>
+
+    <!-- ============================================= -->
+    <!-- SCRIPTS -->
+    <!-- ============================================= -->
+    <script>
+        // =============================================
+        // 1. Load Header Component
+        // =============================================
+        fetch('/components/header.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('header-placeholder').innerHTML = html;
+                // Re-run navigation highlight
+                const script = document.createElement('script');
+                script.textContent = `
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const currentPath = window.location.pathname;
+                        const links = document.querySelectorAll('nav a');
+                        links.forEach(link => {
+                            const linkPath = link.getAttribute('href');
+                            if (currentPath === linkPath || (currentPath === '/' && linkPath === '/')) {
+                                link.classList.add('text-[#003fb1]', 'border-b-2', 'border-[#003fb1]', 'pb-1', 'font-semibold');
+                                link.classList.remove('text-[#434654]');
+                            }
+                        });
+                    });
+                `;
+                document.body.appendChild(script);
+            })
+            .catch(() => {
+                console.error('Failed to load header');
+            });
+
+        // =============================================
+        // 2. Load Footer Component
+        // =============================================
+        fetch('/components/footer.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('footer-placeholder').innerHTML = html;
+            })
+            .catch(() => {
+                console.error('Failed to load footer');
+            });
+
+        // =============================================
+        // 3. Search Function
+        // =============================================
+        function searchPlace() {
+            const query = document.getElementById('hero-search').value.trim();
+            if (query) {
+                window.location.href = '/places?search=' + encodeURIComponent(query);
+            } else {
+                window.location.href = '/places';
+            }
+        }
+
+        // Allow Enter key on search
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('hero-search');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        searchPlace();
+                    }
+                });
+            }
         });
 
-        grid.innerHTML = html;
-    }
+        // =============================================
+        // 4. Fetch Categories
+        // =============================================
+        async function fetchCategories() {
+            try {
+                const res = await fetch('/api/categories');
+                const data = await res.json();
+                if (data.success) {
+                    renderCategories(data.data);
+                }
+            } catch (error) {
+                console.error('Error fetching categories:', error);
+                document.getElementById('categories-grid').innerHTML = 
+                    '<div class="col-span-full text-center py-8 text-red-500">Failed to load categories.</div>';
+            }
+        }
 
-    // =============================================
-    // Initialize
-    // =============================================
-    document.addEventListener('DOMContentLoaded', function() {
-        fetchCategories();
-        fetchFeaturedPlaces();
-    });
-</script>
+        function renderCategories(categories) {
+            const grid = document.getElementById('categories-grid');
+            
+            const icons = {
+                'Religious': 'account_balance',
+                'Nature': 'park',
+                'Dining': 'restaurant',
+                'Sports': 'sports_soccer',
+                'Heritage': 'castle',
+                'Culture': 'museum',
+                'Beach': 'beach_access',
+                'Shopping': 'shopping_bag'
+            };
+            
+            const colors = {
+                'Religious': 'bg-purple-100 text-purple-800',
+                'Nature': 'bg-green-100 text-green-800',
+                'Dining': 'bg-orange-100 text-orange-800',
+                'Sports': 'bg-blue-100 text-blue-800',
+                'Heritage': 'bg-yellow-100 text-yellow-800',
+                'Culture': 'bg-pink-100 text-pink-800',
+                'Beach': 'bg-blue-100 text-blue-800',
+                'Shopping': 'bg-gray-100 text-gray-800'
+            };
+
+            let html = '';
+            categories.forEach(cat => {
+                const icon = icons[cat.name] || 'category';
+                const color = colors[cat.name] || 'bg-gray-100 text-gray-800';
+                html += `
+                    <a href="/places?category=${cat.category_id}" 
+                       class="bg-white rounded-2xl p-6 text-center shadow-sm border border-[#e7eeff] category-card transition-all duration-300 hover:no-underline hover:shadow-lg group">
+                        <div class="w-14 h-14 rounded-full ${color} flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                            <span class="material-symbols-outlined text-2xl">${icon}</span>
+                        </div>
+                        <h3 class="font-semibold text-[#111c2d]">${cat.name}</h3>
+                        <p class="text-sm text-[#434654] mt-1">${cat.place_count} places</p>
+                    </a>
+                `;
+            });
+            grid.innerHTML = html;
+        }
+
+        // =============================================
+        // 5. Fetch Featured Places
+        // =============================================
+        async function fetchFeaturedPlaces() {
+            try {
+                const res = await fetch('/api/places?featured=true');
+                const data = await res.json();
+                if (data.success && data.data.length > 0) {
+                    renderFeaturedPlaces(data.data);
+                } else {
+                    document.getElementById('featured-grid').innerHTML = 
+                        '<div class="col-span-full text-center py-8 text-[#434654]">No featured places yet.</div>';
+                }
+            } catch (error) {
+                console.error('Error fetching featured places:', error);
+                document.getElementById('featured-grid').innerHTML = 
+                    '<div class="col-span-full text-center py-8 text-red-500">Failed to load featured places.</div>';
+            }
+        }
+
+        function renderFeaturedPlaces(places) {
+            const grid = document.getElementById('featured-grid');
+            
+            const colors = {
+                'Religious': 'bg-purple-100 text-purple-800',
+                'Nature': 'bg-green-100 text-green-800',
+                'Dining': 'bg-orange-100 text-orange-800',
+                'Sports': 'bg-blue-100 text-blue-800',
+                'Heritage': 'bg-yellow-100 text-yellow-800'
+            };
+
+            let html = '';
+            places.forEach(place => {
+                const color = colors[place.category_name] || 'bg-gray-100 text-gray-800';
+                const fee = place.entry_fee > 0 ? 'Rs. ' + place.entry_fee : 'Free Entry';
+                const rating = place.rating || 0;
+                const fullStars = Math.floor(rating);
+                const emptyStars = 5 - fullStars;
+                const stars = '★'.repeat(fullStars) + '☆'.repeat(emptyStars);
+                const imageUrl = place.image_url || 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600&h=400&fit=crop';
+                
+                html += `
+                    <a href="/place/${place.place_id}" 
+                       class="bg-white rounded-2xl overflow-hidden shadow-sm border border-[#e7eeff] card-hover transition-all duration-300 hover:no-underline group">
+                        <div class="relative overflow-hidden">
+                            <img src="${imageUrl}" alt="${place.title}" 
+                                 class="w-full h-56 object-cover featured-image group-hover:scale-105 transition-transform duration-500"
+                                 onerror="this.src='https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600&h=400&fit=crop'">
+                            <div class="absolute top-3 left-3">
+                                <span class="${color} px-3 py-1 rounded-full text-xs font-semibold">${place.category_name || 'Uncategorized'}</span>
+                            </div>
+                            ${place.is_featured ? `
+                                <div class="absolute top-3 right-3">
+                                    <span class="bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-xs font-bold badge-pulse">★ Featured</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                        <div class="p-5">
+                            <div class="flex justify-between items-start">
+                                <h3 class="text-xl font-semibold text-[#111c2d] group-hover:text-[#003fb1] transition-colors">${place.title}</h3>
+                            </div>
+                            <p class="text-sm text-[#434654] mt-2 line-clamp-2">${place.description || 'No description available.'}</p>
+                            <div class="flex justify-between items-center mt-4 pt-3 border-t border-[#e7eeff]">
+                                <div class="flex items-center gap-1">
+                                    <span class="text-yellow-500 text-sm">${stars}</span>
+                                    <span class="text-xs text-[#434654]">(${place.total_reviews || 0})</span>
+                                </div>
+                                <span class="text-sm font-medium text-[#006c4a]">${fee}</span>
+                            </div>
+                        </div>
+                    </a>
+                `;
+            });
+            grid.innerHTML = html;
+        }
+
+        // =============================================
+        // 6. Initialize
+        // =============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchCategories();
+            fetchFeaturedPlaces();
+        });
+
+        // Make functions globally accessible
+        window.searchPlace = searchPlace;
+        window.fetchCategories = fetchCategories;
+        window.fetchFeaturedPlaces = fetchFeaturedPlaces;
+    </script>
 
 </body>
 </html>

@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Admin Panel - Panadura Day Planner</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0,63,177,0.15);
+        }
+        .tab-active {
+            background: #003fb1;
+            color: white;
+        }
+        .tab-inactive {
+            background: #e7eeff;
+            color: #434654;
+        }
+        .tab-inactive:hover {
+            background: #dbeafe;
+        }
+    </style>
+</head>
+<body class="bg-[#f9f9ff] text-[#111c2d] min-h-screen flex flex-col antialiased">
+
+<!-- TopNavBar -->
+<header class="bg-white/80 backdrop-blur-md fixed top-0 w-full z-50 border-b border-white/10 shadow-sm">
+    <div class="flex justify-between items-center px-4 md:px-16 max-w-7xl mx-auto h-20">
+        <a class="text-2xl font-bold text-[#003fb1] tracking-tight flex items-center gap-2" href="/">
+            <span class="material-symbols-outlined text-[32px]">map</span>
+            Panadura Planner
+        </a>
+        <nav class="hidden md:flex gap-6 items-center">
+            <a class="text-[#434654] hover:text-[#003fb1] transition-colors" href="/places">Destinations</a>
+            <a class="text-[#434654] hover:text-[#003fb1] transition-colors" href="/planner">Itineraries</a>
+            <a class="text-[#003fb1] border-b-2 border-[#003fb1] pb-1 font-semibold" href="/admin">Admin</a>
+        </nav>
+        <button id="logout-btn" class="text-red-500 hover:text-red-700 font-semibold hidden md:block">
+            Logout
+        </button>
+        <button class="md:hidden text-[#434654]">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
+    </div>
+</header>
+
+<!-- Login Section -->
+<section id="login-section" class="flex-grow flex items-center justify-center pt-20 px-4">
+    <div class="bg-white rounded-2xl shadow-lg p-8 max-w-md w-full border border-[#e7eeff]">
+        <h2 class="text-2xl font-bold text-center text-[#003fb1] mb-6">Admin Login</h2>
+        
+        <div id="login-error" class="bg-red-50 text-red-600 p-3 rounded-lg text-sm hidden mb-4">
+            Invalid username or password
+        </div>
+        
+        <form id="login-form">
+            <div class="mb-4">
+                <label class="block text-sm font-semibold text-[#434654] mb-1">Username</label>
+                <input id="login-username" type="text" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]" placeholder="Enter username" required>
+            </div>
+            <div class="mb-6">
+                <label class="block text-sm font-semibold text-[#434654] mb-1">Password</label>
+                <input id="login-password" type="password" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]" placeholder="Enter password" required>
+            </div>
+            <button type="submit" class="w-full bg-[#003fb1] text-white py-2 rounded-lg font-semibold hover:bg-[#1a56db] transition-colors">
+                Login
+            </button>
+        </form>
+    </div>
+</section>
+
+<!-- Admin Dashboard -->
+<section id="dashboard-section" class="flex-grow pt-20 px-4 md:px-16 max-w-7xl mx-auto w-full hidden">
+    
+    <!-- Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white rounded-xl p-4 shadow-sm border border-[#e7eeff]">
+            <p class="text-sm text-[#434654]">Total Places</p>
+            <p id="stat-places" class="text-2xl font-bold text-[#003fb1]">0</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 shadow-sm border border-[#e7eeff]">
+            <p class="text-sm text-[#434654]">Categories</p>
+            <p id="stat-categories" class="text-2xl font-bold text-[#003fb1]">0</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 shadow-sm border border-[#e7eeff]">
+            <p class="text-sm text-[#434654]">Total Plans</p>
+            <p id="stat-plans" class="text-2xl font-bold text-[#003fb1]">0</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 shadow-sm border border-[#e7eeff]">
+            <p class="text-sm text-[#434654]">Admin</p>
+            <p id="stat-admin" class="text-2xl font-bold text-[#003fb1]">1</p>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex gap-2 mb-6">
+        <button id="tab-places" class="tab-active px-6 py-2 rounded-lg font-semibold transition-colors">Manage Places</button>
+        <button id="tab-add" class="tab-inactive px-6 py-2 rounded-lg font-semibold transition-colors">Add New Place</button>
+    </div>
+
+    <!-- Manage Places Tab -->
+    <div id="manage-places">
+        <div class="bg-white rounded-xl shadow-sm border border-[#e7eeff] overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-[#e7eeff]">
+                            <th class="px-4 py-3 text-sm font-semibold">ID</th>
+                            <th class="px-4 py-3 text-sm font-semibold">Title</th>
+                            <th class="px-4 py-3 text-sm font-semibold hidden md:table-cell">Category</th>
+                            <th class="px-4 py-3 text-sm font-semibold hidden md:table-cell">Fee</th>
+                            <th class="px-4 py-3 text-sm font-semibold">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="places-table-body">
+                        <tr>
+                            <td colspan="5" class="text-center py-8 text-[#434654]">Loading places...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Place Tab -->
+    <div id="add-place" class="hidden">
+        <div class="bg-white rounded-xl shadow-sm border border-[#e7eeff] p-6">
+            <h3 class="text-xl font-semibold mb-4">Add New Place</h3>
+            
+            <form id="add-place-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-semibold text-[#434654] mb-1">Title *</label>
+                    <input id="add-title" type="text" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-[#434654] mb-1">Category *</label>
+                    <select id="add-category" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]" required>
+                        <option value="">Select Category</option>
+                    </select>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold text-[#434654] mb-1">Description *</label>
+                    <textarea id="add-description" rows="3" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]" required></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-[#434654] mb-1">Latitude *</label>
+                    <input id="add-latitude" type="number" step="any" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-[#434654] mb-1">Longitude *</label>
+                    <input id="add-longitude" type="number" step="any" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-[#434654] mb-1">Address *</label>
+                    <input id="add-address" type="text" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-[#434654] mb-1">Entry Fee (Rs.)</label>
+                    <input id="add-fee" type="number" step="0.01" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]" value="0">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-[#434654] mb-1">Opening Time</label>
+                    <input id="add-opening" type="time" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-[#434654] mb-1">Closing Time</label>
+                    <input id="add-closing" type="time" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-[#434654] mb-1">Best Time</label>
+                    <input id="add-besttime" type="text" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]" placeholder="e.g. Morning, Sunset">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-[#434654] mb-1">Duration (minutes)</label>
+                    <input id="add-duration" type="number" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]" value="60">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-[#434654] mb-1">Parking</label>
+                    <select id="add-parking" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]">
+                        <option value="1">Available</option>
+                        <option value="0">Not Available</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-[#434654] mb-1">Featured</label>
+                    <select id="add-featured" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+                <div class="md:col-span-2">
+                    <button type="submit" class="w-full bg-[#003fb1] text-white py-2 rounded-lg font-semibold hover:bg-[#1a56db] transition-colors">
+                        Save Place
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Edit Modal -->
+<div id="edit-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-2xl p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold">Edit Place</h3>
+            <button onclick="closeEditModal()" class="text-[#434654] hover:text-red-500">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <form id="edit-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input id="edit-id" type="hidden">
+            <div>
+                <label class="block text-sm font-semibold text-[#434654] mb-1">Title *</label>
+                <input id="edit-title" type="text" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]" required>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-[#434654] mb-1">Category *</label>
+                <select id="edit-category" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]" required>
+                    <option value="">Select Category</option>
+                </select>
+            </div>
+            <div class="md:col-span-2">
+                <label class="block text-sm font-semibold text-[#434654] mb-1">Description *</label>
+                <textarea id="edit-description" rows="3" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]" required></textarea>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-[#434654] mb-1">Latitude *</label>
+                <input id="edit-latitude" type="number" step="any" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]" required>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-[#434654] mb-1">Longitude *</label>
+                <input id="edit-longitude" type="number" step="any" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]" required>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-[#434654] mb-1">Address *</label>
+                <input id="edit-address" type="text" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]" required>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-[#434654] mb-1">Entry Fee (Rs.)</label>
+                <input id="edit-fee" type="number" step="0.01" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]" value="0">
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-[#434654] mb-1">Opening Time</label>
+                <input id="edit-opening" type="time" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]">
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-[#434654] mb-1">Closing Time</label>
+                <input id="edit-closing" type="time" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]">
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-[#434654] mb-1">Best Time</label>
+                <input id="edit-besttime" type="text" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]">
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-[#434654] mb-1">Duration (minutes)</label>
+                <input id="edit-duration" type="number" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]" value="60">
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-[#434654] mb-1">Parking</label>
+                <select id="edit-parking" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]">
+                    <option value="1">Available</option>
+                    <option value="0">Not Available</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-[#434654] mb-1">Featured</label>
+                <select id="edit-featured" class="w-full border border-[#e7eeff] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#003fb1]">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+            <div class="md:col-span-2 flex gap-3">
+                <button type="submit" class="flex-1 bg-[#003fb1] text-white py-2 rounded-lg font-semibold hover:bg-[#1a56db] transition-colors">
+                    Update Place
+                </button>
+                <button type="button" onclick="closeEditModal()" class="flex-1 bg-gray-200 text-[#434654] py-2 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-[#e7eeff] mt-auto">
+    <div class="px-4 md:px-16 py-8 max-w-7xl mx-auto">
+        <p class="text-[#434654]">© 2024 Panadura Day Planner. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
+    // =============================================
+    // State
+    // =============================================
+    let authToken = localStorage.getItem('adminToken');
+    let categories = [];
+
+    // =============================================
+    // DOM Elements
+    // =============================================
+    const loginSection = document.getElementById('login-section');
+    const dashboardSection = document.getElementById('dashboard-section');
+    const loginForm = document.getElementById('login-form');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    // =============================================
+    // Check Authentication
+    // =============================================
+    function checkAuth() {
+        if (authToken) {
+            loginSection.classList.add('hidden');
+            dashboardSection.classList.remove('hidden');
+            loadDashboard();
+        } else {
+            loginSection.classList.remove('hidden');
+            dashboardSection.classList.add('hidden');
+        }
+    }
+
+    // =============================================
+    // Login
+    // =============================================
+    loginForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const username = document.getElementById('login-username').value;
+        const password = document.getElementById('login-password').value;
+        const errorEl = document.getElementById('login-error');
+
+        try {
+            const res = await fetch('/api/admin/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await res.json();
+            
+            if (data.success) {
+                authToken = data.data.token;
+                localStorage.setItem('adminToken', authToken);
+                errorEl.classList.add('hidden');
+                checkAuth();
+            } else {
+                errorEl.classList.remove('hidden');
+            }
+        } catch (error) {
+            errorEl.classList.remove('hidden');
+        }
+    });
+
+    // =============================================
+    // Logout
+    // =============================================
+    logoutBtn.addEventListener('click', function() {
+        localStorage.removeItem('adminToken');
+        authToken = null;
+        checkAuth();
+    });
+
+    // =============================================
+    // Load Dashboard
+    // =============================================
+    async function loadDashboard() {
+        await Promise.all([
+            loadStats(),
+            loadCategories(),
+            loadPlaces()
+        ]);
+    }
+
+    // =============================================
+    // Load Stats
+    // =============================================
+    async function loadStats() {
+        try {
+            const res = await fetch('/api/places');
+            const data = await res.json();
+            if (data.success) {
+                document.getElementById('stat-places').textContent = data.count;
+            }
+            
+            const catRes = await fetch('/api/categories');
+            const catData = await catRes.json();
+            if (catData.success) {
+                document.getElementById('stat-categories').textContent = catData.count;
+            }
+            
+            const planRes = await fetch('/api/planner');
+            const planData = await planRes.json();
+            if (planData.success) {
+                document.getElementById('stat-plans').textContent = planData.count;
+            }
+        } catch (error) {
+            console.error('Error loading stats:', error);
+        }
+    }
+
+    // =============================================
+    // Load Categories for Dropdowns
+    // =============================================
+    async function loadCategories() {
+        try {
+            const res = await fetch('/api/categories');
+            const data = await res.json();
+            if (data.success) {
+                categories = data.data;
+                populateCategoryDropdowns();
+            }
+        } catch (error) {
+            console.error('Error loading categories:', error);
+        }
+    }
+
+    // =============================================
+    // Populate Category Dropdowns
+    // =============================================
+    function populateCategoryDropdowns() {
+        const selects = ['add-category', 'edit-category'];
+        selects.forEach(id => {
+            const select = document.getElementById(id);
+            if (!select) return;
+            select.innerHTML = '<option value="">Select Category</option>';
+            categories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat.category_id;
+                option.textContent = cat.name;
+                select.appendChild(option);
+            });
+        });
+    }
+
+    // =============================================
+    // Load Places Table
+    // =============================================
+    async function loadPlaces() {
+        try {
+            const res = await fetch('/api/places');
+            const data = await res.json();
+            if (data.success) {
+                renderPlacesTable(data.data);
+            }
+        } catch (error) {
+            console.error('Error loading places:', error);
+            document.getElementById('places-table-body').innerHTML = 
+                '<tr><td colspan="5" class="text-center py-8 text-red-500">Failed to load places</td></tr>';
+        }
+    }
+
+    // =============================================
+    // Render Places Table
+    // =============================================
+    function renderPlacesTable(places) {
+        const tbody = document.getElementById('places-table-body');
+        
+        if (places.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center py-8 text-[#434654]">No places found</td></tr>';
+            return;
+        }
+
+        let html = '';
+        places.forEach(place => {
+            html += `
+                <tr class="border-b border-[#e7eeff] hover:bg-[#f0f3ff]">
+                    <td class="px-4 py-3 text-sm">${place.place_id}</td>
+                    <td class="px-4 py-3 font-semibold">${place.title}</td>
+                    <td class="px-4 py-3 text-sm hidden md:table-cell">${place.category_name || '-'}</td>
+                    <td class="px-4 py-3 text-sm hidden md:table-cell">${place.entry_fee > 0 ? 'Rs.' + place.entry_fee : 'Free'}</td>
+                    <td class="px-4 py-3">
+                        <div class="flex gap-2">
+                            <button onclick="openEditModal(${place.place_id})" class="text-[#003fb1] hover:text-[#1a56db] text-sm font-semibold">
+                                Edit
+                            </button>
+                            <button onclick="deletePlace(${place.place_id})" class="text-red-500 hover:text-red-700 text-sm font-semibold">
+                                Delete
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+
+        tbody.innerHTML = html;
+    }
+
+    // =============================================
+    // Add Place
+    // =============================================
+    document.getElementById('add-place-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const data = {
+            title: document.getElementById('add-title').value,
+            description: document.getElementById('add-description').value,
+            category_id: parseInt(document.getElementById('add-category').value),
+            latitude: parseFloat(document.getElementById('add-latitude').value),
+            longitude: parseFloat(document.getElementById('add-longitude').value),
+            address: document.getElementById('add-address').value,
+            entry_fee: parseFloat(document.getElementById('add-fee').value) || 0,
+            opening_time: document.getElementById('add-opening').value || null,
+            closing_time: document.getElementById('add-closing').value || null,
+            best_time: document.getElementById('add-besttime').value || null,
+            avg_duration: parseInt(document.getElementById('add-duration').value) || 60,
+            has_parking: parseInt(document.getElementById('add-parking').value),
+            is_featured: parseInt(document.getElementById('add-featured').value)
+        };
+
+        try {
+            const res = await fetch('/api/admin/places', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + authToken
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await res.json();
+            
+            if (result.success) {
+                alert('Place added successfully!');
+                this.reset();
+                loadPlaces();
+                loadStats();
+                // Switch to places tab
+                switchTab('places');
+            } else {
+                alert('Failed to add place: ' + result.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to add place.');
+        }
+    });
+
+    // =============================================
+    // Open Edit Modal
+    // =============================================
+    async function openEditModal(placeId) {
+        try {
+            const res = await fetch('/api/places/' + placeId);
+            const data = await res.json();
+            if (data.success) {
+                const place = data.data;
+                document.getElementById('edit-id').value = place.place_id;
+                document.getElementById('edit-title').value = place.title;
+                document.getElementById('edit-description').value = place.description;
+                document.getElementById('edit-category').value = place.category_id;
+                document.getElementById('edit-latitude').value = place.latitude;
+                document.getElementById('edit-longitude').value = place.longitude;
+                document.getElementById('edit-address').value = place.address;
+                document.getElementById('edit-fee').value = place.entry_fee;
+                document.getElementById('edit-opening').value = place.opening_time || '';
+                document.getElementById('edit-closing').value = place.closing_time || '';
+                document.getElementById('edit-besttime').value = place.best_time || '';
+                document.getElementById('edit-duration').value = place.avg_duration;
+                document.getElementById('edit-parking').value = place.has_parking ? 1 : 0;
+                document.getElementById('edit-featured').value = place.is_featured ? 1 : 0;
+                
+                document.getElementById('edit-modal').classList.remove('hidden');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to load place details.');
+        }
+    }
+
+    // =============================================
+    // Close Edit Modal
+    // =============================================
+    function closeEditModal() {
+        document.getElementById('edit-modal').classList.add('hidden');
+    }
+
+    // =============================================
+    // Edit Place
+    // =============================================
+    document.getElementById('edit-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const placeId = document.getElementById('edit-id').value;
+        const data = {
+            title: document.getElementById('edit-title').value,
+            description: document.getElementById('edit-description').value,
+            category_id: parseInt(document.getElementById('edit-category').value),
+            latitude: parseFloat(document.getElementById('edit-latitude').value),
+            longitude: parseFloat(document.getElementById('edit-longitude').value),
+            address: document.getElementById('edit-address').value,
+            entry_fee: parseFloat(document.getElementById('edit-fee').value) || 0,
+            opening_time: document.getElementById('edit-opening').value || null,
+            closing_time: document.getElementById('edit-closing').value || null,
+            best_time: document.getElementById('edit-besttime').value || null,
+            avg_duration: parseInt(document.getElementById('edit-duration').value) || 60,
+            has_parking: parseInt(document.getElementById('edit-parking').value),
+            is_featured: parseInt(document.getElementById('edit-featured').value)
+        };
+
+        try {
+            const res = await fetch('/api/admin/places/' + placeId, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + authToken
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await res.json();
+            
+            if (result.success) {
+                alert('Place updated successfully!');
+                closeEditModal();
+                loadPlaces();
+                loadStats();
+            } else {
+                alert('Failed to update place: ' + result.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to update place.');
+        }
+    });
+
+    // =============================================
+    // Delete Place
+    // =============================================
+    async function deletePlace(placeId) {
+        if (!confirm('Are you sure you want to delete this place?')) return;
+
+        try {
+            const res = await fetch('/api/admin/places/' + placeId, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': 'Bearer ' + authToken
+                }
+            });
+
+            const result = await res.json();
+            
+            if (result.success) {
+                alert('Place deleted successfully!');
+                loadPlaces();
+                loadStats();
+            } else {
+                alert('Failed to delete place: ' + result.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to delete place.');
+        }
+    }
+
+    // =============================================
+    // Tab Switching
+    // =============================================
+    document.getElementById('tab-places').addEventListener('click', function() {
+        switchTab('places');
+    });
+
+    document.getElementById('tab-add').addEventListener('click', function() {
+        switchTab('add');
+    });
+
+    function switchTab(tab) {
+        const placesTab = document.getElementById('tab-places');
+        const addTab = document.getElementById('tab-add');
+        const placesContent = document.getElementById('manage-places');
+        const addContent = document.getElementById('add-place');
+
+        if (tab === 'places') {
+            placesTab.className = 'tab-active px-6 py-2 rounded-lg font-semibold transition-colors';
+            addTab.className = 'tab-inactive px-6 py-2 rounded-lg font-semibold transition-colors';
+            placesContent.classList.remove('hidden');
+            addContent.classList.add('hidden');
+        } else {
+            addTab.className = 'tab-active px-6 py-2 rounded-lg font-semibold transition-colors';
+            placesTab.className = 'tab-inactive px-6 py-2 rounded-lg font-semibold transition-colors';
+            addContent.classList.remove('hidden');
+            placesContent.classList.add('hidden');
+        }
+    }
+
+    // =============================================
+    // Close modal on outside click
+    // =============================================
+    document.getElementById('edit-modal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeEditModal();
+        }
+    });
+
+    // =============================================
+    // Initialize
+    // =============================================
+    document.addEventListener('DOMContentLoaded', function() {
+        checkAuth();
+    });
+
+    // Make functions globally accessible
+    window.openEditModal = openEditModal;
+    window.closeEditModal = closeEditModal;
+    window.deletePlace = deletePlace;
+    window.switchTab = switchTab;
+</script>
+
+</body>
+</html>

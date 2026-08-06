@@ -1,0 +1,76 @@
+<!-- public/components/admin-sidebar.html -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-white shadow-md flex flex-col py-4 z-50 border-r border-[#e7eeff]">
+    <!-- Brand -->
+    <div class="px-4 pb-4 border-b border-[#e7eeff]">
+        <a href="/admin" class="text-xl font-bold text-[#003fb1] tracking-tight flex items-center gap-2">
+            <span class="material-symbols-outlined text-[28px]">dashboard</span>
+            Admin Panel
+        </a>
+        <p class="text-xs text-[#434654] mt-1">Panadura Planner</p>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex-1 px-3 py-4 space-y-1">
+        <a href="/admin" class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#434654] hover:bg-[#e7eeff] hover:text-[#003fb1] transition-colors">
+            <span class="material-symbols-outlined text-[22px]">dashboard</span>
+            <span class="font-medium">Dashboard</span>
+        </a>
+        <a href="/admin?tab=places" class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#434654] hover:bg-[#e7eeff] hover:text-[#003fb1] transition-colors">
+            <span class="material-symbols-outlined text-[22px]">place</span>
+            <span class="font-medium">Manage Places</span>
+        </a>
+        <a href="/admin?tab=add" class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#434654] hover:bg-[#e7eeff] hover:text-[#003fb1] transition-colors">
+            <span class="material-symbols-outlined text-[22px]">add_location</span>
+            <span class="font-medium">Add New Place</span>
+        </a>
+        <a href="/admin?tab=categories" class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#434654] hover:bg-[#e7eeff] hover:text-[#003fb1] transition-colors">
+            <span class="material-symbols-outlined text-[22px]">category</span>
+            <span class="font-medium">Categories</span>
+        </a>
+        <a href="/admin?tab=plans" class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#434654] hover:bg-[#e7eeff] hover:text-[#003fb1] transition-colors">
+            <span class="material-symbols-outlined text-[22px]">event_note</span>
+            <span class="font-medium">User Plans</span>
+        </a>
+    </nav>
+
+    <!-- User & Logout -->
+    <div class="border-t border-[#e7eeff] px-3 pt-3">
+        <div class="flex items-center gap-3 px-3 py-2">
+            <div class="w-8 h-8 rounded-full bg-[#003fb1] text-white flex items-center justify-center text-sm font-bold">
+                A
+            </div>
+            <div>
+                <p class="text-sm font-semibold text-[#111c2d]">Admin</p>
+                <p class="text-xs text-[#434654]">admin@panadura.com</p>
+            </div>
+        </div>
+        <button id="admin-logout" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-red-500 hover:bg-red-50 transition-colors">
+            <span class="material-symbols-outlined text-[22px]">logout</span>
+            <span class="font-medium">Logout</span>
+        </button>
+    </div>
+</aside>
+
+<!-- Admin sidebar JavaScript -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Highlight current page in sidebar
+        const currentPath = window.location.pathname + window.location.search;
+        const sidebarLinks = document.querySelectorAll('.admin-sidebar a');
+        sidebarLinks.forEach(link => {
+            if (currentPath.includes(link.getAttribute('href'))) {
+                link.classList.add('bg-[#e7eeff]', 'text-[#003fb1]');
+                link.classList.remove('text-[#434654]');
+            }
+        });
+
+        // Logout
+        const logoutBtn = document.getElementById('admin-logout');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', function() {
+                localStorage.removeItem('adminToken');
+                window.location.href = '/admin';
+            });
+        }
+    });
+</script>
