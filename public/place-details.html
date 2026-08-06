@@ -5,16 +5,24 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Place Details - Panadura Day Planner</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <style>
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
-        .card-hover:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 30px rgba(0,63,177,0.15);
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
         }
+        
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 63, 177, 0.15);
+        }
+        
         .bg-purple-100 { background: #f3e8ff; }
         .text-purple-800 { color: #6b21a8; }
         .bg-green-100 { background: #d1fae5; }
@@ -27,284 +35,385 @@
         .text-yellow-800 { color: #854d0e; }
         .bg-gray-100 { background: #f3f4f6; }
         .text-gray-800 { color: #1f2937; }
+        
+        .badge-pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.7) 100%);
+        }
+        
+        .info-card {
+            transition: all 0.3s ease;
+        }
+        .info-card:hover {
+            background: #f0f3ff;
+            transform: scale(1.02);
+        }
     </style>
 </head>
 <body class="bg-[#f9f9ff] text-[#111c2d] min-h-screen flex flex-col antialiased">
 
-<!-- TopNavBar -->
-<header class="bg-white/80 backdrop-blur-md fixed top-0 w-full z-50 border-b border-white/10 shadow-sm">
-    <div class="flex justify-between items-center px-4 md:px-16 max-w-7xl mx-auto h-20">
-        <a class="text-2xl font-bold text-[#003fb1] tracking-tight flex items-center gap-2" href="/">
-            <span class="material-symbols-outlined text-[32px]">map</span>
-            Panadura Planner
-        </a>
-        <nav class="hidden md:flex gap-6 items-center">
-            <a class="text-[#003fb1] border-b-2 border-[#003fb1] pb-1 font-semibold" href="/places">Destinations</a>
-            <a class="text-[#434654] hover:text-[#003fb1] transition-colors" href="/planner">Itineraries</a>
-            <a class="text-[#434654] hover:text-[#003fb1] transition-colors" href="/admin">Admin</a>
-        </nav>
-        <button class="bg-[#003fb1] text-white px-4 py-2 rounded-lg hover:bg-[#1a56db] transition-colors hidden md:block">
-            Plan Your Trip
-        </button>
-        <button class="md:hidden text-[#434654]">
-            <span class="material-symbols-outlined">menu</span>
-        </button>
-    </div>
-</header>
+    <!-- ============================================= -->
+    <!-- HEADER - Loaded from components -->
+    <!-- ============================================= -->
+    <div id="header-placeholder"></div>
 
-<!-- Main Content -->
-<main class="flex-grow pt-20">
+    <!-- ============================================= -->
+    <!-- MAIN CONTENT -->
+    <!-- ============================================= -->
+    <main class="flex-grow pt-20">
 
-    <!-- Loading State -->
-    <div id="loading" class="text-center py-20">
-        <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-[#003fb1] border-t-transparent"></div>
-        <p class="mt-4 text-[#434654]">Loading place details...</p>
-    </div>
-
-    <!-- Place Details -->
-    <div id="place-details" style="display:none;">
-        <!-- Back Button -->
-        <div class="max-w-7xl mx-auto px-4 md:px-16 py-4">
-            <a href="/places" class="inline-flex items-center text-[#003fb1] font-semibold hover:underline">
-                <span class="material-symbols-outlined mr-1">arrow_back</span>
-                Back to Places
-            </a>
+        <!-- Loading State -->
+        <div id="loading" class="text-center py-20">
+            <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-[#003fb1] border-t-transparent"></div>
+            <p class="mt-4 text-[#434654] font-medium">Loading place details...</p>
         </div>
 
-        <!-- Hero Section -->
-        <div class="relative w-full h-[50vh] min-h-[300px] max-h-[500px] bg-[#e7eeff]">
-            <div class="absolute inset-0 flex items-center justify-center text-[#737686]">
-                <span class="material-symbols-outlined text-6xl">image</span>
-            </div>
-            <div class="absolute inset-0 bg-gradient-to-t from-[#111c2d]/80 to-transparent"></div>
-            <div class="absolute bottom-0 left-0 w-full px-4 md:px-16 pb-8 max-w-7xl mx-auto">
-                <span id="detail-category" class="inline-block px-3 py-1 rounded-full text-xs font-semibold mb-2"></span>
-                <h1 id="detail-title" class="text-3xl md:text-5xl font-bold text-white drop-shadow-lg"></h1>
-            </div>
-        </div>
-
-        <!-- Content -->
-        <section class="max-w-7xl mx-auto px-4 md:px-16 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Place Details -->
+        <div id="place-details" style="display:none;">
             
-            <!-- Left Column - Details -->
-            <div class="lg:col-span-2 space-y-6">
-                <!-- Description -->
-                <div class="bg-white rounded-xl p-6 shadow-sm border border-[#e7eeff]">
-                    <h2 class="text-xl font-semibold mb-3">About This Place</h2>
-                    <p id="detail-description" class="text-[#434654] leading-relaxed"></p>
-                </div>
+            <!-- Back Button -->
+            <div class="max-w-7xl mx-auto px-4 md:px-16 py-4">
+                <a href="/places" class="inline-flex items-center text-[#003fb1] font-semibold hover:underline group">
+                    <span class="material-symbols-outlined mr-1 group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                    Back to Places
+                </a>
+            </div>
 
-                <!-- Quick Info -->
-                <div class="bg-white rounded-xl p-6 shadow-sm border border-[#e7eeff]">
-                    <h2 class="text-xl font-semibold mb-3">Essential Info</h2>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <p class="text-xs text-[#434654]">Entry Fee</p>
-                            <p id="detail-fee" class="font-semibold text-[#006c4a]"></p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-[#434654]">Opening Hours</p>
-                            <p id="detail-hours" class="font-semibold"></p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-[#434654]">Best Time to Visit</p>
-                            <p id="detail-best-time" class="font-semibold"></p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-[#434654]">Parking</p>
-                            <p id="detail-parking" class="font-semibold"></p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-[#434654]">Suggested Duration</p>
-                            <p id="detail-duration" class="font-semibold"></p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-[#434654]">Rating</p>
-                            <p id="detail-rating" class="font-semibold text-yellow-600"></p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Address -->
-                <div class="bg-white rounded-xl p-6 shadow-sm border border-[#e7eeff]">
-                    <h2 class="text-xl font-semibold mb-3">📍 Location</h2>
-                    <p id="detail-address" class="text-[#434654]"></p>
-                    <div class="mt-3 bg-[#f0f3ff] rounded-lg p-4 text-sm text-[#434654]">
-                        <span class="font-semibold">Coordinates:</span> 
-                        <span id="detail-coordinates"></span>
+            <!-- Hero Section -->
+            <div class="relative w-full h-[55vh] min-h-[350px] max-h-[600px] bg-[#e7eeff] overflow-hidden">
+                <!-- Background Image -->
+                <img id="detail-image" class="w-full h-full object-cover" src="" alt="">
+                <div class="absolute inset-0 hero-gradient"></div>
+                
+                <!-- Category Badge & Title -->
+                <div class="absolute bottom-0 left-0 w-full px-4 md:px-16 pb-10 max-w-7xl mx-auto">
+                    <span id="detail-category" class="inline-block px-4 py-1.5 rounded-full text-xs font-semibold mb-3 backdrop-blur-sm"></span>
+                    <h1 id="detail-title" class="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white drop-shadow-2xl leading-tight"></h1>
+                    <div class="flex items-center gap-4 mt-3 text-white/80">
+                        <span id="detail-rating-badge" class="flex items-center gap-1 bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full text-sm">
+                            <span class="material-symbols-outlined text-yellow-400 text-sm fill">star</span>
+                            <span id="detail-rating-text">0</span>
+                        </span>
+                        <span id="detail-duration-badge" class="flex items-center gap-1 bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full text-sm">
+                            <span class="material-symbols-outlined text-sm">schedule</span>
+                            <span id="detail-duration-text">0 min</span>
+                        </span>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Column - Actions -->
-            <div class="lg:col-span-1 space-y-4">
-                <div class="bg-white rounded-xl p-6 shadow-sm border border-[#e7eeff] sticky top-24">
-                    <h3 class="font-semibold text-lg mb-4">Plan Your Visit</h3>
-                    <button id="add-to-planner" class="w-full bg-[#003fb1] text-white py-3 rounded-lg font-semibold hover:bg-[#1a56db] transition-colors flex items-center justify-center gap-2">
-                        <span class="material-symbols-outlined">add</span>
-                        Add to Itinerary
-                    </button>
-                    <button id="get-directions" class="w-full mt-3 border border-[#003fb1] text-[#003fb1] py-3 rounded-lg font-semibold hover:bg-[#e7eeff] transition-colors flex items-center justify-center gap-2">
-                        <span class="material-symbols-outlined">directions</span>
-                        Get Directions
-                    </button>
+            <!-- Content -->
+            <section class="max-w-7xl mx-auto px-4 md:px-16 py-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Left Column - Details -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- Description -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-[#e7eeff] card-hover">
+                        <h2 class="text-xl font-bold text-[#111c2d] mb-3 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[#003fb1]">description</span>
+                            About This Place
+                        </h2>
+                        <p id="detail-description" class="text-[#434654] leading-relaxed"></p>
+                    </div>
+
+                    <!-- Quick Info -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-[#e7eeff]">
+                        <h2 class="text-xl font-bold text-[#111c2d] mb-4 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[#003fb1]">info</span>
+                            Essential Info
+                        </h2>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                            <div class="info-card bg-[#f9f9ff] rounded-xl p-3 text-center">
+                                <p class="text-xs text-[#434654]">Entry Fee</p>
+                                <p id="detail-fee" class="font-bold text-[#006c4a] text-lg"></p>
+                            </div>
+                            <div class="info-card bg-[#f9f9ff] rounded-xl p-3 text-center">
+                                <p class="text-xs text-[#434654]">Opening Hours</p>
+                                <p id="detail-hours" class="font-semibold text-sm"></p>
+                            </div>
+                            <div class="info-card bg-[#f9f9ff] rounded-xl p-3 text-center">
+                                <p class="text-xs text-[#434654]">Best Time</p>
+                                <p id="detail-best-time" class="font-semibold text-sm"></p>
+                            </div>
+                            <div class="info-card bg-[#f9f9ff] rounded-xl p-3 text-center">
+                                <p class="text-xs text-[#434654]">Parking</p>
+                                <p id="detail-parking" class="font-semibold text-sm"></p>
+                            </div>
+                            <div class="info-card bg-[#f9f9ff] rounded-xl p-3 text-center">
+                                <p class="text-xs text-[#434654]">Duration</p>
+                                <p id="detail-duration" class="font-semibold text-sm"></p>
+                            </div>
+                            <div class="info-card bg-[#f9f9ff] rounded-xl p-3 text-center">
+                                <p class="text-xs text-[#434654]">Rating</p>
+                                <p id="detail-rating" class="font-semibold text-yellow-600 text-sm"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-[#e7eeff]">
+                        <h2 class="text-xl font-bold text-[#111c2d] mb-3 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[#003fb1]">location_on</span>
+                            Location
+                        </h2>
+                        <p id="detail-address" class="text-[#434654]"></p>
+                        <div class="mt-3 bg-[#f0f3ff] rounded-xl p-4 text-sm text-[#434654] flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[#003fb1] text-sm">pin_drop</span>
+                            <span class="font-semibold">Coordinates:</span> 
+                            <span id="detail-coordinates"></span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </section>
 
-        <!-- Nearby Places -->
-        <section id="nearby-section" class="max-w-7xl mx-auto px-4 md:px-16 pb-12">
-            <h2 class="text-2xl font-bold mb-6">Nearby Places You May Like</h2>
-            <div id="nearby-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Nearby places loaded by JavaScript -->
-            </div>
-        </section>
-    </div>
-</main>
+                <!-- Right Column - Actions -->
+                <div class="lg:col-span-1 space-y-4">
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-[#e7eeff] sticky top-24">
+                        <h3 class="font-bold text-lg text-[#111c2d] mb-4 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[#003fb1]">event_note</span>
+                            Plan Your Visit
+                        </h3>
+                        <button id="add-to-planner" class="w-full bg-[#003fb1] text-white py-3 rounded-xl font-semibold hover:bg-[#1a56db] transition-all duration-300 flex items-center justify-center gap-2 shadow-md hover:shadow-lg">
+                            <span class="material-symbols-outlined">add</span>
+                            Add to Itinerary
+                        </button>
+                        <button id="get-directions" class="w-full mt-3 border-2 border-[#003fb1] text-[#003fb1] py-3 rounded-xl font-semibold hover:bg-[#e7eeff] transition-all duration-300 flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined">directions</span>
+                            Get Directions
+                        </button>
+                        <div class="mt-4 pt-4 border-t border-[#e7eeff] text-center">
+                            <p class="text-xs text-[#434654]">Share this place</p>
+                            <div class="flex justify-center gap-3 mt-2">
+                                <button class="w-10 h-10 rounded-full bg-[#25D366] text-white flex items-center justify-center hover:scale-110 transition-transform">
+                                    <span class="material-symbols-outlined text-sm">whatsapp</span>
+                                </button>
+                                <button class="w-10 h-10 rounded-full bg-[#1877F2] text-white flex items-center justify-center hover:scale-110 transition-transform">
+                                    <span class="material-symbols-outlined text-sm">facebook</span>
+                                </button>
+                                <button class="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center hover:scale-110 transition-transform">
+                                    <span class="material-symbols-outlined text-sm">share</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-<!-- Footer -->
-<footer class="bg-[#e7eeff] mt-auto">
-    <div class="px-4 md:px-16 py-8 max-w-7xl mx-auto">
-        <p class="text-[#434654]">© 2024 Panadura Day Planner. All rights reserved.</p>
-    </div>
-</footer>
+            <!-- Nearby Places -->
+            <section class="max-w-7xl mx-auto px-4 md:px-16 pb-16">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-[#111c2d] flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[#003fb1]">near_me</span>
+                        Nearby Places You May Like
+                    </h2>
+                </div>
+                <div id="nearby-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Nearby places loaded by JavaScript -->
+                </div>
+            </section>
+        </div>
+    </main>
 
-<script>
-    // =============================================
-    // Get Place ID from URL
-    // =============================================
-    const pathParts = window.location.pathname.split('/');
-    const placeId = pathParts[pathParts.length - 1];
+    <!-- ============================================= -->
+    <!-- FOOTER - Loaded from components -->
+    <!-- ============================================= -->
+    <div id="footer-placeholder"></div>
 
-    // =============================================
-    // Fetch Place Details
-    // =============================================
-    async function fetchPlaceDetails() {
-        try {
-            const response = await fetch('/api/places/' + placeId);
-            const data = await response.json();
+    <!-- ============================================= -->
+    <!-- SCRIPTS -->
+    <!-- ============================================= -->
+    <script>
+        // =============================================
+        // 1. Load Header Component
+        // =============================================
+        fetch('/components/header.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('header-placeholder').innerHTML = html;
+                const script = document.createElement('script');
+                script.textContent = `
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const currentPath = window.location.pathname;
+                        const links = document.querySelectorAll('nav a');
+                        links.forEach(link => {
+                            const linkPath = link.getAttribute('href');
+                            if (currentPath === linkPath || (currentPath.startsWith('/place/') && linkPath === '/places')) {
+                                link.classList.add('text-[#003fb1]', 'border-b-2', 'border-[#003fb1]', 'pb-1', 'font-semibold');
+                                link.classList.remove('text-[#434654]');
+                            }
+                        });
+                    });
+                `;
+                document.body.appendChild(script);
+            })
+            .catch(() => console.error('Failed to load header'));
 
-            if (data.success) {
-                displayPlace(data.data);
-            } else {
-                document.getElementById('loading').innerHTML = '<p class="text-red-500">Place not found.</p>';
+        // =============================================
+        // 2. Load Footer Component
+        // =============================================
+        fetch('/components/footer.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('footer-placeholder').innerHTML = html;
+            })
+            .catch(() => console.error('Failed to load footer'));
+
+        // =============================================
+        // 3. Get Place ID from URL
+        // =============================================
+        const pathParts = window.location.pathname.split('/');
+        const placeId = pathParts[pathParts.length - 1];
+
+        // Placeholder image
+        const PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23e7eeff\'/%3E%3Ctext x=\'200\' y=\'150\' font-family=\'Arial\' font-size=\'20\' fill=\'%23737686\' text-anchor=\'middle\'%3ENo Image%3C/text%3E%3C/svg%3E';
+
+        // =============================================
+        // 4. Fetch Place Details
+        // =============================================
+        async function fetchPlaceDetails() {
+            try {
+                const response = await fetch('/api/places/' + placeId);
+                const data = await response.json();
+
+                if (data.success) {
+                    displayPlace(data.data);
+                } else {
+                    document.getElementById('loading').innerHTML = '<p class="text-red-500">Place not found.</p>';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('loading').innerHTML = '<p class="text-red-500">Failed to load place details.</p>';
             }
-        } catch (error) {
-            console.error('Error:', error);
-            document.getElementById('loading').innerHTML = '<p class="text-red-500">Failed to load place details.</p>';
-        }
-    }
-
-    // =============================================
-    // Display Place Details
-    // =============================================
-    function displayPlace(place) {
-        // Hide loading, show details
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('place-details').style.display = 'block';
-
-        // Category colors
-        const colors = {
-            'Religious': 'bg-purple-100 text-purple-800',
-            'Nature': 'bg-green-100 text-green-800',
-            'Dining': 'bg-orange-100 text-orange-800',
-            'Sports': 'bg-blue-100 text-blue-800',
-            'Heritage': 'bg-yellow-100 text-yellow-800'
-        };
-        const colorClass = colors[place.category_name] || 'bg-gray-100 text-gray-800';
-
-        // Category badge
-        document.getElementById('detail-category').className = 'inline-block px-3 py-1 rounded-full text-xs font-semibold ' + colorClass + ' mb-2';
-        document.getElementById('detail-category').textContent = place.category_name || 'Uncategorized';
-        
-        // Title
-        document.getElementById('detail-title').textContent = place.title;
-
-        // Description
-        document.getElementById('detail-description').textContent = place.description || 'No description available.';
-
-        // Info
-        document.getElementById('detail-fee').textContent = place.entry_fee > 0 ? 'Rs. ' + place.entry_fee : 'Free Entry';
-        document.getElementById('detail-hours').textContent = (place.opening_time && place.closing_time) 
-            ? place.opening_time + ' - ' + place.closing_time 
-            : 'Not specified';
-        document.getElementById('detail-best-time').textContent = place.best_time || 'Anytime';
-        document.getElementById('detail-parking').textContent = place.has_parking ? 'Available' : 'Not Available';
-        document.getElementById('detail-duration').textContent = place.avg_duration ? place.avg_duration + ' mins' : 'Not specified';
-        
-        const rating = place.rating || 0;
-        document.getElementById('detail-rating').textContent = '⭐ ' + rating + ' (' + (place.total_reviews || 0) + ' reviews)';
-
-        // Address
-        document.getElementById('detail-address').textContent = place.address || 'Address not available';
-        document.getElementById('detail-coordinates').textContent = place.latitude + ', ' + place.longitude;
-
-        // Nearby places
-        if (place.nearby_places && place.nearby_places.length > 0) {
-            renderNearby(place.nearby_places);
-        } else {
-            document.getElementById('nearby-grid').innerHTML = '<p class="text-[#434654]">No nearby places found.</p>';
         }
 
-        // Update page title
-        document.title = place.title + ' - Panadura Day Planner';
-    }
+        // =============================================
+        // 5. Display Place Details
+        // =============================================
+        function displayPlace(place) {
+            // Hide loading, show details
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('place-details').style.display = 'block';
 
-    // =============================================
-    // Render Nearby Places
-    // =============================================
-    function renderNearby(nearby) {
-        const grid = document.getElementById('nearby-grid');
-        let html = '';
+            // Category colors
+            const colors = {
+                'Religious': 'bg-purple-100 text-purple-800',
+                'Nature': 'bg-green-100 text-green-800',
+                'Dining': 'bg-orange-100 text-orange-800',
+                'Sports': 'bg-blue-100 text-blue-800',
+                'Heritage': 'bg-yellow-100 text-yellow-800'
+            };
+            const colorClass = colors[place.category_name] || 'bg-gray-100 text-gray-800';
 
-        nearby.forEach(function(place) {
-            const fee = place.entry_fee > 0 ? 'Rs. ' + place.entry_fee : 'Free';
-            html += '<a href="/place/' + place.place_id + '" class="bg-white rounded-xl overflow-hidden shadow-sm card-hover transition-all duration-300 border border-[#e7eeff] hover:no-underline">';
-            html += '<div class="h-48 bg-[#e7eeff] flex items-center justify-center text-[#737686]">';
-            html += '<span class="material-symbols-outlined text-4xl">place</span>';
-            html += '</div>';
-            html += '<div class="p-4">';
-            html += '<h3 class="font-semibold text-[#111c2d]">' + place.title + '</h3>';
-            html += '<p class="text-sm text-[#434654]">' + (place.category_name || '') + '</p>';
-            html += '<div class="flex justify-between items-center mt-2">';
-            html += '<span class="text-xs text-[#006c4a] font-medium">' + fee + '</span>';
-            html += '<span class="text-xs text-[#434654]">⭐ ' + (place.rating || 0) + '</span>';
-            html += '</div></div></a>';
+            // Hero Image
+            const heroImage = place.image_url || PLACEHOLDER;
+            document.getElementById('detail-image').src = heroImage;
+            document.getElementById('detail-image').onerror = function() { this.src = PLACEHOLDER; };
+
+            // Category badge
+            document.getElementById('detail-category').className = 'inline-block px-4 py-1.5 rounded-full text-xs font-semibold ' + colorClass + ' mb-3 backdrop-blur-sm';
+            document.getElementById('detail-category').textContent = place.category_name || 'Uncategorized';
+            
+            // Title
+            document.getElementById('detail-title').textContent = place.title;
+
+            // Rating Badge
+            const rating = place.rating || 0;
+            document.getElementById('detail-rating-text').textContent = rating + ' (' + (place.total_reviews || 0) + ' reviews)';
+            document.getElementById('detail-duration-text').textContent = (place.avg_duration || 60) + ' min';
+
+            // Description
+            document.getElementById('detail-description').textContent = place.description || 'No description available.';
+
+            // Info
+            document.getElementById('detail-fee').textContent = place.entry_fee > 0 ? 'Rs. ' + place.entry_fee : 'Free';
+            document.getElementById('detail-hours').textContent = (place.opening_time && place.closing_time) 
+                ? place.opening_time + ' - ' + place.closing_time 
+                : 'Not specified';
+            document.getElementById('detail-best-time').textContent = place.best_time || 'Anytime';
+            document.getElementById('detail-parking').textContent = place.has_parking ? '✅ Available' : '❌ Not Available';
+            document.getElementById('detail-duration').textContent = place.avg_duration ? place.avg_duration + ' mins' : 'Not specified';
+            document.getElementById('detail-rating').textContent = '⭐ ' + rating + ' (' + (place.total_reviews || 0) + ')';
+
+            // Address
+            document.getElementById('detail-address').textContent = place.address || 'Address not available';
+            document.getElementById('detail-coordinates').textContent = place.latitude + ', ' + place.longitude;
+
+            // Nearby places
+            if (place.nearby_places && place.nearby_places.length > 0) {
+                renderNearby(place.nearby_places);
+            } else {
+                document.getElementById('nearby-grid').innerHTML = '<p class="text-[#434654]">No nearby places found.</p>';
+            }
+
+            // Update page title
+            document.title = place.title + ' - Panadura Day Planner';
+        }
+
+        // =============================================
+        // 6. Render Nearby Places
+        // =============================================
+        function renderNearby(nearby) {
+            const grid = document.getElementById('nearby-grid');
+            let html = '';
+
+            nearby.forEach(function(place) {
+                const fee = place.entry_fee > 0 ? 'Rs. ' + place.entry_fee : 'Free';
+                const imageUrl = place.image_url || PLACEHOLDER;
+                html += `
+                    <a href="/place/${place.place_id}" class="bg-white rounded-2xl overflow-hidden shadow-sm border border-[#e7eeff] card-hover transition-all duration-300 hover:no-underline group">
+                        <img src="${imageUrl}" alt="${place.title}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='${PLACEHOLDER}'">
+                        <div class="p-4">
+                            <h3 class="font-bold text-[#111c2d] group-hover:text-[#003fb1] transition-colors">${place.title}</h3>
+                            <p class="text-sm text-[#434654]">${place.category_name || ''}</p>
+                            <div class="flex justify-between items-center mt-3 pt-3 border-t border-[#e7eeff]">
+                                <span class="text-sm font-semibold text-[#006c4a]">${fee}</span>
+                                <span class="text-sm text-[#434654]">⭐ ${place.rating || 0}</span>
+                            </div>
+                        </div>
+                    </a>
+                `;
+            });
+
+            grid.innerHTML = html;
+        }
+
+        // =============================================
+        // 7. Add to Planner Button
+        // =============================================
+        document.getElementById('add-to-planner').addEventListener('click', function() {
+            alert('✅ Place added to your itinerary!');
         });
 
-        grid.innerHTML = html;
-    }
+        // =============================================
+        // 8. Get Directions Button
+        // =============================================
+        document.getElementById('get-directions').addEventListener('click', function() {
+            const address = document.getElementById('detail-address').textContent;
+            if (address && address !== 'Address not available') {
+                window.open('https://www.google.com/maps/search/' + encodeURIComponent(address), '_blank');
+            } else {
+                alert('Address not available for directions.');
+            }
+        });
 
-    // =============================================
-    // Add to Planner Button
-    // =============================================
-    document.getElementById('add-to-planner').addEventListener('click', function() {
-        alert('Place added to your itinerary!');
-    });
-
-    // =============================================
-    // Get Directions Button
-    // =============================================
-    document.getElementById('get-directions').addEventListener('click', function() {
-        const address = document.getElementById('detail-address').textContent;
-        if (address && address !== 'Address not available') {
-            window.open('https://www.google.com/maps/search/' + encodeURIComponent(address), '_blank');
-        } else {
-            alert('Address not available for directions.');
-        }
-    });
-
-    // =============================================
-    // Initialize
-    // =============================================
-    document.addEventListener('DOMContentLoaded', function() {
-        if (placeId && placeId !== 'place-details.html') {
-            fetchPlaceDetails();
-        } else {
-            document.getElementById('loading').innerHTML = '<p class="text-red-500">Invalid place ID.</p>';
-        }
-    });
-</script>
+        // =============================================
+        // 9. Initialize
+        // =============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            if (placeId && placeId !== 'place-details.html') {
+                fetchPlaceDetails();
+            } else {
+                document.getElementById('loading').innerHTML = '<p class="text-red-500">Invalid place ID.</p>';
+            }
+        });
+    </script>
 
 </body>
 </html>
