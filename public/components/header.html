@@ -1,44 +1,138 @@
 <!-- public/components/header.html -->
-<header class="bg-white/80 backdrop-blur-md fixed top-0 w-full z-50 border-b border-white/10 shadow-sm">
-    <div class="flex justify-between items-center px-4 md:px-16 max-w-7xl mx-auto h-20">
+<header class="bg-white/90 backdrop-blur-md fixed top-0 w-full z-50 border-b border-[#e7eeff] shadow-sm">
+    <div class="flex justify-between items-center px-4 sm:px-8 lg:px-16 max-w-7xl mx-auto h-16 sm:h-20">
         <!-- Logo -->
-        <a class="text-2xl font-bold text-[#003fb1] tracking-tight flex items-center gap-2" href="/">
-            <span class="material-symbols-outlined text-[32px]">map</span>
-            Panadura Planner
+        <a class="flex items-center gap-2 sm:gap-3 group" href="/">
+            <img src="/assets/images/Logo.jpg" 
+                 alt="Panadura Planner Logo" 
+                 class="h-8 sm:h-10 w-auto object-contain border rounded-lg"
+                 onerror="console.warn('⚠️ Logo image failed to load, switching to fallback icon.'); this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            
+            <!-- Fallback Icon if image fails to load -->
+            <div class="hidden items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-[#003fb1]/10 text-[#003fb1]">
+                <span class="material-symbols-outlined text-xl sm:text-2xl">map</span>
+            </div>
+            
+            <span class="text-lg sm:text-2xl font-bold text-[#003fb1] tracking-tight group-hover:text-[#1a56db] transition-colors">
+                Panadura Planner
+            </span>
         </a>
         
-        <!-- Navigation -->
-        <nav class="hidden md:flex gap-6 items-center">
-            <a class="text-[#434654] hover:text-[#003fb1] transition-colors" href="/">Home</a>
-            <a class="text-[#434654] hover:text-[#003fb1] transition-colors" href="/places">Destinations</a>
-            <a class="text-[#434654] hover:text-[#003fb1] transition-colors" href="/planner">Itineraries</a>
-            <a class="text-[#434654] hover:text-[#003fb1] transition-colors" href="/admin">Admin</a>
+        <!-- Desktop Navigation -->
+        <nav class="hidden md:flex gap-6 lg:gap-8 items-center">
+            <a class="nav-link text-sm lg:text-base text-[#434654] hover:text-[#003fb1] font-medium transition-colors py-1" href="/">Home</a>
+            <a class="nav-link text-sm lg:text-base text-[#434654] hover:text-[#003fb1] font-medium transition-colors py-1" href="/places">Destinations</a>
+            <a class="nav-link text-sm lg:text-base text-[#434654] hover:text-[#003fb1] font-medium transition-colors py-1" href="/planner">Itineraries</a>
+            <a class="nav-link text-sm lg:text-base text-[#434654] hover:text-[#003fb1] font-medium transition-colors py-1" href="/admin">Admin</a>
         </nav>
         
-        <!-- Action Button -->
-        <a href="/planner" class="bg-[#003fb1] text-white px-4 py-2 rounded-lg hover:bg-[#1a56db] transition-colors hidden md:block">
+        <!-- Desktop Action Button -->
+        <a href="/planner" class="bg-[#003fb1] text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl font-semibold hover:bg-[#1a56db] transition-all duration-300 text-xs sm:text-sm shadow-md hover:shadow-lg hidden md:block">
             Plan Your Trip
         </a>
         
-        <!-- Mobile Menu -->
-        <button class="md:hidden text-[#434654]">
-            <span class="material-symbols-outlined">menu</span>
+        <!-- Mobile Menu Hamburger Button -->
+        <button id="header-mobile-toggle" onclick="openHeaderDrawer()" class="md:hidden text-[#434654] hover:text-[#003fb1] p-1.5 rounded-lg hover:bg-[#e7eeff] transition-colors">
+            <span class="material-symbols-outlined text-2xl">menu</span>
         </button>
     </div>
 </header>
 
-<!-- Make current page active - Add this script at bottom of each page -->
+<!-- Mobile Navigation Drawer -->
+<div id="header-mobile-drawer" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm hidden md:hidden transition-opacity">
+    <div class="fixed right-0 top-0 h-full w-64 bg-white shadow-2xl p-6 flex flex-col justify-between transform translate-x-full transition-transform duration-300 ease-in-out" id="header-mobile-menu">
+        <div>
+            <!-- Header inside drawer -->
+            <div class="flex items-center justify-between pb-4 border-b border-[#e7eeff] mb-6">
+                <span class="font-bold text-[#003fb1] text-lg">Navigation</span>
+                <button id="header-mobile-close" onclick="closeHeaderDrawer()" class="text-[#434654] hover:text-red-500 p-1 rounded-lg">
+                    <span class="material-symbols-outlined text-xl">close</span>
+                </button>
+            </div>
+            
+            <!-- Mobile Navigation Links -->
+            <nav class="flex flex-col gap-2">
+                <a class="mobile-nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-[#434654] font-semibold text-sm hover:bg-[#e7eeff] hover:text-[#003fb1] transition-all" href="/">
+                    <span class="material-symbols-outlined text-lg">home</span>
+                    <span>Home</span>
+                </a>
+                <a class="mobile-nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-[#434654] font-semibold text-sm hover:bg-[#e7eeff] hover:text-[#003fb1] transition-all" href="/places">
+                    <span class="material-symbols-outlined text-lg">place</span>
+                    <span>Destinations</span>
+                </a>
+                <a class="mobile-nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-[#434654] font-semibold text-sm hover:bg-[#e7eeff] hover:text-[#003fb1] transition-all" href="/planner">
+                    <span class="material-symbols-outlined text-lg">event_note</span>
+                    <span>Itineraries</span>
+                </a>
+                <a class="mobile-nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-[#434654] font-semibold text-sm hover:bg-[#e7eeff] hover:text-[#003fb1] transition-all" href="/admin">
+                    <span class="material-symbols-outlined text-lg">admin_panel_settings</span>
+                    <span>Admin</span>
+                </a>
+            </nav>
+        </div>
+        
+        <!-- Mobile Action Button -->
+        <a href="/planner" class="w-full bg-[#003fb1] text-white py-3 rounded-xl font-semibold hover:bg-[#1a56db] transition-all text-center text-sm shadow-md">
+            Plan Your Trip
+        </a>
+    </div>
+</div>
+
+<!-- Header Controls Script -->
 <script>
-    // Highlight current page in navigation
-    document.addEventListener('DOMContentLoaded', function() {
+
+    window.openHeaderDrawer = function() {
+        console.log('🍔 openHeaderDrawer() called');
+        const drawer = document.getElementById('header-mobile-drawer');
+        const menu = document.getElementById('header-mobile-menu');
+        
+
+        if (drawer && menu) {
+            drawer.classList.remove('hidden');
+            setTimeout(() => {
+                menu.classList.remove('translate-x-full');
+            }, 10);
+            document.body.style.overflow = 'hidden';
+        } 
+    };
+
+    window.closeHeaderDrawer = function() {
+        console.log('✖️ closeHeaderDrawer() called');
+        const drawer = document.getElementById('header-mobile-drawer');
+        const menu = document.getElementById('header-mobile-menu');
+        
+        if (drawer && menu) {
+            menu.classList.add('translate-x-full');
+            setTimeout(() => {
+                drawer.classList.add('hidden');
+            }, 300);
+            document.body.style.overflow = 'auto';
+        }
+    };
+
+    // Attach overlay click event
+    document.addEventListener('click', function(e) {
+        const drawer = document.getElementById('header-mobile-drawer');
+        if (e.target === drawer) {
+            window.closeHeaderDrawer();
+        }
+    });
+
+    // Highlight active page link
+    (function highlightActiveLinks() {
         const currentPath = window.location.pathname;
-        const links = document.querySelectorAll('nav a');
+        const links = document.querySelectorAll('.nav-link, .mobile-nav-link');
         links.forEach(link => {
             const linkPath = link.getAttribute('href');
             if (currentPath === linkPath || (currentPath === '/' && linkPath === '/')) {
-                link.classList.add('text-[#003fb1]', 'border-b-2', 'border-[#003fb1]', 'pb-1', 'font-semibold');
-                link.classList.remove('text-[#434654]');
+                if (link.classList.contains('nav-link')) {
+                    link.classList.add('text-[#003fb1]', 'border-b-2', 'border-[#003fb1]', 'font-bold');
+                    link.classList.remove('text-[#434654]');
+                } else {
+                    link.classList.add('bg-[#e7eeff]', 'text-[#003fb1]');
+                    link.classList.remove('text-[#434654]');
+                }
             }
         });
-    });
+    })();
 </script>

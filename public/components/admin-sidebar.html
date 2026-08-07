@@ -1,52 +1,57 @@
-<!-- public/components/admin-sidebar.html -->
-<aside class="h-screen w-64 fixed left-0 top-0 bg-white shadow-md flex flex-col py-4 z-50 border-r border-[#e7eeff]">
-    <!-- Brand -->
-    <div class="px-4 pb-4 border-b border-[#e7eeff]">
-        <a href="/admin" class="text-xl font-bold text-[#003fb1] tracking-tight flex items-center gap-2">
-            <span class="material-symbols-outlined text-[28px]">dashboard</span>
-            Admin Panel
-        </a>
-        <p class="text-xs text-[#434654] mt-1">Panadura Planner</p>
+<!-- Mobile Backdrop Overlay -->
+<div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden transition-opacity" onclick="closeSidebar()"></div>
+
+<!-- Sidebar Container -->
+<aside id="admin-sidebar" class="admin-sidebar h-screen w-64 fixed left-0 top-0 bg-white shadow-xl flex flex-col py-4 z-50 border-r border-[#e7eeff] -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+    <!-- Brand & Mobile Close Button -->
+    <div class="px-4 pb-4 border-b border-[#e7eeff] flex items-center justify-between">
+        <div>
+            <a href="/admin" class="text-xl font-bold text-[#003fb1] tracking-tight flex items-center gap-2">
+                <span class="material-symbols-outlined text-[28px]">dashboard</span>
+                Admin Panel
+            </a>
+            <p class="text-xs text-[#434654] mt-0.5">Panadura Planner</p>
+        </div>
+        <!-- Mobile Close Button -->
+        <button id="close-sidebar-btn" onclick="closeSidebar()" class="md:hidden text-[#434654] hover:text-[#003fb1] p-1 rounded-lg">
+            <span class="material-symbols-outlined">close</span>
+        </button>
     </div>
 
     <!-- Navigation -->
-    <nav class="flex-1 px-3 py-4 space-y-1">
-        <a href="/admin" class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#434654] hover:bg-[#e7eeff] hover:text-[#003fb1] transition-colors">
-            <span class="material-symbols-outlined text-[22px]">dashboard</span>
-            <span class="font-medium">Dashboard</span>
+    <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+        <a href="/admin?tab=places" id="sidebar-nav-places" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-[#434654] hover:bg-[#e7eeff] hover:text-[#003fb1] transition-colors font-medium text-sm">
+            <span class="material-symbols-outlined text-[20px]">place</span>
+            <span>Manage Places</span>
         </a>
-        <a href="/admin?tab=places" class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#434654] hover:bg-[#e7eeff] hover:text-[#003fb1] transition-colors">
-            <span class="material-symbols-outlined text-[22px]">place</span>
-            <span class="font-medium">Manage Places</span>
+        <a href="/admin?tab=add" id="sidebar-nav-add" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-[#434654] hover:bg-[#e7eeff] hover:text-[#003fb1] transition-colors font-medium text-sm">
+            <span class="material-symbols-outlined text-[20px]">add_location</span>
+            <span>Add New Place</span>
         </a>
-        <a href="/admin?tab=add" class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#434654] hover:bg-[#e7eeff] hover:text-[#003fb1] transition-colors">
-            <span class="material-symbols-outlined text-[22px]">add_location</span>
-            <span class="font-medium">Add New Place</span>
+        <a href="/admin?tab=categories" id="sidebar-nav-categories" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-[#434654] hover:bg-[#e7eeff] hover:text-[#003fb1] transition-colors font-medium text-sm">
+            <span class="material-symbols-outlined text-[20px]">category</span>
+            <span>Categories</span>
         </a>
-        <a href="/admin?tab=categories" class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#434654] hover:bg-[#e7eeff] hover:text-[#003fb1] transition-colors">
-            <span class="material-symbols-outlined text-[22px]">category</span>
-            <span class="font-medium">Categories</span>
-        </a>
-        <a href="/admin?tab=plans" class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#434654] hover:bg-[#e7eeff] hover:text-[#003fb1] transition-colors">
-            <span class="material-symbols-outlined text-[22px]">event_note</span>
-            <span class="font-medium">User Plans</span>
+        <a href="/admin?tab=plans" id="sidebar-nav-plans" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-[#434654] hover:bg-[#e7eeff] hover:text-[#003fb1] transition-colors font-medium text-sm">
+            <span class="material-symbols-outlined text-[20px]">event_note</span>
+            <span>User Plans</span>
         </a>
     </nav>
 
-    <!-- User & Logout -->
+    <!-- User Profile & Logout -->
     <div class="border-t border-[#e7eeff] px-3 pt-3">
-        <div class="flex items-center gap-3 px-3 py-2">
-            <div class="w-8 h-8 rounded-full bg-[#003fb1] text-white flex items-center justify-center text-sm font-bold">
+        <div class="flex items-center gap-3 px-3 py-2 bg-[#f9f9ff] rounded-xl mb-2">
+            <div class="w-8 h-8 rounded-full bg-[#003fb1] text-white flex items-center justify-center text-sm font-bold shrink-0">
                 A
             </div>
-            <div>
-                <p class="text-sm font-semibold text-[#111c2d]">Admin</p>
-                <p class="text-xs text-[#434654]">admin@planner.com</p>
+            <div class="truncate">
+                <p class="text-sm font-semibold text-[#111c2d] truncate">Admin User</p>
+                <p class="text-xs text-[#434654] truncate">admin@planner.com</p>
             </div>
         </div>
-        <button id="admin-logout" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-red-500 hover:bg-red-50 transition-colors">
-            <span class="material-symbols-outlined text-[22px]">logout</span>
-            <span class="font-medium">Logout</span>
+        <button id="admin-logout" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-red-500 hover:bg-red-50 transition-colors font-medium text-sm">
+            <span class="material-symbols-outlined text-[20px]">logout</span>
+            <span>Logout</span>
         </button>
     </div>
 </aside>
