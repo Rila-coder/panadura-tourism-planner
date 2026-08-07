@@ -45,16 +45,29 @@ npm run dev
 
 
 
+
 ```
 panadura-tourism-planner
+├─ generate-hash.js
 ├─ package-lock.json
 ├─ package.json
 ├─ public
+│  ├─ admin.html
 │  ├─ assets
 │  │  └─ images
+│  │     ├─ Hero_Image.png
+│  │     └─ Logo.jpg
+│  ├─ components
+│  │  ├─ admin-sidebar.html
+│  │  ├─ footer.html
+│  │  └─ header.html
 │  ├─ css
 │  ├─ index.html
-│  └─ js
+│  ├─ js
+│  │  └─ maps-autocomplete.js
+│  ├─ place-details.html
+│  ├─ places.html
+│  └─ planner.html
 ├─ README.md
 ├─ server.js
 └─ src
@@ -65,6 +78,9 @@ panadura-tourism-planner
    ├─ middleware
    ├─ models
    └─ routes
-      └─ placeRoutes.js
+      ├─ adminRoutes.js
+      ├─ categoryRoutes.js
+      ├─ placeRoutes.js
+      └─ plannerRoutes.js
 
 ```
