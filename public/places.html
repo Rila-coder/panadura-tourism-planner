@@ -8,6 +8,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
@@ -22,31 +26,38 @@
             transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         .card-hover:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 60px rgba(0, 63, 177, 0.15);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(0, 63, 177, 0.15);
         }
         
         .filter-btn {
             background: #e7eeff;
             color: #111c2d;
             transition: all 0.3s ease;
-            padding: 8px 20px;
+            padding: 6px 16px;
             border-radius: 9999px;
             font-weight: 600;
             cursor: pointer;
             border: none;
-            font-size: 14px;
+            font-size: 13px;
             white-space: nowrap;
+            flex-shrink: 0;
+        }
+        @media (min-width: 640px) {
+            .filter-btn {
+                padding: 8px 20px;
+                font-size: 14px;
+            }
         }
         .filter-btn:hover {
             background: #1a56db;
             color: white;
-            transform: scale(1.05);
+            transform: scale(1.03);
         }
         .filter-btn.active {
             background: #003fb1;
             color: white;
-            box-shadow: 0 4px 20px rgba(0, 63, 177, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 63, 177, 0.3);
         }
         
         .bg-purple-100 { background: #f3e8ff; }
@@ -59,6 +70,8 @@
         .text-blue-800 { color: #1e40af; }
         .bg-yellow-100 { background: #fef3c7; }
         .text-yellow-800 { color: #854d0e; }
+        .bg-pink-100 { background: #fce7f3; }
+        .text-pink-800 { color: #9d174d; }
         .bg-gray-100 { background: #f3f4f6; }
         .text-gray-800 { color: #1f2937; }
         
@@ -89,8 +102,8 @@
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23434654' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 12px center;
-            background-size: 20px;
-            padding-right: 40px;
+            background-size: 18px;
+            padding-right: 36px;
         }
         .sort-select:focus {
             outline: none;
@@ -98,7 +111,7 @@
         }
     </style>
 </head>
-<body class="bg-[#f9f9ff] text-[#111c2d] min-h-screen flex flex-col antialiased">
+<body class="bg-[#f9f9ff] text-[#111c2d] min-h-screen flex flex-col antialiased overflow-x-hidden">
 
     <!-- ============================================= -->
     <!-- HEADER - Loaded from components -->
@@ -108,25 +121,27 @@
     <!-- ============================================= -->
     <!-- PAGE HEADER -->
     <!-- ============================================= -->
-    <section class="bg-gradient-to-b from-[#e7eeff] to-[#f9f9ff] pt-28 pb-10 px-4 md:px-16">
+    <section class="bg-gradient-to-b from-[#e7eeff] to-[#f9f9ff] pt-20 sm:pt-28 pb-6 sm:pb-10 px-4 sm:px-8 lg:px-16">
         <div class="max-w-7xl mx-auto text-center">
-            <span class="text-[#003fb1] font-semibold text-sm tracking-wider uppercase">Explore</span>
-            <h1 class="text-3xl md:text-5xl font-extrabold text-[#003fb1] mt-2">All Places in Panadura</h1>
-            <p class="text-lg text-[#434654] max-w-2xl mx-auto mt-3">Discover amazing places within 25km. Curated spots for nature lovers, foodies, and culture enthusiasts.</p>
+            <span class="text-[#003fb1] font-semibold text-xs sm:text-sm tracking-wider uppercase">Explore</span>
+            <h1 class="text-2xl sm:text-4xl md:text-5xl font-extrabold text-[#003fb1] mt-1 sm:mt-2">All Places in Panadura</h1>
+            <p class="text-xs sm:text-base md:text-lg text-[#434654] max-w-2xl mx-auto mt-2 sm:mt-3">Discover amazing destinations within a 25km radius. Curated spots for dining, nature, sports, and recreation.</p>
         </div>
     </section>
 
     <!-- ============================================= -->
     <!-- FILTER BAR -->
     <!-- ============================================= -->
-    <section class="px-4 md:px-16 py-4 sticky top-20 bg-[#f9f9ff]/95 backdrop-blur-sm z-40 border-b border-[#e7eeff]">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div class="flex overflow-x-auto w-full md:w-auto gap-2 pb-2 md:pb-0 hide-scrollbar">
+    <section class="px-4 sm:px-8 lg:px-16 py-3 sm:py-4 sticky top-16 sm:top-20 bg-[#f9f9ff]/95 backdrop-blur-sm z-40 border-b border-[#e7eeff]">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 sm:gap-4">
+            <!-- Filter Pills Horizontal Scroll -->
+            <div class="flex overflow-x-auto w-full sm:w-auto gap-2 pb-1 sm:pb-0 hide-scrollbar items-center">
                 <button class="filter-btn active" data-category="all" onclick="filterByCategory('all', this)">🏠 All</button>
                 <div id="category-filters" class="flex gap-2"></div>
             </div>
-            <div class="w-full md:w-auto relative">
-                <select id="sort-select" class="sort-select w-full md:w-48 bg-white border border-[#e7eeff] text-[#111c2d] py-2 pl-4 pr-10 rounded-xl focus:ring-2 focus:ring-[#003fb1] focus:border-transparent cursor-pointer font-medium">
+            <!-- Sort Dropdown -->
+            <div class="w-full sm:w-auto relative flex-shrink-0">
+                <select id="sort-select" class="sort-select w-full sm:w-48 bg-white border border-[#e7eeff] text-[#111c2d] py-2 pl-3.5 pr-9 rounded-xl focus:ring-2 focus:ring-[#003fb1] focus:border-transparent cursor-pointer font-medium text-xs sm:text-sm shadow-sm">
                     <option value="rating">⭐ Sort by: Rating</option>
                     <option value="name">📝 Sort by: Name</option>
                     <option value="fee">💰 Sort by: Price</option>
@@ -138,11 +153,11 @@
     <!-- ============================================= -->
     <!-- PLACES GRID -->
     <!-- ============================================= -->
-    <section class="px-4 md:px-16 py-8 max-w-7xl mx-auto w-full">
-        <div id="places-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <section class="px-4 sm:px-8 lg:px-16 py-6 sm:py-10 max-w-7xl mx-auto w-full">
+        <div id="places-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             <div id="loading" class="col-span-full text-center py-12">
-                <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-[#003fb1] border-t-transparent"></div>
-                <p class="mt-4 text-[#434654] font-medium">Loading amazing places...</p>
+                <div class="inline-block animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-4 border-[#003fb1] border-t-transparent"></div>
+                <p class="mt-4 text-[#434654] font-medium text-xs sm:text-sm">Loading amazing places...</p>
             </div>
         </div>
     </section>
@@ -157,23 +172,23 @@
     <!-- ============================================= -->
     <script>
         // =============================================
-// 1. Load Header Component & Execute Scripts
-// =============================================
-fetch('/components/header.html')
-    .then(res => res.text())
-    .then(html => {
-        const placeholder = document.getElementById('header-placeholder');
-        placeholder.innerHTML = html;
+        // 1. Load Header Component & Execute Scripts
+        // =============================================
+        fetch('/components/header.html')
+            .then(res => res.text())
+            .then(html => {
+                const placeholder = document.getElementById('header-placeholder');
+                placeholder.innerHTML = html;
 
-        // Manually execute inline scripts from component
-        const scripts = placeholder.querySelectorAll('script');
-        scripts.forEach(oldScript => {
-            const newScript = document.createElement('script');
-            newScript.textContent = oldScript.textContent;
-            document.body.appendChild(newScript);
-        });
-    })
-    .catch(err => console.error('Failed to load header component:', err));
+                // Manually execute inline scripts from component
+                const scripts = placeholder.querySelectorAll('script');
+                scripts.forEach(oldScript => {
+                    const newScript = document.createElement('script');
+                    newScript.textContent = oldScript.textContent;
+                    document.body.appendChild(newScript);
+                });
+            })
+            .catch(err => console.error('Failed to load header component:', err));
 
         // =============================================
         // 2. Load Footer Component
@@ -216,12 +231,19 @@ fetch('/components/header.html')
                         const btn = document.createElement('button');
                         btn.className = 'filter-btn';
                         btn.dataset.category = cat.category_id;
-                        btn.textContent = cat.name + ' (' + cat.place_count + ')';
+                        btn.textContent = cat.name + ' (' + (cat.place_count || 0) + ')';
                         btn.onclick = function() {
                             filterByCategory(this.dataset.category, this);
                         };
                         categoryFilters.appendChild(btn);
                     });
+
+                    // Check URL for preselected category or search
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const catParam = urlParams.get('category');
+                    if (catParam) {
+                        filterByCategory(catParam);
+                    }
                 }
             } catch (e) {
                 console.error('Error fetching categories:', e);
@@ -229,15 +251,13 @@ fetch('/components/header.html')
         }
 
         // =============================================
-        // 6. Filter by Category (Fixed)
+        // 6. Filter by Category
         // =============================================
         function filterByCategory(categoryId, button) {
-            // Update active state
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             if (button) {
                 button.classList.add('active');
             } else {
-                // If called without button, find and activate the matching button
                 const btns = document.querySelectorAll('.filter-btn');
                 btns.forEach(b => {
                     if (b.dataset.category == categoryId) {
@@ -259,13 +279,26 @@ fetch('/components/header.html')
                 const data = await res.json();
                 if (data.success) {
                     allPlaces = data.data;
+
+                    // Filter search query if present in URL
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const searchParam = urlParams.get('search');
+                    if (searchParam) {
+                        const query = searchParam.toLowerCase();
+                        allPlaces = allPlaces.filter(p => 
+                            p.title.toLowerCase().includes(query) || 
+                            (p.description && p.description.toLowerCase().includes(query)) ||
+                            (p.address && p.address.toLowerCase().includes(query))
+                        );
+                    }
+
                     renderPlaces();
                 } else {
                     throw new Error(data.message);
                 }
             } catch (e) {
                 console.error('Error fetching places:', e);
-                placesGrid.innerHTML = '<div class="col-span-full text-center py-12 text-red-500">Failed to load places. Please refresh.</div>';
+                placesGrid.innerHTML = '<div class="col-span-full text-center py-12 text-red-500 text-sm">Failed to load places. Please refresh.</div>';
             }
         }
 
@@ -297,68 +330,67 @@ fetch('/components/header.html')
 
             if (filtered.length === 0) {
                 placesGrid.innerHTML = `
-                    <div class="col-span-full text-center py-16">
-                        <span class="material-symbols-outlined text-6xl text-[#737686]">search_off</span>
-                        <p class="text-[#434654] mt-4 text-lg">No places found in this category</p>
+                    <div class="col-span-full text-center py-12 sm:py-16">
+                        <span class="material-symbols-outlined text-4xl sm:text-6xl text-[#737686]">search_off</span>
+                        <p class="text-[#434654] mt-3 sm:mt-4 text-sm sm:text-lg">No places found in this selection</p>
                         <button onclick="filterByCategory('all', document.querySelector('.filter-btn[data-category=\\'all\\']'))" 
-                                class="mt-4 bg-[#003fb1] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#1a56db] transition-colors">
+                                class="mt-3 sm:mt-4 bg-[#003fb1] text-white px-5 sm:px-6 py-2 rounded-xl text-xs sm:text-sm font-semibold hover:bg-[#1a56db] transition-colors shadow-md">
                             View All Places
                         </button>
                     </div>
                 `;
-                loadingEl.style.display = 'none';
+                if (loadingEl) loadingEl.style.display = 'none';
                 return;
             }
 
             let html = '';
             filtered.forEach(place => {
                 const colors = {
-                    'Religious': 'bg-purple-100 text-purple-800',
-                    'Nature': 'bg-green-100 text-green-800',
-                    'Dining': 'bg-orange-100 text-orange-800',
-                    'Sports': 'bg-blue-100 text-blue-800',
-                    'Heritage': 'bg-yellow-100 text-yellow-800'
+                    'Sports & Recreation': 'bg-blue-100 text-blue-800',
+                    'Dining & Leisure': 'bg-orange-100 text-orange-800',
+                    'Hospitality & Food Stop': 'bg-yellow-100 text-yellow-800',
+                    'Nature & Scenic Spot': 'bg-green-100 text-green-800',
+                    'Bakery & Quick Dining': 'bg-pink-100 text-pink-800',
+                    'Culinary & Family Dining': 'bg-orange-100 text-orange-800',
+                    'Outdoor Recreation & Nature': 'bg-green-100 text-green-800'
                 };
                 const color = colors[place.category_name] || 'bg-gray-100 text-gray-800';
                 const fee = place.entry_fee > 0 ? 'Rs. ' + place.entry_fee : 'Free Entry';
                 const rating = place.rating || 0;
-                const fullStars = Math.floor(rating);
-                const emptyStars = 5 - fullStars;
-                const stars = '★'.repeat(fullStars) + '☆'.repeat(emptyStars);
                 const imageUrl = place.image_url || PLACEHOLDER;
 
                 html += `
                     <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-[#e7eeff] card-hover transition-all duration-300 flex flex-col group">
-                        <div class="relative h-56 w-full overflow-hidden">
+                        <div class="relative h-48 sm:h-56 w-full overflow-hidden">
                             <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                                  src="${imageUrl}" 
                                  alt="${place.title}"
                                  onerror="this.src='${PLACEHOLDER}'">
-                            <div class="absolute top-3 left-3">
-                                <span class="${color} px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm">${place.category_name || 'Uncategorized'}</span>
+                            <div class="absolute top-2.5 left-2.5 sm:top-3 sm:left-3">
+                                <span class="${color} px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[10px] sm:text-xs font-semibold backdrop-blur-sm">${place.category_name || 'Uncategorized'}</span>
                             </div>
                             ${place.is_featured ? 
-                                '<div class="absolute top-3 right-3"><span class="bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-xs font-bold badge-pulse">★ Featured</span></div>' 
+                                '<div class="absolute top-2.5 right-2.5 sm:top-3 sm:right-3"><span class="bg-yellow-400 text-yellow-900 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold badge-pulse">★ Featured</span></div>' 
                                 : ''}
-                            <div class="absolute bottom-3 right-3 bg-black/50 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full">
+                            <div class="absolute bottom-2.5 right-2.5 sm:bottom-3 sm:right-3 bg-black/60 backdrop-blur-sm text-white text-[10px] sm:text-xs px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full">
                                 ${place.avg_duration || 60} min
                             </div>
                         </div>
-                        <div class="p-5 flex-grow flex flex-col bg-white">
-                            <h2 class="text-xl font-bold text-[#111c2d] mb-1 line-clamp-1 group-hover:text-[#003fb1] transition-colors">${place.title}</h2>
-                            <p class="text-sm text-[#434654] mb-3 line-clamp-2 flex-grow">${place.description || 'No description available'}</p>
-                            <div class="flex flex-wrap items-center gap-3 text-xs text-[#434654] mb-3 bg-[#f0f3ff] p-3 rounded-xl">
-                                <span class="flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-[16px] text-yellow-500 fill">star</span>
+                        <div class="p-4 sm:p-5 flex-grow flex flex-col bg-white">
+                            <h2 class="text-base sm:text-xl font-bold text-[#111c2d] mb-1 line-clamp-1 group-hover:text-[#003fb1] transition-colors">${place.title}</h2>
+                            <p class="text-xs sm:text-sm text-[#434654] mb-3 line-clamp-2 flex-grow">${place.description || 'No description available'}</p>
+                            <div class="flex flex-wrap items-center gap-2 sm:gap-3 text-[10px] sm:text-xs text-[#434654] mb-3 bg-[#f0f3ff] p-2.5 sm:p-3 rounded-xl">
+                                <span class="flex items-center gap-1 font-semibold">
+                                    <span class="material-symbols-outlined text-sm sm:text-[16px] text-yellow-500 fill">star</span>
                                     ${rating} (${place.total_reviews || 0})
                                 </span>
-                                <span class="flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-[16px] text-[#003fb1]">location_on</span>
+                                <span class="flex items-center gap-1 truncate max-w-[120px] sm:max-w-none">
+                                    <span class="material-symbols-outlined text-sm sm:text-[16px] text-[#003fb1]">location_on</span>
                                     ${place.latitude}, ${place.longitude}
                                 </span>
-                                <span class="ml-auto font-semibold text-[#006c4a]">${fee}</span>
+                                <span class="ml-auto font-bold text-[#006c4a]">${fee}</span>
                             </div>
-                            <a href="/place/${place.place_id}" class="w-full bg-[#003fb1] text-white text-center font-semibold py-2.5 rounded-xl hover:bg-[#1a56db] transition-all duration-300 shadow-md hover:shadow-lg">
+                            <a href="/place/${place.place_id}" class="w-full bg-[#003fb1] text-white text-center font-semibold py-2 sm:py-2.5 rounded-xl hover:bg-[#1a56db] transition-all duration-300 shadow-md text-xs sm:text-sm">
                                 View Details →
                             </a>
                         </div>
@@ -367,16 +399,18 @@ fetch('/components/header.html')
             });
 
             placesGrid.innerHTML = html;
-            loadingEl.style.display = 'none';
+            if (loadingEl) loadingEl.style.display = 'none';
         }
 
         // =============================================
         // 9. Sort Change Handler
         // =============================================
-        sortSelect.addEventListener('change', function() {
-            currentSort = this.value;
-            renderPlaces();
-        });
+        if (sortSelect) {
+            sortSelect.addEventListener('change', function() {
+                currentSort = this.value;
+                renderPlaces();
+            });
+        }
 
         // =============================================
         // 10. Initialize
