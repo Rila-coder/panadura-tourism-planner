@@ -20,6 +20,13 @@
 
     <!-- Navigation -->
     <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+        <!-- Return to Main Home Website Link -->
+        <a href="/" target="_blank" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-[#003fb1] bg-[#f0f3ff] hover:bg-[#e7eeff] transition-colors font-semibold text-sm mb-3 border border-[#dbeafe]">
+            <span class="material-symbols-outlined text-[20px]">language</span>
+            <span>View Live Site</span>
+            <span class="material-symbols-outlined text-[16px] ml-auto">open_in_new</span>
+        </a>
+
         <a href="/admin?tab=places" id="sidebar-nav-places" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-[#434654] hover:bg-[#e7eeff] hover:text-[#003fb1] transition-colors font-medium text-sm">
             <span class="material-symbols-outlined text-[20px]">place</span>
             <span>Manage Places</span>
@@ -61,27 +68,24 @@
     document.addEventListener('DOMContentLoaded', function() {
         // Highlight current page in sidebar
         const currentPath = window.location.pathname + window.location.search;
-        const sidebarLinks = document.querySelectorAll('a');
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
         sidebarLinks.forEach(link => {
             const href = link.getAttribute('href');
-            if (href && currentPath.includes(href)) {
+            if (href && href !== '/' && currentPath.includes(href)) {
                 link.classList.add('bg-[#e7eeff]', 'text-[#003fb1]');
                 link.classList.remove('text-[#434654]');
             }
         });
 
-        // ✅ FIXED: Logout functionality
+        // Logout functionality
         const logoutBtn = document.getElementById('admin-logout');
         if (logoutBtn) {
             logoutBtn.addEventListener('click', function(e) {
                 e.preventDefault();
-                // Clear token from localStorage
                 localStorage.removeItem('adminToken');
-                // Show toast message if available
                 if (typeof showToast === 'function') {
                     showToast('Logged out successfully', 'info');
                 }
-                // Redirect to login page after short delay
                 setTimeout(function() {
                     window.location.href = '/admin';
                 }, 500);
