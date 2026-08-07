@@ -8,6 +8,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
@@ -19,8 +23,8 @@
             transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         .card-hover:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 60px rgba(0, 63, 177, 0.15);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 63, 177, 0.12);
         }
         
         .bg-purple-100 { background: #f3e8ff; }
@@ -46,7 +50,7 @@
         }
         
         .hero-gradient {
-            background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.7) 100%);
+            background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.8) 100%);
         }
         
         .info-card {
@@ -60,17 +64,27 @@
         /* Toast Notification */
         .toast {
             position: fixed;
-            top: 100px;
-            right: 20px;
+            top: 80px;
+            right: 16px;
             z-index: 9999;
-            padding: 16px 24px;
-            border-radius: 16px;
-            min-width: 300px;
-            max-width: 450px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            padding: 12px 20px;
+            border-radius: 12px;
+            min-width: 280px;
+            max-width: 400px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
             transform: translateX(120%);
             transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             backdrop-filter: blur(20px);
+        }
+        @media (min-width: 640px) {
+            .toast {
+                top: 100px;
+                right: 20px;
+                padding: 16px 24px;
+                min-width: 300px;
+                max-width: 450px;
+                border-radius: 16px;
+            }
         }
         .toast.show {
             transform: translateX(0);
@@ -91,8 +105,14 @@
             color: #1e40af;
         }
         .toast .toast-icon {
-            font-size: 24px;
-            margin-right: 12px;
+            font-size: 20px;
+            margin-right: 8px;
+        }
+        @media (min-width: 640px) {
+            .toast .toast-icon {
+                font-size: 24px;
+                margin-right: 12px;
+            }
         }
         .toast .toast-close {
             cursor: pointer;
@@ -117,7 +137,7 @@
         }
     </style>
 </head>
-<body class="bg-[#f9f9ff] text-[#111c2d] min-h-screen flex flex-col antialiased">
+<body class="bg-[#f9f9ff] text-[#111c2d] min-h-screen flex flex-col antialiased overflow-x-hidden">
 
     <!-- ============================================= -->
     <!-- TOAST NOTIFICATION -->
@@ -126,9 +146,9 @@
         <div class="flex items-center justify-between">
             <div class="flex items-center">
                 <span id="toast-icon" class="toast-icon material-symbols-outlined">check_circle</span>
-                <span id="toast-message" class="font-medium">Success!</span>
+                <span id="toast-message" class="font-medium text-xs sm:text-base">Success!</span>
             </div>
-            <span id="toast-close" class="toast-close material-symbols-outlined text-sm">close</span>
+            <span id="toast-close" class="toast-close material-symbols-outlined text-xs sm:text-sm">close</span>
         </div>
     </div>
 
@@ -140,42 +160,42 @@
     <!-- ============================================= -->
     <!-- MAIN CONTENT -->
     <!-- ============================================= -->
-    <main class="flex-grow pt-20">
+    <main class="flex-grow pt-16 sm:pt-20">
 
         <!-- Loading State -->
-        <div id="loading" class="text-center py-20">
-            <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-[#003fb1] border-t-transparent"></div>
-            <p class="mt-4 text-[#434654] font-medium">Loading place details...</p>
+        <div id="loading" class="text-center py-16 sm:py-24">
+            <div class="inline-block animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-4 border-[#003fb1] border-t-transparent"></div>
+            <p class="mt-4 text-[#434654] font-medium text-xs sm:text-base">Loading place details...</p>
         </div>
 
         <!-- Place Details -->
         <div id="place-details" style="display:none;">
             
             <!-- Back Button -->
-            <div class="max-w-7xl mx-auto px-4 md:px-16 py-4">
-                <a href="/places" class="inline-flex items-center text-[#003fb1] font-semibold hover:underline group">
-                    <span class="material-symbols-outlined mr-1 group-hover:-translate-x-1 transition-transform">arrow_back</span>
+            <div class="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 py-3 sm:py-4">
+                <a href="/places" class="inline-flex items-center text-[#003fb1] font-semibold hover:underline group text-xs sm:text-sm">
+                    <span class="material-symbols-outlined text-sm sm:text-base mr-1 group-hover:-translate-x-1 transition-transform">arrow_back</span>
                     Back to Places
                 </a>
             </div>
 
             <!-- Hero Section -->
-            <div class="relative w-full h-[55vh] min-h-[350px] max-h-[600px] bg-[#e7eeff] overflow-hidden">
+            <div class="relative w-full h-[40vh] sm:h-[50vh] lg:h-[55vh] min-h-[280px] max-h-[550px] bg-[#e7eeff] overflow-hidden">
                 <!-- Background Image -->
-                <img id="detail-image" class="w-full h-full object-cover" src="" alt="">
+                <img id="detail-image" class="w-full h-full object-cover object-center" src="" alt="">
                 <div class="absolute inset-0 hero-gradient"></div>
                 
                 <!-- Category Badge & Title -->
-                <div class="absolute bottom-0 left-0 w-full px-4 md:px-16 pb-10 max-w-7xl mx-auto">
-                    <span id="detail-category" class="inline-block px-4 py-1.5 rounded-full text-xs font-semibold mb-3 backdrop-blur-sm"></span>
-                    <h1 id="detail-title" class="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white drop-shadow-2xl leading-tight"></h1>
-                    <div class="flex items-center gap-4 mt-3 text-white/80">
-                        <span id="detail-rating-badge" class="flex items-center gap-1 bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full text-sm">
-                            <span class="material-symbols-outlined text-yellow-400 text-sm fill">star</span>
+                <div class="absolute bottom-0 left-0 w-full px-4 sm:px-8 lg:px-16 pb-6 sm:pb-10 max-w-7xl mx-auto">
+                    <span id="detail-category" class="inline-block px-3 py-1 sm:px-4 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold mb-2 sm:mb-3 backdrop-blur-sm"></span>
+                    <h1 id="detail-title" class="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white drop-shadow-2xl leading-tight"></h1>
+                    <div class="flex flex-wrap items-center gap-2 sm:gap-4 mt-2 sm:mt-3 text-white/90">
+                        <span id="detail-rating-badge" class="flex items-center gap-1 bg-black/40 backdrop-blur-sm px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm">
+                            <span class="material-symbols-outlined text-yellow-400 text-xs sm:text-sm fill">star</span>
                             <span id="detail-rating-text">0</span>
                         </span>
-                        <span id="detail-duration-badge" class="flex items-center gap-1 bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full text-sm">
-                            <span class="material-symbols-outlined text-sm">schedule</span>
+                        <span id="detail-duration-badge" class="flex items-center gap-1 bg-black/40 backdrop-blur-sm px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm">
+                            <span class="material-symbols-outlined text-xs sm:text-sm">schedule</span>
                             <span id="detail-duration-text">0 min</span>
                         </span>
                     </div>
@@ -183,63 +203,63 @@
             </div>
 
             <!-- Content -->
-            <section class="max-w-7xl mx-auto px-4 md:px-16 py-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <section class="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 py-6 sm:py-10 grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
                 
                 <!-- Left Column - Details -->
                 <div class="lg:col-span-2 space-y-6">
                     <!-- Description -->
-                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-[#e7eeff] card-hover">
-                        <h2 class="text-xl font-bold text-[#111c2d] mb-3 flex items-center gap-2">
-                            <span class="material-symbols-outlined text-[#003fb1]">description</span>
+                    <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-[#e7eeff] card-hover">
+                        <h2 class="text-lg sm:text-xl font-bold text-[#111c2d] mb-2 sm:mb-3 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[#003fb1] text-lg sm:text-xl">description</span>
                             About This Place
                         </h2>
-                        <p id="detail-description" class="text-[#434654] leading-relaxed"></p>
+                        <p id="detail-description" class="text-xs sm:text-base text-[#434654] leading-relaxed"></p>
                     </div>
 
                     <!-- Quick Info -->
-                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-[#e7eeff]">
-                        <h2 class="text-xl font-bold text-[#111c2d] mb-4 flex items-center gap-2">
-                            <span class="material-symbols-outlined text-[#003fb1]">info</span>
+                    <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-[#e7eeff]">
+                        <h2 class="text-lg sm:text-xl font-bold text-[#111c2d] mb-3 sm:mb-4 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[#003fb1] text-lg sm:text-xl">info</span>
                             Essential Info
                         </h2>
-                        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                            <div class="info-card bg-[#f9f9ff] rounded-xl p-3 text-center">
-                                <p class="text-xs text-[#434654]">Entry Fee</p>
-                                <p id="detail-fee" class="font-bold text-[#006c4a] text-lg"></p>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3">
+                            <div class="info-card bg-[#f9f9ff] rounded-xl p-2.5 sm:p-3 text-center">
+                                <p class="text-[10px] sm:text-xs text-[#434654]">Entry Fee</p>
+                                <p id="detail-fee" class="font-bold text-[#006c4a] text-sm sm:text-lg mt-0.5"></p>
                             </div>
-                            <div class="info-card bg-[#f9f9ff] rounded-xl p-3 text-center">
-                                <p class="text-xs text-[#434654]">Opening Hours</p>
-                                <p id="detail-hours" class="font-semibold text-sm"></p>
+                            <div class="info-card bg-[#f9f9ff] rounded-xl p-2.5 sm:p-3 text-center">
+                                <p class="text-[10px] sm:text-xs text-[#434654]">Opening Hours</p>
+                                <p id="detail-hours" class="font-semibold text-xs sm:text-sm mt-0.5"></p>
                             </div>
-                            <div class="info-card bg-[#f9f9ff] rounded-xl p-3 text-center">
-                                <p class="text-xs text-[#434654]">Best Time</p>
-                                <p id="detail-best-time" class="font-semibold text-sm"></p>
+                            <div class="info-card bg-[#f9f9ff] rounded-xl p-2.5 sm:p-3 text-center">
+                                <p class="text-[10px] sm:text-xs text-[#434654]">Best Time</p>
+                                <p id="detail-best-time" class="font-semibold text-xs sm:text-sm mt-0.5"></p>
                             </div>
-                            <div class="info-card bg-[#f9f9ff] rounded-xl p-3 text-center">
-                                <p class="text-xs text-[#434654]">Parking</p>
-                                <p id="detail-parking" class="font-semibold text-sm"></p>
+                            <div class="info-card bg-[#f9f9ff] rounded-xl p-2.5 sm:p-3 text-center">
+                                <p class="text-[10px] sm:text-xs text-[#434654]">Parking</p>
+                                <p id="detail-parking" class="font-semibold text-xs sm:text-sm mt-0.5"></p>
                             </div>
-                            <div class="info-card bg-[#f9f9ff] rounded-xl p-3 text-center">
-                                <p class="text-xs text-[#434654]">Duration</p>
-                                <p id="detail-duration" class="font-semibold text-sm"></p>
+                            <div class="info-card bg-[#f9f9ff] rounded-xl p-2.5 sm:p-3 text-center">
+                                <p class="text-[10px] sm:text-xs text-[#434654]">Duration</p>
+                                <p id="detail-duration" class="font-semibold text-xs sm:text-sm mt-0.5"></p>
                             </div>
-                            <div class="info-card bg-[#f9f9ff] rounded-xl p-3 text-center">
-                                <p class="text-xs text-[#434654]">Rating</p>
-                                <p id="detail-rating" class="font-semibold text-yellow-600 text-sm"></p>
+                            <div class="info-card bg-[#f9f9ff] rounded-xl p-2.5 sm:p-3 text-center">
+                                <p class="text-[10px] sm:text-xs text-[#434654]">Rating</p>
+                                <p id="detail-rating" class="font-semibold text-yellow-600 text-xs sm:text-sm mt-0.5"></p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Location & Map -->
-                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-[#e7eeff]">
-                        <h2 class="text-xl font-bold text-[#111c2d] mb-3 flex items-center gap-2">
-                            <span class="material-symbols-outlined text-[#003fb1]">location_on</span>
+                    <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-[#e7eeff]">
+                        <h2 class="text-lg sm:text-xl font-bold text-[#111c2d] mb-3 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[#003fb1] text-lg sm:text-xl">location_on</span>
                             Location &amp; Map
                         </h2>
                         
                         <!-- Address -->
-                        <div class="bg-[#f0f3ff] rounded-xl p-4 text-sm text-[#434654] flex items-start gap-2">
-                            <span class="material-symbols-outlined text-[#003fb1] text-sm mt-0.5">location_on</span>
+                        <div class="bg-[#f0f3ff] rounded-xl p-3 sm:p-4 text-xs sm:text-sm text-[#434654] flex items-start gap-2">
+                            <span class="material-symbols-outlined text-[#003fb1] text-base mt-0.5 shrink-0">location_on</span>
                             <div>
                                 <span class="font-semibold">Address:</span>
                                 <span id="detail-address" class="ml-1"></span>
@@ -247,18 +267,18 @@
                         </div>
                         
                         <!-- Coordinates -->
-                        <div style="display: none;" class="mt-2 bg-[#f0f3ff] rounded-xl p-4 text-sm text-[#434654] flex items-center gap-2">
-                            <span class="material-symbols-outlined text-[#003fb1] text-sm">pin_drop</span>
+                        <div style="display: none;" class="mt-2 bg-[#f0f3ff] rounded-xl p-3 sm:p-4 text-xs sm:text-sm text-[#434654] flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[#003fb1] text-base shrink-0">pin_drop</span>
                             <span class="font-semibold">Coordinates:</span> 
                             <span id="detail-coordinates"></span>
                         </div>
                         
                         <!-- Google Map -->
-                        <div class="mt-4 map-container">
-                            <div id="map-placeholder" class="w-full h-[250px] bg-[#e7eeff] rounded-xl flex items-center justify-center text-[#737686]">
+                        <div class="mt-3 sm:mt-4 map-container">
+                            <div id="map-placeholder" class="w-full h-[200px] sm:h-[250px] bg-[#e7eeff] rounded-xl flex items-center justify-center text-[#737686]">
                                 <div class="text-center">
-                                    <span class="material-symbols-outlined text-5xl">map</span>
-                                    <p class="mt-2 text-sm">Loading map...</p>
+                                    <span class="material-symbols-outlined text-4xl sm:text-5xl">map</span>
+                                    <p class="mt-2 text-xs sm:text-sm">Loading map...</p>
                                 </div>
                             </div>
                         </div>
@@ -267,39 +287,39 @@
 
                 <!-- Right Column - Actions -->
                 <div class="lg:col-span-1 space-y-4">
-                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-[#e7eeff] sticky top-24">
-                        <h3 class="font-bold text-lg text-[#111c2d] mb-4 flex items-center gap-2">
+                    <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-[#e7eeff] lg:sticky lg:top-24">
+                        <h3 class="font-bold text-base sm:text-lg text-[#111c2d] mb-3 sm:mb-4 flex items-center gap-2">
                             <span class="material-symbols-outlined text-[#003fb1]">event_note</span>
                             Plan Your Visit
                         </h3>
-                        <button id="add-to-planner" class="w-full bg-[#003fb1] text-white py-3 rounded-xl font-semibold hover:bg-[#1a56db] transition-all duration-300 flex items-center justify-center gap-2 shadow-md hover:shadow-lg">
-                            <span class="material-symbols-outlined">add</span>
+                        <button id="add-to-planner" class="w-full bg-[#003fb1] text-white py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-semibold hover:bg-[#1a56db] transition-all duration-300 flex items-center justify-center gap-2 shadow-md hover:shadow-lg">
+                            <span class="material-symbols-outlined text-sm sm:text-base">add</span>
                             Add to Itinerary
                         </button>
-                        <button id="get-directions" class="w-full mt-3 border-2 border-[#003fb1] text-[#003fb1] py-3 rounded-xl font-semibold hover:bg-[#e7eeff] transition-all duration-300 flex items-center justify-center gap-2">
-                            <span class="material-symbols-outlined">directions</span>
+                        <button id="get-directions" class="w-full mt-2.5 sm:mt-3 border-2 border-[#003fb1] text-[#003fb1] py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-semibold hover:bg-[#e7eeff] transition-all duration-300 flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-sm sm:text-base">directions</span>
                             Get Directions
                         </button>
                         <div class="mt-4 pt-4 border-t border-[#e7eeff] text-center">
-                            <p class="text-xs text-[#434654]">Share this place</p>
-                            <div class="flex justify-center gap-3 mt-2">
-                                <button onclick="sharePlace('whatsapp')" class="share-btn w-10 h-10 rounded-full bg-[#25D366] text-white flex items-center justify-center hover:shadow-lg transition-all">
-                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <p class="text-[10px] sm:text-xs text-[#434654]">Share this place</p>
+                            <div class="flex justify-center gap-2.5 sm:gap-3 mt-2">
+                                <button onclick="sharePlace('whatsapp')" class="share-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#25D366] text-white flex items-center justify-center hover:shadow-lg transition-all">
+                                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                                     </svg>
                                 </button>
-                                <button onclick="sharePlace('facebook')" class="share-btn w-10 h-10 rounded-full bg-[#1877F2] text-white flex items-center justify-center hover:shadow-lg transition-all">
-                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <button onclick="sharePlace('facebook')" class="share-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#1877F2] text-white flex items-center justify-center hover:shadow-lg transition-all">
+                                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                                     </svg>
                                 </button>
-                                <button onclick="sharePlace('twitter')" class="share-btn w-10 h-10 rounded-full bg-black text-white flex items-center justify-center hover:shadow-lg transition-all">
-                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <button onclick="sharePlace('twitter')" class="share-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black text-white flex items-center justify-center hover:shadow-lg transition-all">
+                                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                                     </svg>
                                 </button>
-                                <button onclick="sharePlace('copy')" class="share-btn w-10 h-10 rounded-full bg-[#6c757d] text-white flex items-center justify-center hover:shadow-lg transition-all">
-                                    <span class="material-symbols-outlined text-sm">content_copy</span>
+                                <button onclick="sharePlace('copy')" class="share-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#6c757d] text-white flex items-center justify-center hover:shadow-lg transition-all">
+                                    <span class="material-symbols-outlined text-xs sm:text-sm">content_copy</span>
                                 </button>
                             </div>
                         </div>
@@ -308,14 +328,14 @@
             </section>
 
             <!-- Nearby Places -->
-            <section class="max-w-7xl mx-auto px-4 md:px-16 pb-16">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-[#111c2d] flex items-center gap-2">
-                        <span class="material-symbols-outlined text-[#003fb1]">near_me</span>
+            <section class="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 pb-12 sm:pb-16">
+                <div class="flex justify-between items-center mb-4 sm:mb-6">
+                    <h2 class="text-lg sm:text-2xl font-bold text-[#111c2d] flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[#003fb1] text-lg sm:text-2xl">near_me</span>
                         Nearby Places You May Like
                     </h2>
                 </div>
-                <div id="nearby-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div id="nearby-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                     <!-- Nearby places loaded by JavaScript -->
                 </div>
             </section>
@@ -401,33 +421,46 @@
         }
 
         // =============================================
-// 1. Load Header Component & Execute Scripts
-// =============================================
-fetch('/components/header.html')
-    .then(res => res.text())
-    .then(html => {
-        const placeholder = document.getElementById('header-placeholder');
-        placeholder.innerHTML = html;
+        // 3. Load Header Component & Execute Scripts
+        // =============================================
+        fetch('/components/header.html')
+            .then(res => res.text())
+            .then(html => {
+                const placeholder = document.getElementById('header-placeholder');
+                placeholder.innerHTML = html;
 
-        // Manually execute inline scripts from component
-        const scripts = placeholder.querySelectorAll('script');
-        scripts.forEach(oldScript => {
-            const newScript = document.createElement('script');
-            newScript.textContent = oldScript.textContent;
-            document.body.appendChild(newScript);
-        });
-    })
-    .catch(err => console.error('Failed to load header component:', err));
+                // Manually execute inline scripts from component
+                const scripts = placeholder.querySelectorAll('script');
+                scripts.forEach(oldScript => {
+                    const newScript = document.createElement('script');
+                    newScript.textContent = oldScript.textContent;
+                    document.body.appendChild(newScript);
+                });
+            })
+            .catch(err => console.error('Failed to load header component:', err));
 
         // =============================================
         // 4. Load Footer Component
         // =============================================
-        fetch('/components/footer.html')
-            .then(res => res.text())
-            .then(html => {
-                document.getElementById('footer-placeholder').innerHTML = html;
-            })
-            .catch(() => console.error('Failed to load footer'));
+// Load Footer Component & Execute Embedded Scripts
+// =============================================
+fetch('/components/footer.html')
+    .then(res => res.text())
+    .then(html => {
+        const placeholder = document.getElementById('footer-placeholder');
+        if (placeholder) {
+            placeholder.innerHTML = html;
+
+            // Manually execute inline scripts from footer component
+            const scripts = placeholder.querySelectorAll('script');
+            scripts.forEach(oldScript => {
+                const newScript = document.createElement('script');
+                newScript.textContent = oldScript.textContent;
+                document.body.appendChild(newScript);
+            });
+        }
+    })
+    .catch(err => console.error('Failed to load footer component:', err));
 
         // =============================================
         // 5. Get Place ID from URL
@@ -449,12 +482,12 @@ fetch('/components/header.html')
                 if (data.success) {
                     displayPlace(data.data);
                 } else {
-                    document.getElementById('loading').innerHTML = '<p class="text-red-500">Place not found.</p>';
+                    document.getElementById('loading').innerHTML = '<p class="text-red-500 text-sm">Place not found.</p>';
                     showToast('Place not found', 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                document.getElementById('loading').innerHTML = '<p class="text-red-500">Failed to load place details.</p>';
+                document.getElementById('loading').innerHTML = '<p class="text-red-500 text-sm">Failed to load place details.</p>';
                 showToast('Failed to load place details', 'error');
             }
         }
@@ -463,17 +496,17 @@ fetch('/components/header.html')
         // 7. Display Place Details
         // =============================================
         function displayPlace(place) {
-            // Hide loading, show details
             document.getElementById('loading').style.display = 'none';
             document.getElementById('place-details').style.display = 'block';
 
-            // Category colors
             const colors = {
-                'Religious': 'bg-purple-100 text-purple-800',
-                'Nature': 'bg-green-100 text-green-800',
-                'Dining': 'bg-orange-100 text-orange-800',
-                'Sports': 'bg-blue-100 text-blue-800',
-                'Heritage': 'bg-yellow-100 text-yellow-800'
+                'Sports & Recreation': 'bg-blue-100 text-blue-800',
+                'Dining & Leisure': 'bg-orange-100 text-orange-800',
+                'Hospitality & Food Stop': 'bg-yellow-100 text-yellow-800',
+                'Nature & Scenic Spot': 'bg-green-100 text-green-800',
+                'Bakery & Quick Dining': 'bg-pink-100 text-pink-800',
+                'Culinary & Family Dining': 'bg-orange-100 text-orange-800',
+                'Outdoor Recreation & Nature': 'bg-green-100 text-green-800'
             };
             const colorClass = colors[place.category_name] || 'bg-gray-100 text-gray-800';
 
@@ -483,7 +516,7 @@ fetch('/components/header.html')
             document.getElementById('detail-image').onerror = function() { this.src = PLACEHOLDER; };
 
             // Category badge
-            document.getElementById('detail-category').className = 'inline-block px-4 py-1.5 rounded-full text-xs font-semibold ' + colorClass + ' mb-3 backdrop-blur-sm';
+            document.getElementById('detail-category').className = 'inline-block px-3 py-1 sm:px-4 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold ' + colorClass + ' mb-2 sm:mb-3 backdrop-blur-sm';
             document.getElementById('detail-category').textContent = place.category_name || 'Uncategorized';
             
             // Title
@@ -518,18 +551,18 @@ fetch('/components/header.html')
             if (place.nearby_places && place.nearby_places.length > 0) {
                 renderNearby(place.nearby_places);
             } else {
-                document.getElementById('nearby-grid').innerHTML = '<p class="text-[#434654]">No nearby places found.</p>';
+                document.getElementById('nearby-grid').innerHTML = '<p class="text-[#434654] text-xs sm:text-sm">No nearby places found.</p>';
             }
 
             // Update page title
             document.title = place.title + ' - Panadura Day Planner';
             
-            // Store current place data for "Add to Itinerary" button
+            // Store current place data for "Add to Itinerary"
             window.currentPlace = place;
         }
 
         // =============================================
-        // 8. Load Google Map (Free Search Embed - No API Key Needed)
+        // 8. Load Google Map
         // =============================================
         function loadMap(lat, lng, title) {
             const mapContainer = document.getElementById('map-placeholder');
@@ -537,8 +570,8 @@ fetch('/components/header.html')
             if (!lat || !lng) {
                 mapContainer.innerHTML = `
                     <div class="text-center">
-                        <span class="material-symbols-outlined text-5xl">map</span>
-                        <p class="mt-2 text-sm text-[#434654]">Location coordinates not available</p>
+                        <span class="material-symbols-outlined text-4xl sm:text-5xl">map</span>
+                        <p class="mt-2 text-xs sm:text-sm text-[#434654]">Location coordinates not available</p>
                     </div>
                 `;
                 return;
@@ -571,13 +604,13 @@ fetch('/components/header.html')
                 const imageUrl = place.image_url || PLACEHOLDER;
                 html += `
                     <a href="/place/${place.place_id}" class="bg-white rounded-2xl overflow-hidden shadow-sm border border-[#e7eeff] card-hover transition-all duration-300 hover:no-underline group">
-                        <img src="${imageUrl}" alt="${place.title}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='${PLACEHOLDER}'">
+                        <img src="${imageUrl}" alt="${place.title}" class="w-full h-40 sm:h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='${PLACEHOLDER}'">
                         <div class="p-4">
-                            <h3 class="font-bold text-[#111c2d] group-hover:text-[#003fb1] transition-colors">${place.title}</h3>
-                            <p class="text-sm text-[#434654]">${place.category_name || ''}</p>
-                            <div class="flex justify-between items-center mt-3 pt-3 border-t border-[#e7eeff]">
-                                <span class="text-sm font-semibold text-[#006c4a]">${fee}</span>
-                                <span class="text-sm text-[#434654]">⭐ ${place.rating || 0}</span>
+                            <h3 class="font-bold text-[#111c2d] text-sm sm:text-base group-hover:text-[#003fb1] transition-colors">${place.title}</h3>
+                            <p class="text-xs sm:text-sm text-[#434654] mt-0.5">${place.category_name || ''}</p>
+                            <div class="flex justify-between items-center mt-3 pt-2.5 border-t border-[#e7eeff]">
+                                <span class="text-xs sm:text-sm font-semibold text-[#006c4a]">${fee}</span>
+                                <span class="text-xs sm:text-sm text-[#434654]">⭐ ${place.rating || 0}</span>
                             </div>
                         </div>
                     </a>
@@ -588,7 +621,7 @@ fetch('/components/header.html')
         }
 
         // =============================================
-        // 10. Add to Planner Button - NOW WITH LOCAL STORAGE
+        // 10. Add to Planner Button (Local Storage)
         // =============================================
         document.getElementById('add-to-planner').addEventListener('click', function() {
             const place = window.currentPlace;
@@ -598,10 +631,7 @@ fetch('/components/header.html')
                 return;
             }
 
-            // Get existing itinerary from localStorage
             let itinerary = JSON.parse(localStorage.getItem('itineraryPlaces')) || [];
-            
-            // Check if place already exists
             const exists = itinerary.some(p => p.place_id === place.place_id);
             
             if (exists) {
@@ -609,10 +639,8 @@ fetch('/components/header.html')
                 return;
             }
 
-            // Add place to itinerary
             itinerary.push(place);
             localStorage.setItem('itineraryPlaces', JSON.stringify(itinerary));
-            
             showToast(`✅ "${place.title}" added to your itinerary!`, 'success');
         });
 
@@ -645,7 +673,7 @@ fetch('/components/header.html')
             if (placeId && placeId !== 'place-details.html') {
                 fetchPlaceDetails();
             } else {
-                document.getElementById('loading').innerHTML = '<p class="text-red-500">Invalid place ID.</p>';
+                document.getElementById('loading').innerHTML = '<p class="text-red-500 text-sm">Invalid place ID.</p>';
                 showToast('Invalid place ID', 'error');
             }
         });

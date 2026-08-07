@@ -1,70 +1,106 @@
 <!-- public/components/footer.html -->
-<footer class="bg-[#e7eeff] mt-auto">
-    <div class="max-w-7xl mx-auto px-4 md:px-16 py-8">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <!-- Brand -->
-            <div class="md:col-span-1">
-                <a class="text-2xl font-bold text-[#003fb1] tracking-tight flex items-center gap-2" href="/">
-                    <span class="material-symbols-outlined text-[28px]">map</span>
-                    Panadura Planner
+<footer class="bg-[#e7eeff] mt-auto border-t border-[#c3c5d7]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 py-8 sm:py-12">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            
+            <!-- Brand & Info -->
+            <div class="space-y-3">
+                <a class="flex items-center gap-2 sm:gap-3 group" href="/">
+                    <img src="/assets/images/Logo.jpg" 
+                         alt="Panadura Planner Logo" 
+                         class="h-8 sm:h-10 w-auto object-contain border rounded-lg"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    
+                    <!-- Fallback Icon -->
+                    <div class="hidden items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-[#003fb1]/10 text-[#003fb1]">
+                        <span class="material-symbols-outlined text-xl sm:text-2xl">map</span>
+                    </div>
+                    
+                    <span class="text-lg sm:text-2xl font-bold text-[#003fb1] tracking-tight group-hover:text-[#1a56db] transition-colors">
+                        Panadura Planner
+                    </span>
                 </a>
-                <p class="text-sm text-[#434654] mt-2">Discover the best places within 25km of Panadura.</p>
+                <p class="text-xs sm:text-sm text-[#434654] leading-relaxed">
+                    Discover the best destinations, food spots, and recreation within 25km of Panadura.
+                </p>
             </div>
             
             <!-- Quick Links -->
             <div>
-                <h4 class="font-semibold text-[#111c2d] mb-3">Quick Links</h4>
-                <ul class="space-y-2 text-sm">
+                <h4 class="font-bold text-sm sm:text-base text-[#111c2d] mb-2.5 sm:mb-3">Quick Links</h4>
+                <ul class="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
                     <li><a href="/" class="text-[#434654] hover:text-[#003fb1] transition-colors">Home</a></li>
                     <li><a href="/places" class="text-[#434654] hover:text-[#003fb1] transition-colors">Destinations</a></li>
                     <li><a href="/planner" class="text-[#434654] hover:text-[#003fb1] transition-colors">Trip Planner</a></li>
-                    <li><a href="/admin" class="text-[#434654] hover:text-[#003fb1] transition-colors">Admin</a></li>
+                    <li><a href="/admin" class="text-[#434654] hover:text-[#003fb1] transition-colors">Admin Panel</a></li>
                 </ul>
             </div>
             
-            <!-- Categories -->
+            <!-- Featured Categories (Limited to 4 Max) -->
             <div>
-                <h4 class="font-semibold text-[#111c2d] mb-3">Categories</h4>
-                <ul id="footer-categories" class="space-y-2 text-sm">
-                    <li class="text-[#434654]">Loading...</li>
+                <h4 class="font-bold text-sm sm:text-base text-[#111c2d] mb-2.5 sm:mb-3">Top Categories</h4>
+                <ul id="footer-categories" class="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
+                    <li class="text-[#434654] animate-pulse">Loading categories...</li>
                 </ul>
             </div>
             
             <!-- Contact -->
             <div>
-                <h4 class="font-semibold text-[#111c2d] mb-3">Contact</h4>
-                <ul class="space-y-2 text-sm text-[#434654]">
-                    <li>📧 info@panaduraplanner.com</li>
-                    <li>📍 Panadura, Sri Lanka</li>
+                <h4 class="font-bold text-sm sm:text-base text-[#111c2d] mb-2.5 sm:mb-3">Contact</h4>
+                <ul class="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-[#434654]">
+                    <li class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm text-[#003fb1]">mail</span>
+                        <span>info@panaduraplanner.com</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm text-[#003fb1]">location_on</span>
+                        <span>Panadura, Sri Lanka</span>
+                    </li>
                 </ul>
             </div>
         </div>
         
         <!-- Copyright -->
-        <div class="border-t border-[#c3c5d7] mt-6 pt-4 text-center text-sm text-[#434654]">
-            <p>© 2024 Panadura Day Planner. All rights reserved.</p>
+        <div class="border-t border-[#c3c5d7] mt-8 pt-4 sm:pt-6 text-center text-xs sm:text-sm text-[#434654]">
+            <p>© 2026 Panadura Day Planner. All rights reserved.</p>
         </div>
     </div>
 </footer>
 
-<!-- Load categories for footer -->
+<!-- Footer Categories Loader Script -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    (function loadFooterCategories() {
         fetch('/api/categories')
             .then(res => res.json())
             .then(data => {
-                if (data.success) {
-                    const container = document.getElementById('footer-categories');
+                const container = document.getElementById('footer-categories');
+                if (!container) return;
+
+                if (data.success && data.data && data.data.length > 0) {
                     container.innerHTML = '';
-                    data.data.forEach(cat => {
+                    
+                    // Randomize list & select up to 4 categories
+                    const shuffled = [...data.data].sort(() => 0.5 - Math.random());
+                    const topFour = shuffled.slice(0, 4);
+
+                    topFour.forEach(cat => {
                         const li = document.createElement('li');
-                        li.innerHTML = `<a href="/places?category=${cat.category_id}" class="text-[#434654] hover:text-[#003fb1] transition-colors">${cat.name} (${cat.place_count})</a>`;
+                        li.innerHTML = `
+                            <a href="/places?category=${cat.category_id}" class="text-[#434654] hover:text-[#003fb1] transition-colors block truncate">
+                                ${cat.name} <span class="text-xs text-[#737686]">(${cat.place_count || 0})</span>
+                            </a>
+                        `;
                         container.appendChild(li);
                     });
+                } else {
+                    container.innerHTML = '<li class="text-[#434654]">No categories available</li>';
                 }
             })
-            .catch(() => {
-                document.getElementById('footer-categories').innerHTML = '<li class="text-[#434654]">Categories unavailable</li>';
+            .catch(err => {
+                const container = document.getElementById('footer-categories');
+                if (container) {
+                    container.innerHTML = '<li class="text-[#434654]">Categories unavailable</li>';
+                }
             });
-    });
+    })();
 </script>

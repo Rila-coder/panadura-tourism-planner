@@ -8,6 +8,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
@@ -44,7 +48,7 @@
         @keyframes slideIn {
             from {
                 opacity: 0;
-                transform: translateX(-20px);
+                transform: translateX(-15px);
             }
             to {
                 opacity: 1;
@@ -62,7 +66,7 @@
         }
         
         .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
+            width: 5px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
             background: transparent;
@@ -79,17 +83,27 @@
         /* Toast Notification */
         .toast {
             position: fixed;
-            top: 100px;
-            right: 20px;
+            top: 80px;
+            right: 16px;
             z-index: 9999;
-            padding: 16px 24px;
-            border-radius: 16px;
-            min-width: 300px;
-            max-width: 450px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            padding: 12px 20px;
+            border-radius: 12px;
+            min-width: 280px;
+            max-width: 400px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
             transform: translateX(120%);
             transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             backdrop-filter: blur(20px);
+        }
+        @media (min-width: 640px) {
+            .toast {
+                top: 100px;
+                right: 20px;
+                padding: 16px 24px;
+                min-width: 300px;
+                max-width: 450px;
+                border-radius: 16px;
+            }
         }
         .toast.show {
             transform: translateX(0);
@@ -110,8 +124,14 @@
             color: #1e40af;
         }
         .toast .toast-icon {
-            font-size: 24px;
-            margin-right: 12px;
+            font-size: 20px;
+            margin-right: 8px;
+        }
+        @media (min-width: 640px) {
+            .toast .toast-icon {
+                font-size: 24px;
+                margin-right: 12px;
+            }
         }
         .toast .toast-close {
             cursor: pointer;
@@ -122,9 +142,24 @@
         .toast .toast-close:hover {
             background: rgba(0, 0, 0, 0.1);
         }
+
+        .bg-purple-100 { background: #f3e8ff; }
+        .text-purple-800 { color: #6b21a8; }
+        .bg-green-100 { background: #d1fae5; }
+        .text-green-800 { color: #065f46; }
+        .bg-orange-100 { background: #ffedd5; }
+        .text-orange-800 { color: #9a3412; }
+        .bg-blue-100 { background: #dbeafe; }
+        .text-blue-800 { color: #1e40af; }
+        .bg-yellow-100 { background: #fef3c7; }
+        .text-yellow-800 { color: #854d0e; }
+        .bg-pink-100 { background: #fce7f3; }
+        .text-pink-800 { color: #9d174d; }
+        .bg-gray-100 { background: #f3f4f6; }
+        .text-gray-800 { color: #1f2937; }
     </style>
 </head>
-<body class="bg-[#f9f9ff] text-[#111c2d] min-h-screen flex flex-col antialiased">
+<body class="bg-[#f9f9ff] text-[#111c2d] min-h-screen flex flex-col antialiased overflow-x-hidden">
 
     <!-- ============================================= -->
     <!-- TOAST NOTIFICATION -->
@@ -133,9 +168,9 @@
         <div class="flex items-center justify-between">
             <div class="flex items-center">
                 <span id="toast-icon" class="toast-icon material-symbols-outlined">check_circle</span>
-                <span id="toast-message" class="font-medium">Success!</span>
+                <span id="toast-message" class="font-medium text-xs sm:text-base">Success!</span>
             </div>
-            <span id="toast-close" class="toast-close material-symbols-outlined text-sm">close</span>
+            <span id="toast-close" class="toast-close material-symbols-outlined text-xs sm:text-sm">close</span>
         </div>
     </div>
 
@@ -147,44 +182,44 @@
     <!-- ============================================= -->
     <!-- PAGE HEADER -->
     <!-- ============================================= -->
-    <section class="bg-gradient-to-b from-[#e7eeff] to-[#f9f9ff] pt-28 pb-8 px-4 md:px-16">
+    <section class="bg-gradient-to-b from-[#e7eeff] to-[#f9f9ff] pt-20 sm:pt-28 pb-6 sm:pb-8 px-4 sm:px-8 lg:px-16">
         <div class="max-w-7xl mx-auto">
-            <span class="text-[#003fb1] font-semibold text-sm tracking-wider uppercase">Plan Your Trip</span>
-            <h1 class="text-3xl md:text-5xl font-extrabold text-[#003fb1] mt-1">Plan Your One-Day Trip</h1>
-            <p class="text-lg text-[#434654] mt-2">Select places and build your perfect itinerary</p>
+            <span class="text-[#003fb1] font-semibold text-xs sm:text-sm tracking-wider uppercase">Plan Your Trip</span>
+            <h1 class="text-2xl sm:text-4xl md:text-5xl font-extrabold text-[#003fb1] mt-1">Plan Your One-Day Trip</h1>
+            <p class="text-xs sm:text-base md:text-lg text-[#434654] mt-1 sm:mt-2">Select places and build your perfect customized itinerary</p>
         </div>
     </section>
 
     <!-- ============================================= -->
     <!-- USER DETAILS -->
     <!-- ============================================= -->
-    <section class="px-4 md:px-16 py-4 max-w-7xl mx-auto w-full">
-        <div class="bg-white rounded-2xl p-5 shadow-sm border border-[#e7eeff] flex flex-col md:flex-row gap-4 card-hover">
-            <div class="flex-1">
-                <label class="block text-sm font-semibold text-[#434654] mb-1 flex items-center gap-1">
-                    <span class="material-symbols-outlined text-[#003fb1] text-sm">person</span>
+    <section class="px-4 sm:px-8 lg:px-16 py-3 sm:py-4 max-w-7xl mx-auto w-full">
+        <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-[#e7eeff] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 card-hover">
+            <div>
+                <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1 flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[#003fb1] text-xs sm:text-sm">person</span>
                     Your Name <span class="required-star text-red-500">*</span>
                 </label>
                 <input id="user-name" type="text"
-                    class="w-full border border-[#e7eeff] rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#003fb1] focus:border-transparent transition-all"
+                    class="w-full border border-[#e7eeff] rounded-xl px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#003fb1] focus:border-transparent transition-all"
                     placeholder="Enter your name">
             </div>
-            <div class="flex-1">
-                <label class="block text-sm font-semibold text-[#434654] mb-1 flex items-center gap-1">
-                    <span class="material-symbols-outlined text-[#003fb1] text-sm">phone</span>
+            <div>
+                <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1 flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[#003fb1] text-xs sm:text-sm">phone</span>
                     Phone Number <span class="required-star text-red-500">*</span>
                 </label>
                 <input id="user-phone" type="tel"
-                    class="w-full border border-[#e7eeff] rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#003fb1] focus:border-transparent transition-all"
+                    class="w-full border border-[#e7eeff] rounded-xl px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#003fb1] focus:border-transparent transition-all"
                     placeholder="Enter your phone number">
             </div>
-            <div class="flex-1">
-                <label class="block text-sm font-semibold text-[#434654] mb-1 flex items-center gap-1">
-                    <span class="material-symbols-outlined text-[#003fb1] text-sm">calendar_today</span>
+            <div class="sm:col-span-2 lg:col-span-1">
+                <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1 flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[#003fb1] text-xs sm:text-sm">calendar_today</span>
                     Visit Date <span class="required-star text-red-500">*</span>
                 </label>
                 <input id="visit-date" type="date"
-                    class="w-full border border-[#e7eeff] rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#003fb1] focus:border-transparent transition-all">
+                    class="w-full border border-[#e7eeff] rounded-xl px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#003fb1] focus:border-transparent transition-all">
             </div>
         </div>
     </section>
@@ -192,74 +227,74 @@
     <!-- ============================================= -->
     <!-- MAIN LAYOUT -->
     <!-- ============================================= -->
-    <section class="px-4 md:px-16 py-4 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <section class="px-4 sm:px-8 lg:px-16 py-3 sm:py-4 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         <!-- Left: Available Places -->
         <div class="lg:col-span-7">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold text-[#111c2d] flex items-center gap-2">
-                    <span class="material-symbols-outlined text-[#003fb1]">place</span>
+            <div class="flex justify-between items-center mb-3 sm:mb-4">
+                <h2 class="text-base sm:text-xl font-bold text-[#111c2d] flex items-center gap-1.5 sm:gap-2">
+                    <span class="material-symbols-outlined text-[#003fb1] text-lg sm:text-xl">place</span>
                     Available Places
-                    <span id="place-count" class="text-sm font-normal text-[#434654]">(0)</span>
+                    <span id="place-count" class="text-xs sm:text-sm font-normal text-[#434654]">(0)</span>
                 </h2>
-                <span class="text-xs text-[#434654]">Click to add</span>
+                <span class="text-[10px] sm:text-xs text-[#434654]">Click to add</span>
             </div>
-            <div id="places-list" class="space-y-2 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
-                <div class="text-center py-8 text-[#434654]">Loading places...</div>
+            <div id="places-list" class="space-y-2 max-h-[450px] sm:max-h-[600px] overflow-y-auto pr-1 sm:pr-2 custom-scrollbar">
+                <div class="text-center py-8 text-[#434654] text-xs sm:text-sm">Loading places...</div>
             </div>
         </div>
 
         <!-- Right: Your Itinerary -->
         <div class="lg:col-span-5">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold text-[#111c2d] flex items-center gap-2">
-                    <span class="material-symbols-outlined text-[#003fb1]">list_alt</span>
+            <div class="flex justify-between items-center mb-3 sm:mb-4">
+                <h2 class="text-base sm:text-xl font-bold text-[#111c2d] flex items-center gap-1.5 sm:gap-2">
+                    <span class="material-symbols-outlined text-[#003fb1] text-lg sm:text-xl">list_alt</span>
                     Your Itinerary
-                    <span id="itinerary-count" class="text-sm font-normal text-[#434654]">(0)</span>
+                    <span id="itinerary-count" class="text-xs sm:text-sm font-normal text-[#434654]">(0)</span>
                 </h2>
-                <button id="clear-all" class="text-xs text-red-500 hover:text-red-700 font-semibold hidden">
+                <button id="clear-all" class="text-[10px] sm:text-xs text-red-500 hover:text-red-700 font-semibold hidden">
                     Clear All
                 </button>
             </div>
             
-            <div id="itinerary" class="bg-white rounded-2xl p-4 shadow-sm border border-[#e7eeff] min-h-[300px]">
-                <div class="text-center py-12 text-[#434654] empty-state rounded-xl">
-                    <span class="material-symbols-outlined text-5xl text-[#737686]">add_circle</span>
-                    <p class="mt-3 font-medium">Click on places to add them</p>
-                    <p class="text-sm mt-1">Build your perfect day trip</p>
+            <div id="itinerary" class="bg-white rounded-2xl p-3 sm:p-4 shadow-sm border border-[#e7eeff] min-h-[220px] sm:min-h-[300px]">
+                <div class="text-center py-8 sm:py-12 text-[#434654] empty-state rounded-xl">
+                    <span class="material-symbols-outlined text-4xl sm:text-5xl text-[#737686]">add_circle</span>
+                    <p class="mt-2 sm:mt-3 font-medium text-xs sm:text-base">Click on places to add them</p>
+                    <p class="text-[10px] sm:text-xs text-[#737686] mt-1">Build your perfect day trip</p>
                 </div>
             </div>
 
             <!-- Summary -->
-            <div id="summary" class="mt-4 bg-white rounded-2xl p-5 shadow-sm border border-[#e7eeff] hidden card-hover">
-                <h3 class="font-bold text-[#111c2d] mb-3 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-[#003fb1]">analytics</span>
+            <div id="summary" class="mt-4 bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-[#e7eeff] hidden card-hover">
+                <h3 class="font-bold text-sm sm:text-base text-[#111c2d] mb-3 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[#003fb1] text-base sm:text-xl">analytics</span>
                     Trip Summary
                 </h3>
-                <div class="grid grid-cols-3 gap-3 text-center">
-                    <div class="bg-[#f9f9ff] rounded-xl p-3">
-                        <p class="text-xs text-[#434654]">Places</p>
-                        <p id="summary-places" class="text-2xl font-bold text-[#003fb1]">0</p>
+                <div class="grid grid-cols-3 gap-2 sm:gap-3 text-center">
+                    <div class="bg-[#f9f9ff] rounded-xl p-2 sm:p-3">
+                        <p class="text-[10px] sm:text-xs text-[#434654]">Places</p>
+                        <p id="summary-places" class="text-base sm:text-2xl font-bold text-[#003fb1] mt-0.5">0</p>
                     </div>
-                    <div class="bg-[#f9f9ff] rounded-xl p-3">
-                        <p class="text-xs text-[#434654]">Duration</p>
-                        <p id="summary-duration" class="text-2xl font-bold text-[#003fb1]">0 min</p>
+                    <div class="bg-[#f9f9ff] rounded-xl p-2 sm:p-3">
+                        <p class="text-[10px] sm:text-xs text-[#434654]">Duration</p>
+                        <p id="summary-duration" class="text-base sm:text-2xl font-bold text-[#003fb1] mt-0.5">0 min</p>
                     </div>
-                    <div class="bg-[#f9f9ff] rounded-xl p-3">
-                        <p class="text-xs text-[#434654]">Budget</p>
-                        <p id="summary-budget" class="text-2xl font-bold text-[#006c4a]">Rs. 0</p>
+                    <div class="bg-[#f9f9ff] rounded-xl p-2 sm:p-3">
+                        <p class="text-[10px] sm:text-xs text-[#434654]">Budget</p>
+                        <p id="summary-budget" class="text-base sm:text-2xl font-bold text-[#006c4a] mt-0.5">Rs. 0</p>
                     </div>
                 </div>
                 
                 <!-- Budget Breakdown -->
                 <div class="mt-3">
-                    <p class="text-xs text-[#434654] mb-1">Budget Breakdown</p>
+                    <p class="text-[10px] sm:text-xs text-[#434654] mb-1">Budget Breakdown</p>
                     <div class="h-2 w-full rounded-full flex overflow-hidden">
                         <div id="transport-bar" class="bg-[#003fb1] h-full" style="width: 40%;"></div>
                         <div id="food-bar" class="bg-[#006c4a] h-full" style="width: 35%;"></div>
                         <div id="activity-bar" class="bg-[#694100] h-full" style="width: 25%;"></div>
                     </div>
-                    <div class="flex gap-3 mt-1 text-xs text-[#434654]">
+                    <div class="flex flex-wrap gap-2 sm:gap-3 mt-1.5 text-[10px] sm:text-xs text-[#434654]">
                         <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#003fb1]"></span> Transport</span>
                         <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#006c4a]"></span> Food</span>
                         <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#694100]"></span> Activities</span>
@@ -267,8 +302,8 @@
                 </div>
                 
                 <button id="save-plan"
-                    class="w-full mt-4 bg-[#003fb1] text-white py-3 rounded-xl font-semibold hover:bg-[#1a56db] transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center gap-2">
-                    <span class="material-symbols-outlined">save</span>
+                    class="w-full mt-4 bg-[#003fb1] text-white py-2.5 sm:py-3 rounded-xl font-semibold hover:bg-[#1a56db] transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center gap-2 text-xs sm:text-sm">
+                    <span class="material-symbols-outlined text-sm sm:text-base">save</span>
                     Save Plan
                 </button>
             </div>
@@ -317,33 +352,44 @@
         });
 
         // =============================================
-// 1. Load Header Component & Execute Scripts
-// =============================================
-fetch('/components/header.html')
-    .then(res => res.text())
-    .then(html => {
-        const placeholder = document.getElementById('header-placeholder');
-        placeholder.innerHTML = html;
-
-        // Manually execute inline scripts from component
-        const scripts = placeholder.querySelectorAll('script');
-        scripts.forEach(oldScript => {
-            const newScript = document.createElement('script');
-            newScript.textContent = oldScript.textContent;
-            document.body.appendChild(newScript);
-        });
-    })
-    .catch(err => console.error('Failed to load header component:', err));
-
+        // 2. Load Header Component & Execute Scripts
         // =============================================
-        // 3. Load Footer Component
-        // =============================================
-        fetch('/components/footer.html')
+        fetch('/components/header.html')
             .then(res => res.text())
             .then(html => {
-                document.getElementById('footer-placeholder').innerHTML = html;
+                const placeholder = document.getElementById('header-placeholder');
+                placeholder.innerHTML = html;
+
+                // Manually execute inline scripts from component
+                const scripts = placeholder.querySelectorAll('script');
+                scripts.forEach(oldScript => {
+                    const newScript = document.createElement('script');
+                    newScript.textContent = oldScript.textContent;
+                    document.body.appendChild(newScript);
+                });
             })
-            .catch(() => console.error('Failed to load footer'));
+            .catch(err => console.error('Failed to load header component:', err));
+
+        // =============================================
+// Load Footer Component & Execute Embedded Scripts
+// =============================================
+fetch('/components/footer.html')
+    .then(res => res.text())
+    .then(html => {
+        const placeholder = document.getElementById('footer-placeholder');
+        if (placeholder) {
+            placeholder.innerHTML = html;
+
+            // Manually execute inline scripts from footer component
+            const scripts = placeholder.querySelectorAll('script');
+            scripts.forEach(oldScript => {
+                const newScript = document.createElement('script');
+                newScript.textContent = oldScript.textContent;
+                document.body.appendChild(newScript);
+            });
+        }
+    })
+    .catch(err => console.error('Failed to load footer component:', err));
 
         // =============================================
         // 4. State
@@ -377,13 +423,13 @@ fetch('/components/header.html')
                 }
             } catch (error) {
                 console.error('Error:', error);
-                placesList.innerHTML = '<div class="text-center py-8 text-red-500">Failed to load places.</div>';
+                placesList.innerHTML = '<div class="text-center py-8 text-red-500 text-xs sm:text-sm">Failed to load places.</div>';
                 showToast('Failed to load places', 'error');
             }
         }
 
         // =============================================
-        // 7. Load from localStorage (from place details page)
+        // 7. Load from localStorage
         // =============================================
         function loadFromLocalStorage() {
             const storedPlaces = JSON.parse(localStorage.getItem('itineraryPlaces')) || [];
@@ -412,25 +458,27 @@ fetch('/components/header.html')
             allPlaces.forEach(place => {
                 const isSelected = selectedPlaces.some(p => p.place_id === place.place_id);
                 const categoryColors = {
-                    'Religious': 'bg-purple-100 text-purple-800',
-                    'Nature': 'bg-green-100 text-green-800',
-                    'Dining': 'bg-orange-100 text-orange-800',
-                    'Sports': 'bg-blue-100 text-blue-800',
-                    'Heritage': 'bg-yellow-100 text-yellow-800'
+                    'Sports & Recreation': 'bg-blue-100 text-blue-800',
+                    'Dining & Leisure': 'bg-orange-100 text-orange-800',
+                    'Hospitality & Food Stop': 'bg-yellow-100 text-yellow-800',
+                    'Nature & Scenic Spot': 'bg-green-100 text-green-800',
+                    'Bakery & Quick Dining': 'bg-pink-100 text-pink-800',
+                    'Culinary & Family Dining': 'bg-orange-100 text-orange-800',
+                    'Outdoor Recreation & Nature': 'bg-green-100 text-green-800'
                 };
                 const color = categoryColors[place.category_name] || 'bg-gray-100 text-gray-800';
                 
                 html += `
-                    <div class="place-item bg-white rounded-xl p-3 shadow-sm border ${isSelected ? 'border-[#003fb1] selected' : 'border-[#e7eeff]'} flex justify-between items-center cursor-pointer transition-all" 
+                    <div class="place-item bg-white rounded-xl p-2.5 sm:p-3 shadow-sm border ${isSelected ? 'border-[#003fb1] selected' : 'border-[#e7eeff]'} flex justify-between items-center cursor-pointer transition-all" 
                          onclick="togglePlace(${place.place_id})">
-                        <div class="flex items-center gap-3">
-                            <span class="${color} px-2 py-0.5 rounded-full text-xs font-medium">${place.category_name || 'Other'}</span>
+                        <div class="flex items-center gap-2.5 sm:gap-3">
+                            <span class="${color} px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold flex-shrink-0">${place.category_name || 'Other'}</span>
                             <div>
-                                <h3 class="font-semibold">${place.title}</h3>
-                                <p class="text-xs text-[#434654]">${place.entry_fee > 0 ? 'Rs. ' + place.entry_fee : 'Free'} • ${place.avg_duration || 60} min</p>
+                                <h3 class="font-semibold text-xs sm:text-sm text-[#111c2d]">${place.title}</h3>
+                                <p class="text-[10px] sm:text-xs text-[#434654]">${place.entry_fee > 0 ? 'Rs. ' + place.entry_fee : 'Free'} • ${place.avg_duration || 60} min</p>
                             </div>
                         </div>
-                        <span class="material-symbols-outlined ${isSelected ? 'text-white' : 'text-[#434654]'}">
+                        <span class="material-symbols-outlined text-sm sm:text-base ${isSelected ? 'text-white' : 'text-[#434654]'}">
                             ${isSelected ? 'check_circle' : 'add_circle'}
                         </span>
                     </div>
@@ -465,10 +513,10 @@ fetch('/components/header.html')
         function renderItinerary() {
             if (selectedPlaces.length === 0) {
                 itinerary.innerHTML = `
-                    <div class="text-center py-12 text-[#434654] empty-state rounded-xl">
-                        <span class="material-symbols-outlined text-5xl text-[#737686]">add_circle</span>
-                        <p class="mt-3 font-medium">Click on places to add them</p>
-                        <p class="text-sm mt-1">Build your perfect day trip</p>
+                    <div class="text-center py-8 sm:py-12 text-[#434654] empty-state rounded-xl">
+                        <span class="material-symbols-outlined text-4xl sm:text-5xl text-[#737686]">add_circle</span>
+                        <p class="mt-2 sm:mt-3 font-medium text-xs sm:text-base">Click on places to add them</p>
+                        <p class="text-[10px] sm:text-xs text-[#737686] mt-1">Build your perfect day trip</p>
                     </div>
                 `;
                 summary.classList.add('hidden');
@@ -480,17 +528,17 @@ fetch('/components/header.html')
             selectedPlaces.forEach((place, index) => {
                 const isLast = index === selectedPlaces.length - 1;
                 html += `
-                    <div class="itinerary-item flex items-center gap-3 p-3 bg-[#f9f9ff] rounded-xl hover:bg-[#f0f3ff] transition-colors">
-                        <span class="w-7 h-7 rounded-full bg-[#003fb1] text-white text-xs flex items-center justify-center font-bold flex-shrink-0">${index + 1}</span>
-                        <div class="flex-1">
-                            <p class="font-semibold text-[#111c2d]">${place.title}</p>
-                            <p class="text-xs text-[#434654]">${place.avg_duration || 60} min • ${place.entry_fee > 0 ? 'Rs. ' + place.entry_fee : 'Free'}</p>
+                    <div class="itinerary-item flex items-center gap-2.5 sm:gap-3 p-2.5 sm:p-3 bg-[#f9f9ff] rounded-xl hover:bg-[#f0f3ff] transition-colors">
+                        <span class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-[#003fb1] text-white text-[10px] sm:text-xs flex items-center justify-center font-bold flex-shrink-0">${index + 1}</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="font-semibold text-xs sm:text-sm text-[#111c2d] truncate">${place.title}</p>
+                            <p class="text-[10px] sm:text-xs text-[#434654]">${place.avg_duration || 60} min • ${place.entry_fee > 0 ? 'Rs. ' + place.entry_fee : 'Free'}</p>
                         </div>
-                        <button onclick="removePlace(${place.place_id})" class="text-red-500 hover:text-red-700 hover:bg-red-50 p-1 rounded-full transition-colors">
-                            <span class="material-symbols-outlined text-sm">close</span>
+                        <button onclick="removePlace(${place.place_id})" class="text-red-500 hover:text-red-700 hover:bg-red-50 p-1 rounded-full transition-colors flex-shrink-0">
+                            <span class="material-symbols-outlined text-sm sm:text-base">close</span>
                         </button>
                     </div>
-                    ${!isLast ? '<div class="w-0.5 h-2 bg-[#c3c5d7] ml-3"></div>' : ''}
+                    ${!isLast ? '<div class="w-0.5 h-2 bg-[#c3c5d7] ml-3 sm:ml-3.5"></div>' : ''}
                 `;
             });
             html += '</div>';
