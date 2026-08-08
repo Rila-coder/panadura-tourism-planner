@@ -1,54 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Admin Panel - Panadura Day Planner</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
         }
-        
+
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
+
         .material-symbols-outlined.fill {
             font-variation-settings: 'FILL' 1;
         }
-        
+
         .card-hover {
             transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
+
         .card-hover:hover {
             transform: translateY(-4px);
             box-shadow: 0 10px 30px rgba(0, 63, 177, 0.15);
         }
-        
+
         .tab-active {
             background: #003fb1;
             color: white;
             box-shadow: 0 4px 20px rgba(0, 63, 177, 0.3);
         }
+
         .tab-inactive {
             background: #e7eeff;
             color: #434654;
         }
+
         .tab-inactive:hover {
             background: #dbeafe;
             transform: scale(1.02);
         }
-        
+
         .location-tab-active {
             background: #003fb1;
             color: white;
         }
+
         .location-tab-inactive {
             background: #e7eeff;
             color: #434654;
         }
+
         .location-tab-inactive:hover {
             background: #dbeafe;
         }
@@ -57,14 +66,16 @@
             background: #003fb1;
             color: white;
         }
+
         .image-tab-inactive {
             background: #e7eeff;
             color: #434654;
         }
+
         .image-tab-inactive:hover {
             background: #dbeafe;
         }
-        
+
         /* Toast Notification */
         .toast {
             position: fixed;
@@ -80,6 +91,7 @@
             transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             backdrop-filter: blur(20px);
         }
+
         @media (min-width: 768px) {
             .toast {
                 top: 100px;
@@ -89,76 +101,101 @@
                 max-width: 450px;
             }
         }
+
         .toast.show {
             transform: translateX(0);
         }
+
         .toast.success {
             background: linear-gradient(135deg, #d1fae5, #a7f3d0);
             border: 1px solid #6ee7b7;
             color: #065f46;
         }
+
         .toast.error {
             background: linear-gradient(135deg, #fecaca, #fca5a5);
             border: 1px solid #f87171;
             color: #991b1b;
         }
+
         .toast.info {
             background: linear-gradient(135deg, #dbeafe, #93c5fd);
             border: 1px solid #60a5fa;
             color: #1e40af;
         }
+
         .toast .toast-icon {
             font-size: 22px;
             margin-right: 10px;
         }
+
         .toast .toast-close {
             cursor: pointer;
             padding: 4px;
             border-radius: 50%;
             transition: background 0.3s;
         }
+
         .toast .toast-close:hover {
             background: rgba(0, 0, 0, 0.1);
         }
-        
+
         .stat-card {
             transition: all 0.3s ease;
         }
+
         .stat-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 10px 30px rgba(0, 63, 177, 0.1);
         }
-        
+
         .table-row {
             transition: all 0.2s ease;
         }
+
         .table-row:hover {
             background: #f0f3ff;
         }
-        
+
         .form-input {
             transition: all 0.3s ease;
         }
+
         .form-input:focus {
             box-shadow: 0 0 0 3px rgba(0, 63, 177, 0.2);
             border-color: #003fb1;
         }
-        
+
         .modal-overlay {
             animation: fadeIn 0.3s ease;
         }
+
         .modal-content {
             animation: slideUp 0.3s ease;
         }
+
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
+
         @keyframes slideUp {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
-        
+
         /* Admin Sidebar - hidden by default on mobile */
         .admin-sidebar {
             position: fixed;
@@ -167,57 +204,63 @@
             height: 100vh;
             width: 280px;
             background: white;
-            box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
             z-index: 1000;
             transform: translateX(-100%);
             transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             overflow-y: auto;
             padding: 16px 0;
         }
+
         @media (min-width: 768px) {
             .admin-sidebar {
                 transform: translateX(0);
                 width: 240px;
             }
         }
+
         @media (min-width: 1024px) {
             .admin-sidebar {
                 width: 260px;
             }
         }
+
         .admin-sidebar.open {
             transform: translateX(0);
         }
-        
+
         /* Sidebar overlay for mobile */
         .sidebar-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.4);
+            background: rgba(0, 0, 0, 0.4);
             z-index: 999;
             display: none;
         }
+
         .sidebar-overlay.active {
             display: block;
         }
-        
+
         /* Category card hover */
         .category-card {
             transition: all 0.3s ease;
         }
+
         .category-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 20px rgba(0, 63, 177, 0.1);
         }
-        
+
         /* Modal animation */
         .category-modal-overlay {
             animation: fadeIn 0.3s ease;
         }
+
         .category-modal-content {
             animation: slideUp 0.3s ease;
         }
-        
+
         /* Location search results */
         .location-results {
             max-height: 200px;
@@ -229,8 +272,9 @@
             position: absolute;
             z-index: 50;
             width: 100%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
+
         .location-result-item {
             padding: 10px 16px;
             cursor: pointer;
@@ -238,84 +282,94 @@
             font-size: 14px;
             border-bottom: 1px solid #f0f3ff;
         }
+
         .location-result-item:hover {
             background: #f0f3ff;
         }
+
         .location-result-item:last-child {
             border-bottom: none;
         }
-        
+
         /* Required field indicator */
         .required-star {
             color: #dc2626;
         }
+
         .readonly-field {
             background-color: #f3f4f6;
             cursor: not-allowed;
         }
-        
+
         /* Responsive table wrapper */
         .table-wrapper {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
         }
-        
+
         /* Mobile tabs scroll */
         .tabs-scroll {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             flex-wrap: nowrap;
         }
+
         .tabs-scroll::-webkit-scrollbar {
             height: 4px;
         }
+
         .tabs-scroll::-webkit-scrollbar-track {
             background: #e7eeff;
             border-radius: 10px;
         }
+
         .tabs-scroll::-webkit-scrollbar-thumb {
             background: #003fb1;
             border-radius: 10px;
         }
-        
+
         /* Stats grid responsive */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
         }
+
         @media (min-width: 640px) {
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 16px;
             }
         }
+
         @media (min-width: 1024px) {
             .stats-grid {
                 grid-template-columns: repeat(4, 1fr);
                 gap: 20px;
             }
         }
-        
+
         /* Form responsive */
         .form-grid {
             display: grid;
             grid-template-columns: 1fr;
             gap: 16px;
         }
+
         @media (min-width: 768px) {
             .form-grid {
                 grid-template-columns: 1fr 1fr;
                 gap: 20px;
             }
         }
-        
+
         /* Main content padding */
         .main-content {
             padding-left: 16px;
             padding-right: 16px;
             padding-top: 76px;
         }
+
         @media (min-width: 768px) {
             .main-content {
                 padding-left: 24px;
@@ -324,6 +378,7 @@
                 margin-left: 240px;
             }
         }
+
         @media (min-width: 1024px) {
             .main-content {
                 padding-left: 32px;
@@ -331,13 +386,14 @@
                 margin-left: 260px;
             }
         }
-        
+
         /* Login form responsive */
         .login-card {
             max-width: 400px;
             width: 100%;
             margin: 0 16px;
         }
+
         @media (min-width: 640px) {
             .login-card {
                 margin: 0 auto;
@@ -345,6 +401,7 @@
         }
     </style>
 </head>
+
 <body class="bg-[#f9f9ff] text-[#111c2d] min-h-screen antialiased overflow-x-hidden">
 
     <!-- ============================================= -->
@@ -376,10 +433,12 @@
     <div class="main-content flex flex-col min-h-screen">
 
         <!-- TopNavBar -->
-        <header class="bg-white/80 backdrop-blur-md fixed top-0 left-0 right-0 z-40 border-b border-[#e7eeff] shadow-sm">
+        <header
+            class="bg-white/80 backdrop-blur-md fixed top-0 left-0 right-0 z-40 border-b border-[#e7eeff] shadow-sm">
             <div class="flex justify-between items-center px-3 sm:px-4 md:px-6 h-14 sm:h-16">
                 <div class="flex items-center gap-2 sm:gap-3">
-                    <button id="mobile-menu-btn" class="md:hidden text-[#434654] p-1 rounded-lg hover:bg-[#e7eeff] transition-colors">
+                    <button id="mobile-menu-btn"
+                        class="md:hidden text-[#434654] p-1 rounded-lg hover:bg-[#e7eeff] transition-colors">
                         <span class="material-symbols-outlined">menu</span>
                     </button>
                     <h1 class="text-base sm:text-lg md:text-xl font-bold text-[#003fb1]">Admin Dashboard</h1>
@@ -399,32 +458,36 @@
         <section id="login-section" class="flex-grow flex items-center justify-center px-3 sm:px-4 py-8">
             <div class="login-card bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-[#e7eeff] card-hover">
                 <div class="text-center mb-5 sm:mb-6">
-                    <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#003fb1]/10 flex items-center justify-center mx-auto mb-3">
-                        <span class="material-symbols-outlined text-2xl sm:text-3xl text-[#003fb1]">admin_panel_settings</span>
+                    <div
+                        class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#003fb1]/10 flex items-center justify-center mx-auto mb-3">
+                        <span
+                            class="material-symbols-outlined text-2xl sm:text-3xl text-[#003fb1]">admin_panel_settings</span>
                     </div>
                     <h2 class="text-xl sm:text-2xl font-bold text-[#003fb1]">Admin Login</h2>
                     <p class="text-xs sm:text-sm text-[#434654] mt-1">Enter your credentials to access dashboard</p>
                 </div>
-                
-                <div id="login-error" class="bg-red-50 text-red-600 p-2 sm:p-3 rounded-xl text-xs sm:text-sm hidden mb-3 sm:mb-4 flex items-center gap-2">
+
+                <div id="login-error"
+                    class="bg-red-50 text-red-600 p-2 sm:p-3 rounded-xl text-xs sm:text-sm hidden mb-3 sm:mb-4 flex items-center gap-2">
                     <span class="material-symbols-outlined text-sm">error</span>
                     Invalid username or password
                 </div>
-                
+
                 <form id="login-form">
                     <div class="mb-3 sm:mb-4">
                         <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Username</label>
-                        <input id="login-username" type="text" 
-                               class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 focus:outline-none transition-all text-sm sm:text-base" 
-                               placeholder="Enter username" required>
+                        <input id="login-username" type="text"
+                            class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 focus:outline-none transition-all text-sm sm:text-base"
+                            placeholder="Enter username" required>
                     </div>
                     <div class="mb-4 sm:mb-6">
                         <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Password</label>
-                        <input id="login-password" type="password" 
-                               class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 focus:outline-none transition-all text-sm sm:text-base" 
-                               placeholder="Enter password" required>
+                        <input id="login-password" type="password"
+                            class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 focus:outline-none transition-all text-sm sm:text-base"
+                            placeholder="Enter password" required>
                     </div>
-                    <button type="submit" class="w-full bg-[#003fb1] text-white py-2.5 sm:py-3 rounded-xl font-semibold hover:bg-[#1a56db] transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base">
+                    <button type="submit"
+                        class="w-full bg-[#003fb1] text-white py-2.5 sm:py-3 rounded-xl font-semibold hover:bg-[#1a56db] transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base">
                         <span class="material-symbols-outlined">login</span>
                         Login
                     </button>
@@ -436,7 +499,7 @@
         <!-- DASHBOARD SECTION -->
         <!-- ============================================= -->
         <section id="dashboard-section" class="flex-grow py-4 sm:py-6 hidden">
-            
+
             <!-- Stats -->
             <div class="stats-grid">
                 <div class="stat-card bg-white rounded-2xl p-3 sm:p-5 shadow-sm border border-[#e7eeff]">
@@ -445,7 +508,8 @@
                             <p class="text-[10px] sm:text-sm text-[#434654]">Total Places</p>
                             <p id="stat-places" class="text-xl sm:text-3xl font-bold text-[#003fb1]">0</p>
                         </div>
-                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#dbeafe] flex items-center justify-center">
+                        <div
+                            class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#dbeafe] flex items-center justify-center">
                             <span class="material-symbols-outlined text-[#003fb1] text-sm sm:text-base">place</span>
                         </div>
                     </div>
@@ -456,7 +520,8 @@
                             <p class="text-[10px] sm:text-sm text-[#434654]">Categories</p>
                             <p id="stat-categories" class="text-xl sm:text-3xl font-bold text-[#003fb1]">0</p>
                         </div>
-                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#d1fae5] flex items-center justify-center">
+                        <div
+                            class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#d1fae5] flex items-center justify-center">
                             <span class="material-symbols-outlined text-[#006c4a] text-sm sm:text-base">category</span>
                         </div>
                     </div>
@@ -467,8 +532,10 @@
                             <p class="text-[10px] sm:text-sm text-[#434654]">Total Plans</p>
                             <p id="stat-plans" class="text-xl sm:text-3xl font-bold text-[#003fb1]">0</p>
                         </div>
-                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#ffedd5] flex items-center justify-center">
-                            <span class="material-symbols-outlined text-[#9a3412] text-sm sm:text-base">event_note</span>
+                        <div
+                            class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#ffedd5] flex items-center justify-center">
+                            <span
+                                class="material-symbols-outlined text-[#9a3412] text-sm sm:text-base">event_note</span>
                         </div>
                     </div>
                 </div>
@@ -478,8 +545,10 @@
                             <p class="text-[10px] sm:text-sm text-[#434654]">Admin</p>
                             <p id="stat-admin" class="text-xl sm:text-3xl font-bold text-[#003fb1]">1</p>
                         </div>
-                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#fce7f3] flex items-center justify-center">
-                            <span class="material-symbols-outlined text-[#9d174d] text-sm sm:text-base">admin_panel_settings</span>
+                        <div
+                            class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#fce7f3] flex items-center justify-center">
+                            <span
+                                class="material-symbols-outlined text-[#9d174d] text-sm sm:text-base">admin_panel_settings</span>
                         </div>
                     </div>
                 </div>
@@ -487,19 +556,27 @@
 
             <!-- Tabs -->
             <div class="tabs-scroll flex flex-nowrap gap-1 sm:gap-2 mb-4 sm:mb-6 overflow-x-auto pb-1">
-                <button id="tab-places" class="tab-active px-3 sm:px-6 py-1.5 sm:py-2.5 rounded-xl font-semibold transition-all flex items-center gap-1 sm:gap-2 text-xs sm:text-sm whitespace-nowrap flex-shrink-0" data-tab="places">
+                <button id="tab-places"
+                    class="tab-active px-3 sm:px-6 py-1.5 sm:py-2.5 rounded-xl font-semibold transition-all flex items-center gap-1 sm:gap-2 text-xs sm:text-sm whitespace-nowrap flex-shrink-0"
+                    data-tab="places">
                     <span class="material-symbols-outlined text-sm sm:text-base">list</span>
                     Manage Places
                 </button>
-                <button id="tab-add" class="tab-inactive px-3 sm:px-6 py-1.5 sm:py-2.5 rounded-xl font-semibold transition-all flex items-center gap-1 sm:gap-2 text-xs sm:text-sm whitespace-nowrap flex-shrink-0" data-tab="add">
+                <button id="tab-add"
+                    class="tab-inactive px-3 sm:px-6 py-1.5 sm:py-2.5 rounded-xl font-semibold transition-all flex items-center gap-1 sm:gap-2 text-xs sm:text-sm whitespace-nowrap flex-shrink-0"
+                    data-tab="add">
                     <span class="material-symbols-outlined text-sm sm:text-base">add_location</span>
                     Add New Place
                 </button>
-                <button id="tab-categories" class="tab-inactive px-3 sm:px-6 py-1.5 sm:py-2.5 rounded-xl font-semibold transition-all flex items-center gap-1 sm:gap-2 text-xs sm:text-sm whitespace-nowrap flex-shrink-0" data-tab="categories">
+                <button id="tab-categories"
+                    class="tab-inactive px-3 sm:px-6 py-1.5 sm:py-2.5 rounded-xl font-semibold transition-all flex items-center gap-1 sm:gap-2 text-xs sm:text-sm whitespace-nowrap flex-shrink-0"
+                    data-tab="categories">
                     <span class="material-symbols-outlined text-sm sm:text-base">category</span>
                     Categories
                 </button>
-                <button id="tab-plans" class="tab-inactive px-3 sm:px-6 py-1.5 sm:py-2.5 rounded-xl font-semibold transition-all flex items-center gap-1 sm:gap-2 text-xs sm:text-sm whitespace-nowrap flex-shrink-0" data-tab="plans">
+                <button id="tab-plans"
+                    class="tab-inactive px-3 sm:px-6 py-1.5 sm:py-2.5 rounded-xl font-semibold transition-all flex items-center gap-1 sm:gap-2 text-xs sm:text-sm whitespace-nowrap flex-shrink-0"
+                    data-tab="plans">
                     <span class="material-symbols-outlined text-sm sm:text-base">event_note</span>
                     User Plans
                 </button>
@@ -514,15 +591,21 @@
                                 <tr class="bg-[#e7eeff]">
                                     <th class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-semibold">ID</th>
                                     <th class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-semibold">Title</th>
-                                    <th class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-semibold hidden sm:table-cell">Category</th>
-                                    <th class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-semibold hidden md:table-cell">Fee</th>
-                                    <th class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-semibold text-center">Actions</th>
+                                    <th
+                                        class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-semibold hidden sm:table-cell">
+                                        Category</th>
+                                    <th
+                                        class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-semibold hidden md:table-cell">
+                                        Fee</th>
+                                    <th class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-semibold text-center">
+                                        Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="places-table-body">
                                 <tr>
                                     <td colspan="5" class="text-center py-8 sm:py-12 text-[#434654] text-xs sm:text-sm">
-                                        <span class="material-symbols-outlined text-3xl sm:text-4xl text-[#737686]">hourglass_top</span>
+                                        <span
+                                            class="material-symbols-outlined text-3xl sm:text-4xl text-[#737686]">hourglass_top</span>
                                         <p class="mt-2">Loading places...</p>
                                     </td>
                                 </tr>
@@ -539,117 +622,157 @@
                         <span class="material-symbols-outlined text-[#003fb1]">add_location</span>
                         Add New Place
                     </h3>
-                    <p class="text-xs sm:text-sm text-[#434654] mb-4 sm:mb-6">Fill in the details below to add a new destination</p>
-                    
+                    <p class="text-xs sm:text-sm text-[#434654] mb-4 sm:mb-6">Fill in the details below to add a new
+                        destination</p>
+
                     <form id="add-place-form" class="form-grid">
                         <div>
-                            <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Title <span class="required-star">*</span></label>
-                            <input id="add-title" type="text" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm" placeholder="Enter place name" required>
+                            <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Title <span
+                                    class="required-star">*</span></label>
+                            <input id="add-title" type="text"
+                                class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm"
+                                placeholder="Enter place name" required>
                         </div>
                         <div>
-                            <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Category <span class="required-star">*</span></label>
-                            <select id="add-category" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm" required>
+                            <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Category <span
+                                    class="required-star">*</span></label>
+                            <select id="add-category"
+                                class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm"
+                                required>
                                 <option value="">Select Category</option>
                             </select>
                         </div>
-                        
+
                         <!-- Location Input -->
                         <div class="md:col-span-2">
-                            <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Location <span class="required-star">*</span></label>
-                            <p class="text-[10px] sm:text-xs text-[#434654] mb-2">Use Search or URL to get location coordinates</p>
+                            <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Location <span
+                                    class="required-star">*</span></label>
+                            <p class="text-[10px] sm:text-xs text-[#434654] mb-2">Use Search or URL to get location
+                                coordinates</p>
                             <div class="flex flex-wrap gap-1 sm:gap-2 mb-2 sm:mb-3">
-                                <button type="button" id="location-tab-search" class="location-tab-active px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2">
+                                <button type="button" id="location-tab-search"
+                                    class="location-tab-active px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2">
                                     <span class="material-symbols-outlined text-sm sm:text-base">search</span>
                                     Search
                                 </button>
-                                <button type="button" id="location-tab-url" class="location-tab-inactive px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2">
+                                <button type="button" id="location-tab-url"
+                                    class="location-tab-inactive px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2">
                                     <span class="material-symbols-outlined text-sm sm:text-base">link</span>
                                     URL
                                 </button>
                             </div>
-                            
+
                             <div id="location-search-container">
                                 <div class="relative">
-                                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#434654] text-sm">search</span>
-                                    <input id="location-search" type="text" 
-                                           class="form-input w-full border border-[#e7eeff] rounded-xl pl-9 sm:pl-10 pr-3 py-2 sm:py-2.5 focus:outline-none transition-all text-sm" 
-                                           placeholder="Type to search for a place..." autocomplete="off">
+                                    <span
+                                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#434654] text-sm">search</span>
+                                    <input id="location-search" type="text"
+                                        class="form-input w-full border border-[#e7eeff] rounded-xl pl-9 sm:pl-10 pr-3 py-2 sm:py-2.5 focus:outline-none transition-all text-sm"
+                                        placeholder="Type to search for a place..." autocomplete="off">
                                     <div class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#434654]">
                                         <span class="material-symbols-outlined text-sm">pin_drop</span>
                                     </div>
                                 </div>
                                 <div id="location-results" class="location-results hidden"></div>
-                                <p class="text-[10px] sm:text-xs text-[#434654] mt-1">Type at least 3 characters to search places</p>
+                                <p class="text-[10px] sm:text-xs text-[#434654] mt-1">Type at least 3 characters to
+                                    search places</p>
                             </div>
-                            
+
                             <div id="location-url-container" class="hidden">
                                 <div class="flex flex-col sm:flex-row gap-2">
-                                    <input id="location-url" type="url" 
-                                           class="form-input flex-1 border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm" 
-                                           placeholder="https://www.google.com/maps/place/...">
-                                    <button type="button" onclick="getCoordinatesFromUrl()" 
-                                            class="bg-[#003fb1] text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl hover:bg-[#1a56db] transition-colors text-xs sm:text-sm font-semibold whitespace-nowrap">
+                                    <input id="location-url" type="url"
+                                        class="form-input flex-1 border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm"
+                                        placeholder="https://www.google.com/maps/place/...">
+                                    <button type="button" onclick="getCoordinatesFromUrl()"
+                                        class="bg-[#003fb1] text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl hover:bg-[#1a56db] transition-colors text-xs sm:text-sm font-semibold whitespace-nowrap">
                                         <span class="material-symbols-outlined text-sm align-middle mr-1">sync</span>
                                         Get Coordinates
                                     </button>
                                 </div>
-                                <p class="text-[10px] sm:text-xs text-[#434654] mt-1">Paste a Google Maps URL to extract latitude and longitude</p>
+                                <p class="text-[10px] sm:text-xs text-[#434654] mt-1">Paste a Google Maps URL to extract
+                                    latitude and longitude</p>
                             </div>
                         </div>
-                        
+
                         <div class="md:col-span-2">
-                            <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Description <span class="required-star">*</span></label>
-                            <textarea id="add-description" rows="3" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm" placeholder="Describe the place..." required></textarea>
+                            <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Description <span
+                                    class="required-star">*</span></label>
+                            <textarea id="add-description" rows="3"
+                                class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm"
+                                placeholder="Describe the place..." required></textarea>
                         </div>
-                        
+
                         <div>
-                            <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Latitude <span class="required-star">*</span></label>
-                            <input id="add-latitude" type="text" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 readonly-field text-sm" placeholder="Auto-filled" required readonly>
+                            <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Latitude <span
+                                    class="required-star">*</span></label>
+                            <input id="add-latitude" type="text"
+                                class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 readonly-field text-sm"
+                                placeholder="Auto-filled" required readonly>
                             <p class="text-[10px] sm:text-xs text-[#434654] mt-1">Auto-filled from search</p>
                         </div>
-                        
+
                         <div>
-                            <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Longitude <span class="required-star">*</span></label>
-                            <input id="add-longitude" type="text" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 readonly-field text-sm" placeholder="Auto-filled" required readonly>
+                            <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Longitude <span
+                                    class="required-star">*</span></label>
+                            <input id="add-longitude" type="text"
+                                class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 readonly-field text-sm"
+                                placeholder="Auto-filled" required readonly>
                             <p class="text-[10px] sm:text-xs text-[#434654] mt-1">Auto-filled from search</p>
                         </div>
-                        
+
                         <div class="md:col-span-2">
-                            <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Address <span class="required-star">*</span></label>
-                            <input id="add-address" type="text" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 readonly-field text-sm" placeholder="Auto-filled" required readonly>
+                            <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Address <span
+                                    class="required-star">*</span></label>
+                            <input id="add-address" type="text"
+                                class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 readonly-field text-sm"
+                                placeholder="Auto-filled" required readonly>
                             <p class="text-[10px] sm:text-xs text-[#434654] mt-1">Auto-filled from search</p>
                         </div>
-                        
+
                         <div>
-                            <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Entry Fee (Rs.)</label>
-                            <input id="add-fee" type="number" step="0.01" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm" value="0">
+                            <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Entry Fee
+                                (Rs.)</label>
+                            <input id="add-fee" type="number" step="0.01"
+                                class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm"
+                                value="0">
                         </div>
                         <div>
-                            <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Opening Time</label>
-                            <input id="add-opening" type="time" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm">
+                            <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Opening
+                                Time</label>
+                            <input id="add-opening" type="time"
+                                class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm">
                         </div>
                         <div>
-                            <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Closing Time</label>
-                            <input id="add-closing" type="time" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm">
+                            <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Closing
+                                Time</label>
+                            <input id="add-closing" type="time"
+                                class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm">
                         </div>
                         <div>
                             <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Best Time</label>
-                            <input id="add-besttime" type="text" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm" placeholder="e.g. Morning, Sunset">
+                            <input id="add-besttime" type="text"
+                                class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm"
+                                placeholder="e.g. Morning, Sunset">
                         </div>
                         <div>
-                            <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Duration (minutes)</label>
-                            <input id="add-duration" type="number" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm" value="60">
+                            <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Duration
+                                (minutes)</label>
+                            <input id="add-duration" type="number"
+                                class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm"
+                                value="60">
                         </div>
                         <div>
                             <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Parking</label>
-                            <select id="add-parking" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm">
+                            <select id="add-parking"
+                                class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm">
                                 <option value="1">Available</option>
                                 <option value="0">Not Available</option>
                             </select>
                         </div>
                         <div>
                             <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Featured</label>
-                            <select id="add-featured" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm">
+                            <select id="add-featured"
+                                class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm">
                                 <option value="0">No</option>
                                 <option value="1">Yes</option>
                             </select>
@@ -659,34 +782,46 @@
                         <div class="md:col-span-2">
                             <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Image</label>
                             <div class="flex flex-wrap gap-1 sm:gap-2 mb-2 sm:mb-3">
-                                <button type="button" id="image-tab-url" class="image-tab-active px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2">
+                                <button type="button" id="image-tab-url"
+                                    class="image-tab-active px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2">
                                     <span class="material-symbols-outlined text-sm sm:text-base">link</span>
                                     URL
                                 </button>
-                                <button type="button" id="image-tab-upload" class="image-tab-inactive px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2">
+                                <button type="button" id="image-tab-upload"
+                                    class="image-tab-inactive px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2">
                                     <span class="material-symbols-outlined text-sm sm:text-base">upload_file</span>
                                     Upload
                                 </button>
                             </div>
-                            
+
                             <div id="image-url-container">
-                                <input id="add-image-url" type="url" 
-                                       class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm" 
-                                       placeholder="https://example.com/image.jpg">
+                                <input id="add-image-url" type="url"
+                                    class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm"
+                                    placeholder="https://example.com/image.jpg">
                                 <p class="text-[10px] sm:text-xs text-[#434654] mt-1">Enter a direct image URL</p>
                             </div>
-                            
+
                             <div id="image-upload-container" class="hidden">
-                                <div class="border-2 border-dashed border-[#e7eeff] rounded-xl p-4 sm:p-6 text-center hover:border-[#003fb1] transition-colors">
-                                    <input id="add-image-file" type="file" accept="image/*" class="hidden" onchange="previewImage(this)">
-                                    <div id="image-upload-placeholder" onclick="document.getElementById('add-image-file').click()" class="cursor-pointer">
-                                        <span class="material-symbols-outlined text-3xl sm:text-4xl text-[#737686]">cloud_upload</span>
-                                        <p class="text-xs sm:text-sm text-[#434654] mt-2">Click to upload or drag and drop</p>
-                                        <p class="text-[10px] sm:text-xs text-[#434654]">PNG, JPG, JPEG, WEBP (Max 5MB)</p>
+                                <div
+                                    class="border-2 border-dashed border-[#e7eeff] rounded-xl p-4 sm:p-6 text-center hover:border-[#003fb1] transition-colors">
+                                    <input id="add-image-file" type="file" accept="image/*" class="hidden"
+                                        onchange="previewImage(this)">
+                                    <div id="image-upload-placeholder"
+                                        onclick="document.getElementById('add-image-file').click()"
+                                        class="cursor-pointer">
+                                        <span
+                                            class="material-symbols-outlined text-3xl sm:text-4xl text-[#737686]">cloud_upload</span>
+                                        <p class="text-xs sm:text-sm text-[#434654] mt-2">Click to upload or drag and
+                                            drop</p>
+                                        <p class="text-[10px] sm:text-xs text-[#434654]">PNG, JPG, JPEG, WEBP (Max 5MB)
+                                        </p>
                                     </div>
                                     <div id="image-preview-container" class="hidden mt-3">
-                                        <img id="image-preview" class="max-h-32 sm:max-h-48 rounded-lg mx-auto" src="" alt="Preview">
-                                        <button type="button" onclick="removeImagePreview()" class="mt-2 text-red-500 text-xs sm:text-sm font-semibold hover:underline">Remove Image</button>
+                                        <img id="image-preview" class="max-h-32 sm:max-h-48 rounded-lg mx-auto" src=""
+                                            alt="Preview">
+                                        <button type="button" onclick="removeImagePreview()"
+                                            class="mt-2 text-red-500 text-xs sm:text-sm font-semibold hover:underline">Remove
+                                            Image</button>
                                     </div>
                                 </div>
                             </div>
@@ -694,7 +829,8 @@
                         </div>
 
                         <div class="md:col-span-2">
-                            <button type="submit" class="w-full bg-[#003fb1] text-white py-2.5 sm:py-3 rounded-xl font-semibold hover:bg-[#1a56db] transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base">
+                            <button type="submit"
+                                class="w-full bg-[#003fb1] text-white py-2.5 sm:py-3 rounded-xl font-semibold hover:bg-[#1a56db] transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base">
                                 <span class="material-symbols-outlined">save</span>
                                 Save Place
                             </button>
@@ -714,14 +850,16 @@
                             </h3>
                             <p class="text-xs sm:text-sm text-[#434654] mt-1">Add, edit, or delete categories</p>
                         </div>
-                        <button onclick="showAddCategoryModal()" class="bg-[#003fb1] text-white px-3 sm:px-4 py-1.5 sm:py-2.5 rounded-xl font-semibold hover:bg-[#1a56db] transition-colors flex items-center gap-1 sm:gap-2 shadow-md hover:shadow-lg text-xs sm:text-sm">
+                        <button onclick="showAddCategoryModal()"
+                            class="bg-[#003fb1] text-white px-3 sm:px-4 py-1.5 sm:py-2.5 rounded-xl font-semibold hover:bg-[#1a56db] transition-colors flex items-center gap-1 sm:gap-2 shadow-md hover:shadow-lg text-xs sm:text-sm">
                             <span class="material-symbols-outlined text-sm">add</span>
                             Add Category
                         </button>
                     </div>
                     <div id="categories-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                         <div class="col-span-full text-center py-8 sm:py-12 text-[#434654] text-sm">
-                            <span class="material-symbols-outlined text-3xl sm:text-4xl text-[#737686]">hourglass_top</span>
+                            <span
+                                class="material-symbols-outlined text-3xl sm:text-4xl text-[#737686]">hourglass_top</span>
                             <p class="mt-2">Loading categories...</p>
                         </div>
                     </div>
@@ -733,7 +871,8 @@
                 <div class="bg-white rounded-2xl shadow-sm border border-[#e7eeff] overflow-hidden">
                     <div class="p-3 sm:p-4 border-b border-[#e7eeff] flex flex-wrap justify-between items-center gap-2">
                         <h3 class="text-base sm:text-xl font-bold text-[#111c2d]">User Plans</h3>
-                        <span class="text-xs sm:text-sm text-[#434654]">Total: <span id="total-plans-count">0</span></span>
+                        <span class="text-xs sm:text-sm text-[#434654]">Total: <span
+                                id="total-plans-count">0</span></span>
                     </div>
                     <div class="table-wrapper">
                         <table class="w-full text-left min-w-[550px]">
@@ -741,16 +880,24 @@
                                 <tr class="bg-[#e7eeff]">
                                     <th class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-semibold">ID</th>
                                     <th class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-semibold">User</th>
-                                    <th class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-semibold hidden sm:table-cell">Date</th>
-                                    <th class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-semibold hidden md:table-cell">Places</th>
-                                    <th class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-semibold hidden lg:table-cell">Budget</th>
-                                    <th class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-semibold text-center">Actions</th>
+                                    <th
+                                        class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-semibold hidden sm:table-cell">
+                                        Date</th>
+                                    <th
+                                        class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-semibold hidden md:table-cell">
+                                        Places</th>
+                                    <th
+                                        class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-semibold hidden lg:table-cell">
+                                        Budget</th>
+                                    <th class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-semibold text-center">
+                                        Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="plans-table-body">
                                 <tr>
                                     <td colspan="6" class="text-center py-8 sm:py-12 text-[#434654] text-sm">
-                                        <span class="material-symbols-outlined text-3xl sm:text-4xl text-[#737686]">hourglass_top</span>
+                                        <span
+                                            class="material-symbols-outlined text-3xl sm:text-4xl text-[#737686]">hourglass_top</span>
                                         <p class="mt-2">Loading plans...</p>
                                     </td>
                                 </tr>
@@ -764,7 +911,8 @@
         <!-- Footer -->
         <footer class="bg-[#e7eeff] mt-auto py-3 sm:py-4 px-3 sm:px-4 md:px-8">
             <div class="max-w-7xl mx-auto">
-                <p class="text-[10px] sm:text-sm text-[#434654] text-center">© 2024 Panadura Day Planner Admin Panel. All rights reserved.</p>
+                <p class="text-[10px] sm:text-sm text-[#434654] text-center">© 2024 Panadura Day Planner Admin Panel.
+                    All rights reserved.</p>
             </div>
         </footer>
     </div>
@@ -772,176 +920,223 @@
     <!-- ============================================= -->
     <!-- EDIT PLACE MODAL -->
     <!-- ============================================= -->
-    <div id="edit-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden modal-overlay p-3 sm:p-4">
+    <div id="edit-modal"
+        class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden modal-overlay p-3 sm:p-4">
         <div class="bg-white rounded-2xl p-4 sm:p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto modal-content">
             <div class="flex justify-between items-center mb-3 sm:mb-4">
                 <h3 class="text-lg sm:text-2xl font-bold text-[#111c2d] flex items-center gap-2">
                     <span class="material-symbols-outlined text-[#003fb1]">edit</span>
                     Edit Place
                 </h3>
-                <button onclick="closeEditModal()" class="text-[#434654] hover:text-red-500 transition-colors p-1 sm:p-2 rounded-full hover:bg-red-50">
+                <button onclick="closeEditModal()"
+                    class="text-[#434654] hover:text-red-500 transition-colors p-1 sm:p-2 rounded-full hover:bg-red-50">
                     <span class="material-symbols-outlined">close</span>
                 </button>
             </div>
             <form id="edit-form" class="form-grid">
                 <input id="edit-id" type="hidden">
                 <div>
-                    <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Title <span class="required-star">*</span></label>
-                    <input id="edit-title" type="text" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm" required>
+                    <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Title <span
+                            class="required-star">*</span></label>
+                    <input id="edit-title" type="text"
+                        class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm"
+                        required>
                 </div>
                 <div>
-                    <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Category <span class="required-star">*</span></label>
-                    <select id="edit-category" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm" required>
+                    <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Category <span
+                            class="required-star">*</span></label>
+                    <select id="edit-category"
+                        class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm"
+                        required>
                         <option value="">Select Category</option>
                     </select>
                 </div>
-                
+
                 <!-- Edit Location Input -->
                 <div class="md:col-span-2">
-                    <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Location <span class="required-star">*</span></label>
-                    <p class="text-[10px] sm:text-xs text-[#434654] mb-2">Use Search or URL to get location coordinates</p>
+                    <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Location <span
+                            class="required-star">*</span></label>
+                    <p class="text-[10px] sm:text-xs text-[#434654] mb-2">Use Search or URL to get location coordinates
+                    </p>
                     <div class="flex flex-wrap gap-1 sm:gap-2 mb-2 sm:mb-3">
-                        <button type="button" id="edit-location-tab-search" class="location-tab-active px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2">
+                        <button type="button" id="edit-location-tab-search"
+                            class="location-tab-active px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2">
                             <span class="material-symbols-outlined text-sm sm:text-base">search</span>
                             Search
                         </button>
-                        <button type="button" id="edit-location-tab-url" class="location-tab-inactive px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2">
+                        <button type="button" id="edit-location-tab-url"
+                            class="location-tab-inactive px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2">
                             <span class="material-symbols-outlined text-sm sm:text-base">link</span>
                             URL
                         </button>
                     </div>
-                    
+
                     <div id="edit-location-search-container">
                         <div class="relative">
-                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#434654] text-sm">search</span>
-                            <input id="edit-location-search" type="text" 
-                                   class="form-input w-full border border-[#e7eeff] rounded-xl pl-9 sm:pl-10 pr-3 py-2 sm:py-2.5 focus:outline-none transition-all text-sm" 
-                                   placeholder="Type to search for a place..." autocomplete="off">
+                            <span
+                                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#434654] text-sm">search</span>
+                            <input id="edit-location-search" type="text"
+                                class="form-input w-full border border-[#e7eeff] rounded-xl pl-9 sm:pl-10 pr-3 py-2 sm:py-2.5 focus:outline-none transition-all text-sm"
+                                placeholder="Type to search for a place..." autocomplete="off">
                             <div class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#434654]">
                                 <span class="material-symbols-outlined text-sm">pin_drop</span>
                             </div>
                         </div>
                         <div id="edit-location-results" class="location-results hidden"></div>
-                        <p class="text-[10px] sm:text-xs text-[#434654] mt-1">Type at least 3 characters to search places</p>
+                        <p class="text-[10px] sm:text-xs text-[#434654] mt-1">Type at least 3 characters to search
+                            places</p>
                     </div>
-                    
+
                     <div id="edit-location-url-container" class="hidden">
                         <div class="flex flex-col sm:flex-row gap-2">
-                            <input id="edit-location-url" type="url" 
-                                   class="form-input flex-1 border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm" 
-                                   placeholder="https://www.google.com/maps/place/...">
-                            <button type="button" onclick="editGetCoordinatesFromUrl()" 
-                                    class="bg-[#003fb1] text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl hover:bg-[#1a56db] transition-colors text-xs sm:text-sm font-semibold whitespace-nowrap">
+                            <input id="edit-location-url" type="url"
+                                class="form-input flex-1 border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm"
+                                placeholder="https://www.google.com/maps/place/...">
+                            <button type="button" onclick="editGetCoordinatesFromUrl()"
+                                class="bg-[#003fb1] text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl hover:bg-[#1a56db] transition-colors text-xs sm:text-sm font-semibold whitespace-nowrap">
                                 <span class="material-symbols-outlined text-sm align-middle mr-1">sync</span>
                                 Get Coordinates
                             </button>
                         </div>
-                        <p class="text-[10px] sm:text-xs text-[#434654] mt-1">Paste a Google Maps URL to extract latitude and longitude</p>
+                        <p class="text-[10px] sm:text-xs text-[#434654] mt-1">Paste a Google Maps URL to extract
+                            latitude and longitude</p>
                     </div>
                 </div>
-                
+
                 <div class="md:col-span-2">
-                    <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Description <span class="required-star">*</span></label>
-                    <textarea id="edit-description" rows="3" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm" required></textarea>
+                    <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Description <span
+                            class="required-star">*</span></label>
+                    <textarea id="edit-description" rows="3"
+                        class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm"
+                        required></textarea>
                 </div>
-                
+
                 <div>
-                    <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Latitude <span class="required-star">*</span></label>
-                    <input id="edit-latitude" type="text" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 readonly-field text-sm" required readonly>
+                    <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Latitude <span
+                            class="required-star">*</span></label>
+                    <input id="edit-latitude" type="text"
+                        class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 readonly-field text-sm"
+                        required readonly>
                     <p class="text-[10px] sm:text-xs text-[#434654] mt-1">Auto-filled from search</p>
                 </div>
-                
+
                 <div>
-                    <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Longitude <span class="required-star">*</span></label>
-                    <input id="edit-longitude" type="text" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 readonly-field text-sm" required readonly>
+                    <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Longitude <span
+                            class="required-star">*</span></label>
+                    <input id="edit-longitude" type="text"
+                        class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 readonly-field text-sm"
+                        required readonly>
                     <p class="text-[10px] sm:text-xs text-[#434654] mt-1">Auto-filled from search</p>
                 </div>
-                
+
                 <div class="md:col-span-2">
-                    <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Address <span class="required-star">*</span></label>
-                    <input id="edit-address" type="text" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 readonly-field text-sm" required readonly>
+                    <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Address <span
+                            class="required-star">*</span></label>
+                    <input id="edit-address" type="text"
+                        class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 readonly-field text-sm"
+                        required readonly>
                     <p class="text-[10px] sm:text-xs text-[#434654] mt-1">Auto-filled from search</p>
                 </div>
-                
+
                 <div>
                     <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Entry Fee (Rs.)</label>
-                    <input id="edit-fee" type="number" step="0.01" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm" value="0">
+                    <input id="edit-fee" type="number" step="0.01"
+                        class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm"
+                        value="0">
                 </div>
                 <div>
                     <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Opening Time</label>
-                    <input id="edit-opening" type="time" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm">
+                    <input id="edit-opening" type="time"
+                        class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm">
                 </div>
                 <div>
                     <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Closing Time</label>
-                    <input id="edit-closing" type="time" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm">
+                    <input id="edit-closing" type="time"
+                        class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm">
                 </div>
                 <div>
                     <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Best Time</label>
-                    <input id="edit-besttime" type="text" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm">
+                    <input id="edit-besttime" type="text"
+                        class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm">
                 </div>
                 <div>
                     <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Duration (minutes)</label>
-                    <input id="edit-duration" type="number" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm" value="60">
+                    <input id="edit-duration" type="number"
+                        class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm"
+                        value="60">
                 </div>
                 <div>
                     <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Parking</label>
-                    <select id="edit-parking" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm">
+                    <select id="edit-parking"
+                        class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm">
                         <option value="1">Available</option>
                         <option value="0">Not Available</option>
                     </select>
                 </div>
                 <div>
                     <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Featured</label>
-                    <select id="edit-featured" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm">
+                    <select id="edit-featured"
+                        class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm">
                         <option value="0">No</option>
                         <option value="1">Yes</option>
                     </select>
                 </div>
-                
+
                 <!-- Edit Image -->
                 <div class="md:col-span-2">
                     <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Image</label>
                     <div class="flex flex-wrap gap-1 sm:gap-2 mb-2 sm:mb-3">
-                        <button type="button" id="edit-image-tab-url" class="image-tab-active px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2">
+                        <button type="button" id="edit-image-tab-url"
+                            class="image-tab-active px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2">
                             <span class="material-symbols-outlined text-sm sm:text-base">link</span>
                             URL
                         </button>
-                        <button type="button" id="edit-image-tab-upload" class="image-tab-inactive px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2">
+                        <button type="button" id="edit-image-tab-upload"
+                            class="image-tab-inactive px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2">
                             <span class="material-symbols-outlined text-sm sm:text-base">upload_file</span>
                             Upload
                         </button>
                     </div>
-                    
+
                     <div id="edit-image-url-container">
-                        <input id="edit-image-url" type="url" 
-                               class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm" 
-                               placeholder="https://example.com/image.jpg">
+                        <input id="edit-image-url" type="url"
+                            class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm"
+                            placeholder="https://example.com/image.jpg">
                         <p class="text-[10px] sm:text-xs text-[#434654] mt-1">Enter a direct image URL</p>
                     </div>
-                    
+
                     <div id="edit-image-upload-container" class="hidden">
-                        <div class="border-2 border-dashed border-[#e7eeff] rounded-xl p-4 sm:p-6 text-center hover:border-[#003fb1] transition-colors">
-                            <input id="edit-image-file" type="file" accept="image/*" class="hidden" onchange="editPreviewImage(this)">
-                            <div id="edit-image-upload-placeholder" onclick="document.getElementById('edit-image-file').click()" class="cursor-pointer">
-                                <span class="material-symbols-outlined text-3xl sm:text-4xl text-[#737686]">cloud_upload</span>
+                        <div
+                            class="border-2 border-dashed border-[#e7eeff] rounded-xl p-4 sm:p-6 text-center hover:border-[#003fb1] transition-colors">
+                            <input id="edit-image-file" type="file" accept="image/*" class="hidden"
+                                onchange="editPreviewImage(this)">
+                            <div id="edit-image-upload-placeholder"
+                                onclick="document.getElementById('edit-image-file').click()" class="cursor-pointer">
+                                <span
+                                    class="material-symbols-outlined text-3xl sm:text-4xl text-[#737686]">cloud_upload</span>
                                 <p class="text-xs sm:text-sm text-[#434654] mt-2">Click to upload or drag and drop</p>
                                 <p class="text-[10px] sm:text-xs text-[#434654]">PNG, JPG, JPEG, WEBP (Max 5MB)</p>
                             </div>
                             <div id="edit-image-preview-container" class="hidden mt-3">
-                                <img id="edit-image-preview" class="max-h-32 sm:max-h-48 rounded-lg mx-auto" src="" alt="Preview">
-                                <button type="button" onclick="editRemoveImagePreview()" class="mt-2 text-red-500 text-xs sm:text-sm font-semibold hover:underline">Remove Image</button>
+                                <img id="edit-image-preview" class="max-h-32 sm:max-h-48 rounded-lg mx-auto" src=""
+                                    alt="Preview">
+                                <button type="button" onclick="editRemoveImagePreview()"
+                                    class="mt-2 text-red-500 text-xs sm:text-sm font-semibold hover:underline">Remove
+                                    Image</button>
                             </div>
                         </div>
                     </div>
                     <p id="edit-image-status" class="text-[10px] sm:text-xs text-[#434654] mt-1"></p>
                 </div>
-                
+
                 <div class="md:col-span-2 flex flex-col sm:flex-row gap-2 sm:gap-3">
-                    <button type="submit" class="flex-1 bg-[#003fb1] text-white py-2 sm:py-2.5 rounded-xl font-semibold hover:bg-[#1a56db] transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base">
+                    <button type="submit"
+                        class="flex-1 bg-[#003fb1] text-white py-2 sm:py-2.5 rounded-xl font-semibold hover:bg-[#1a56db] transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base">
                         <span class="material-symbols-outlined">update</span>
                         Update Place
                     </button>
-                    <button type="button" onclick="closeEditModal()" class="flex-1 bg-gray-200 text-[#434654] py-2 sm:py-2.5 rounded-xl font-semibold hover:bg-gray-300 transition-all text-sm sm:text-base">
+                    <button type="button" onclick="closeEditModal()"
+                        class="flex-1 bg-gray-200 text-[#434654] py-2 sm:py-2.5 rounded-xl font-semibold hover:bg-gray-300 transition-all text-sm sm:text-base">
                         Cancel
                     </button>
                 </div>
@@ -952,14 +1147,17 @@
     <!-- ============================================= -->
     <!-- PLAN DETAILS MODAL -->
     <!-- ============================================= -->
-    <div id="plan-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden modal-overlay p-3 sm:p-4">
-        <div class="bg-white rounded-2xl p-4 sm:p-6 max-w-2xl w-full mx-3 sm:mx-4 max-h-[90vh] overflow-y-auto modal-content">
+    <div id="plan-modal"
+        class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden modal-overlay p-3 sm:p-4">
+        <div
+            class="bg-white rounded-2xl p-4 sm:p-6 max-w-2xl w-full mx-3 sm:mx-4 max-h-[90vh] overflow-y-auto modal-content">
             <div class="flex justify-between items-center mb-3 sm:mb-4">
                 <h3 class="text-lg sm:text-2xl font-bold text-[#111c2d] flex items-center gap-2">
                     <span class="material-symbols-outlined text-[#003fb1]">event_note</span>
                     Plan Details
                 </h3>
-                <button onclick="closePlanModal()" class="text-[#434654] hover:text-red-500 transition-colors p-1 sm:p-2 rounded-full hover:bg-red-50">
+                <button onclick="closePlanModal()"
+                    class="text-[#434654] hover:text-red-500 transition-colors p-1 sm:p-2 rounded-full hover:bg-red-50">
                     <span class="material-symbols-outlined">close</span>
                 </button>
             </div>
@@ -972,32 +1170,42 @@
     <!-- ============================================= -->
     <!-- ADD/EDIT CATEGORY MODAL -->
     <!-- ============================================= -->
-    <div id="category-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden modal-overlay p-3 sm:p-4">
+    <div id="category-modal"
+        class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden modal-overlay p-3 sm:p-4">
         <div class="bg-white rounded-2xl p-5 sm:p-6 max-w-md w-full mx-3 sm:mx-4 category-modal-content">
             <div class="flex justify-between items-center mb-3 sm:mb-4">
-                <h3 id="category-modal-title" class="text-lg sm:text-2xl font-bold text-[#111c2d] flex items-center gap-2">
+                <h3 id="category-modal-title"
+                    class="text-lg sm:text-2xl font-bold text-[#111c2d] flex items-center gap-2">
                     <span class="material-symbols-outlined text-[#003fb1]">category</span>
                     Add Category
                 </h3>
-                <button onclick="closeCategoryModal()" class="text-[#434654] hover:text-red-500 transition-colors p-1 sm:p-2 rounded-full hover:bg-red-50">
+                <button onclick="closeCategoryModal()"
+                    class="text-[#434654] hover:text-red-500 transition-colors p-1 sm:p-2 rounded-full hover:bg-red-50">
                     <span class="material-symbols-outlined">close</span>
                 </button>
             </div>
             <form id="category-form">
                 <input id="category-edit-id" type="hidden" value="">
                 <div class="mb-3 sm:mb-4">
-                    <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Category Name <span class="required-star">*</span></label>
-                    <input id="category-name" type="text" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm" placeholder="Enter category name" required>
+                    <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Category Name <span
+                            class="required-star">*</span></label>
+                    <input id="category-name" type="text"
+                        class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm"
+                        placeholder="Enter category name" required>
                 </div>
                 <div class="mb-4 sm:mb-6">
                     <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1">Description</label>
-                    <textarea id="category-description" rows="2" class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm" placeholder="Enter category description (optional)"></textarea>
+                    <textarea id="category-description" rows="2"
+                        class="form-input w-full border border-[#e7eeff] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition-all text-sm"
+                        placeholder="Enter category description (optional)"></textarea>
                 </div>
                 <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
-                    <button type="submit" class="flex-1 bg-[#003fb1] text-white py-2 sm:py-2.5 rounded-xl font-semibold hover:bg-[#1a56db] transition-all shadow-md hover:shadow-lg text-sm sm:text-base">
+                    <button type="submit"
+                        class="flex-1 bg-[#003fb1] text-white py-2 sm:py-2.5 rounded-xl font-semibold hover:bg-[#1a56db] transition-all shadow-md hover:shadow-lg text-sm sm:text-base">
                         Save Category
                     </button>
-                    <button type="button" onclick="closeCategoryModal()" class="flex-1 bg-gray-200 text-[#434654] py-2 sm:py-2.5 rounded-xl font-semibold hover:bg-gray-300 transition-all text-sm sm:text-base">
+                    <button type="button" onclick="closeCategoryModal()"
+                        class="flex-1 bg-gray-200 text-[#434654] py-2 sm:py-2.5 rounded-xl font-semibold hover:bg-gray-300 transition-all text-sm sm:text-base">
                         Cancel
                     </button>
                 </div>
@@ -1010,49 +1218,49 @@
     <!-- ============================================= -->
     <script>
         // =============================================
-// Sidebar Functions (Fixed Mobile Toggle)
-// =============================================
-function openSidebar() {
-    const sidebar = document.getElementById('admin-sidebar');
-    const overlay = document.getElementById('sidebar-overlay');
-    
-    if (sidebar) {
-        sidebar.classList.remove('-translate-x-full');
-        sidebar.classList.add('translate-x-0');
-    }
-    if (overlay) {
-        overlay.classList.remove('hidden');
-    }
-    document.body.style.overflow = 'hidden';
-}
+        // Sidebar Functions (Fixed Mobile Toggle)
+        // =============================================
+        function openSidebar() {
+            const sidebar = document.getElementById('admin-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
 
-function closeSidebar() {
-    const sidebar = document.getElementById('admin-sidebar');
-    const overlay = document.getElementById('sidebar-overlay');
-    
-    if (sidebar) {
-        sidebar.classList.add('-translate-x-full');
-        sidebar.classList.remove('translate-x-0');
-    }
-    if (overlay) {
-        overlay.classList.add('hidden');
-    }
-    document.body.style.overflow = 'auto';
-}
+            if (sidebar) {
+                sidebar.classList.remove('-translate-x-full');
+                sidebar.classList.add('translate-x-0');
+            }
+            if (overlay) {
+                overlay.classList.remove('hidden');
+            }
+            document.body.style.overflow = 'hidden';
+        }
 
-// Mobile Hamburger Menu Click
-document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e) {
-    e.stopPropagation();
-    const sidebar = document.getElementById('admin-sidebar');
-    if (sidebar && sidebar.classList.contains('-translate-x-full')) {
-        openSidebar();
-    } else {
-        closeSidebar();
-    }
-});
+        function closeSidebar() {
+            const sidebar = document.getElementById('admin-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            if (sidebar) {
+                sidebar.classList.add('-translate-x-full');
+                sidebar.classList.remove('translate-x-0');
+            }
+            if (overlay) {
+                overlay.classList.add('hidden');
+            }
+            document.body.style.overflow = 'auto';
+        }
+
+        // Mobile Hamburger Menu Click
+        document.getElementById('mobile-menu-btn')?.addEventListener('click', function (e) {
+            e.stopPropagation();
+            const sidebar = document.getElementById('admin-sidebar');
+            if (sidebar && sidebar.classList.contains('-translate-x-full')) {
+                openSidebar();
+            } else {
+                closeSidebar();
+            }
+        });
 
         // Mobile menu toggle
-        document.getElementById('mobile-menu-btn')?.addEventListener('click', function() {
+        document.getElementById('mobile-menu-btn')?.addEventListener('click', function () {
             const sidebar = document.querySelector('.admin-sidebar');
             if (sidebar) {
                 if (sidebar.classList.contains('open')) {
@@ -1064,7 +1272,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
         });
 
         // Close sidebar on escape key
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
                 closeSidebar();
             }
@@ -1079,7 +1287,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
         const imageUploadContainer = document.getElementById('image-upload-container');
 
         if (imageUrlTab) {
-            imageUrlTab.addEventListener('click', function() {
+            imageUrlTab.addEventListener('click', function () {
                 imageUrlTab.className = 'image-tab-active px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2';
                 imageUploadTab.className = 'image-tab-inactive px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2';
                 imageUrlContainer.classList.remove('hidden');
@@ -1092,7 +1300,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
         }
 
         if (imageUploadTab) {
-            imageUploadTab.addEventListener('click', function() {
+            imageUploadTab.addEventListener('click', function () {
                 imageUploadTab.className = 'image-tab-active px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2';
                 imageUrlTab.className = 'image-tab-inactive px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2';
                 imageUploadContainer.classList.remove('hidden');
@@ -1123,7 +1331,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
             }
 
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 document.getElementById('image-preview').src = e.target.result;
                 document.getElementById('image-preview-container').classList.remove('hidden');
                 document.getElementById('image-upload-placeholder').classList.add('hidden');
@@ -1150,7 +1358,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
         const editImageUploadContainer = document.getElementById('edit-image-upload-container');
 
         if (editImageUrlTab) {
-            editImageUrlTab.addEventListener('click', function() {
+            editImageUrlTab.addEventListener('click', function () {
                 editImageUrlTab.className = 'image-tab-active px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2';
                 editImageUploadTab.className = 'image-tab-inactive px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2';
                 editImageUrlContainer.classList.remove('hidden');
@@ -1163,7 +1371,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
         }
 
         if (editImageUploadTab) {
-            editImageUploadTab.addEventListener('click', function() {
+            editImageUploadTab.addEventListener('click', function () {
                 editImageUploadTab.className = 'image-tab-active px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2';
                 editImageUrlTab.className = 'image-tab-inactive px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2';
                 editImageUploadContainer.classList.remove('hidden');
@@ -1194,7 +1402,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
             }
 
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 document.getElementById('edit-image-preview').src = e.target.result;
                 document.getElementById('edit-image-preview-container').classList.remove('hidden');
                 document.getElementById('edit-image-upload-placeholder').classList.add('hidden');
@@ -1244,13 +1452,13 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
         }
 
         if (searchTab) {
-            searchTab.addEventListener('click', function() {
+            searchTab.addEventListener('click', function () {
                 switchLocationTab('search');
             });
         }
 
         if (urlTab) {
-            urlTab.addEventListener('click', function() {
+            urlTab.addEventListener('click', function () {
                 switchLocationTab('url');
             });
         }
@@ -1287,13 +1495,13 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
         }
 
         if (editSearchTab) {
-            editSearchTab.addEventListener('click', function() {
+            editSearchTab.addEventListener('click', function () {
                 editSwitchLocationTab('search');
             });
         }
 
         if (editUrlTab) {
-            editUrlTab.addEventListener('click', function() {
+            editUrlTab.addEventListener('click', function () {
                 editSwitchLocationTab('url');
             });
         }
@@ -1304,9 +1512,9 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
         let searchTimeout;
 
         if (searchInput) {
-            searchInput.addEventListener('input', function() {
+            searchInput.addEventListener('input', function () {
                 const query = this.value.trim();
-                
+
                 if (query.length < 3) {
                     resultsContainer.classList.add('hidden');
                     resultsContainer.innerHTML = '';
@@ -1319,14 +1527,14 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
                 }
 
                 clearTimeout(searchTimeout);
-                
+
                 searchTimeout = setTimeout(async () => {
                     try {
                         const res = await fetch(
                             `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5&addressdetails=1&countrycodes=LK`
                         );
                         const data = await res.json();
-                        
+
                         if (data.length === 0) {
                             resultsContainer.innerHTML = '<div class="location-result-item text-[#434654]">No results found</div>';
                             resultsContainer.classList.remove('hidden');
@@ -1338,7 +1546,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
                             const lat = parseFloat(place.lat);
                             const lon = parseFloat(place.lon);
                             const displayName = place.display_name || place.name;
-                            
+
                             html += `
                                 <div class="location-result-item" onclick="selectLocation('${displayName.replace(/'/g, "\\'")}', ${lat}, ${lon})">
                                     <span class="material-symbols-outlined text-[#003fb1] text-sm align-middle mr-2">location_on</span>
@@ -1347,7 +1555,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
                                 </div>
                             `;
                         });
-                        
+
                         resultsContainer.innerHTML = html;
                         resultsContainer.classList.remove('hidden');
                     } catch (error) {
@@ -1359,7 +1567,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
             });
         }
 
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             if (!e.target.closest('#location-search') && !e.target.closest('#location-results')) {
                 resultsContainer.classList.add('hidden');
             }
@@ -1371,9 +1579,9 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
         let editSearchTimeout;
 
         if (editSearchInput) {
-            editSearchInput.addEventListener('input', function() {
+            editSearchInput.addEventListener('input', function () {
                 const query = this.value.trim();
-                
+
                 if (query.length < 3) {
                     editResultsContainer.classList.add('hidden');
                     editResultsContainer.innerHTML = '';
@@ -1386,14 +1594,14 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
                 }
 
                 clearTimeout(editSearchTimeout);
-                
+
                 editSearchTimeout = setTimeout(async () => {
                     try {
                         const res = await fetch(
                             `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5&addressdetails=1&countrycodes=LK`
                         );
                         const data = await res.json();
-                        
+
                         if (data.length === 0) {
                             editResultsContainer.innerHTML = '<div class="location-result-item text-[#434654]">No results found</div>';
                             editResultsContainer.classList.remove('hidden');
@@ -1405,7 +1613,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
                             const lat = parseFloat(place.lat);
                             const lon = parseFloat(place.lon);
                             const displayName = place.display_name || place.name;
-                            
+
                             html += `
                                 <div class="location-result-item" onclick="editSelectLocation('${displayName.replace(/'/g, "\\'")}', ${lat}, ${lon})">
                                     <span class="material-symbols-outlined text-[#003fb1] text-sm align-middle mr-2">location_on</span>
@@ -1414,7 +1622,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
                                 </div>
                             `;
                         });
-                        
+
                         editResultsContainer.innerHTML = html;
                         editResultsContainer.classList.remove('hidden');
                     } catch (error) {
@@ -1426,7 +1634,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
             });
         }
 
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             if (!e.target.closest('#edit-location-search') && !e.target.closest('#edit-location-results')) {
                 editResultsContainer.classList.add('hidden');
             }
@@ -1440,10 +1648,10 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
             document.getElementById('add-latitude').value = lat.toFixed(8);
             document.getElementById('add-longitude').value = lng.toFixed(8);
             document.getElementById('add-address').value = name;
-            
+
             resultsContainer.classList.add('hidden');
             resultsContainer.innerHTML = '';
-            
+
             showToast('📍 Location selected! Coordinates added.', 'success');
         }
 
@@ -1455,10 +1663,10 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
             document.getElementById('edit-latitude').value = lat.toFixed(8);
             document.getElementById('edit-longitude').value = lng.toFixed(8);
             document.getElementById('edit-address').value = name;
-            
+
             editResultsContainer.classList.add('hidden');
             editResultsContainer.innerHTML = '';
-            
+
             showToast('📍 Location selected! Coordinates added.', 'success');
         }
 
@@ -1477,7 +1685,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
                 if (match) {
                     const lat = parseFloat(match[1]);
                     const lng = parseFloat(match[2]);
-                    
+
                     if (!isNaN(lat) && !isNaN(lng)) {
                         document.getElementById('add-latitude').value = lat.toFixed(8);
                         document.getElementById('add-longitude').value = lng.toFixed(8);
@@ -1494,7 +1702,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
                 if (llMatch) {
                     const lat = parseFloat(llMatch[1]);
                     const lng = parseFloat(llMatch[2]);
-                    
+
                     if (!isNaN(lat) && !isNaN(lng)) {
                         document.getElementById('add-latitude').value = lat.toFixed(8);
                         document.getElementById('add-longitude').value = lng.toFixed(8);
@@ -1524,7 +1732,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
                 if (match) {
                     const lat = parseFloat(match[1]);
                     const lng = parseFloat(match[2]);
-                    
+
                     if (!isNaN(lat) && !isNaN(lng)) {
                         document.getElementById('edit-latitude').value = lat.toFixed(8);
                         document.getElementById('edit-longitude').value = lng.toFixed(8);
@@ -1541,7 +1749,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
                 if (llMatch) {
                     const lat = parseFloat(llMatch[1]);
                     const lng = parseFloat(llMatch[2]);
-                    
+
                     if (!isNaN(lat) && !isNaN(lng)) {
                         document.getElementById('edit-latitude').value = lat.toFixed(8);
                         document.getElementById('edit-longitude').value = lng.toFixed(8);
@@ -1563,11 +1771,11 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
             .then(res => res.text())
             .then(html => {
                 document.getElementById('sidebar-placeholder').innerHTML = html;
-                
+
                 // Setup Sidebar Logout Button
                 const sidebarLogout = document.getElementById('admin-logout');
                 if (sidebarLogout) {
-                    sidebarLogout.addEventListener('click', function(e) {
+                    sidebarLogout.addEventListener('click', function (e) {
                         e.preventDefault();
                         localStorage.removeItem('adminToken');
                         authToken = null;
@@ -1605,10 +1813,10 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
             const toast = document.getElementById('toast');
             const toastMessage = document.getElementById('toast-message');
             const toastIcon = document.getElementById('toast-icon');
-            
+
             toast.classList.remove('success', 'error', 'info', 'show');
             toast.classList.add(type);
-            
+
             const icons = {
                 success: 'check_circle',
                 error: 'error',
@@ -1616,17 +1824,17 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
             };
             toastIcon.textContent = icons[type] || 'check_circle';
             toastMessage.textContent = message;
-            
+
             setTimeout(() => {
                 toast.classList.add('show');
             }, 100);
-            
+
             setTimeout(() => {
                 toast.classList.remove('show');
             }, 4000);
         }
 
-        document.getElementById('toast-close').addEventListener('click', function() {
+        document.getElementById('toast-close').addEventListener('click', function () {
             document.getElementById('toast').classList.remove('show');
         });
 
@@ -1673,7 +1881,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
         // =============================================
         // 19. Login
         // =============================================
-        loginForm.addEventListener('submit', async function(e) {
+        loginForm.addEventListener('submit', async function (e) {
             e.preventDefault();
             const username = document.getElementById('login-username').value;
             const password = document.getElementById('login-password').value;
@@ -1687,7 +1895,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
                 });
 
                 const data = await res.json();
-                
+
                 if (data.success) {
                     authToken = data.data.token;
                     localStorage.setItem('adminToken', authToken);
@@ -1707,7 +1915,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
         // =============================================
         // 20. Logout
         // =============================================
-        logoutBtn.addEventListener('click', function() {
+        logoutBtn.addEventListener('click', function () {
             localStorage.removeItem('adminToken');
             authToken = null;
             showToast('Logged out successfully', 'info');
@@ -1736,13 +1944,13 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
                 if (data.success) {
                     document.getElementById('stat-places').textContent = data.count;
                 }
-                
+
                 const catRes = await fetch('/api/categories');
                 const catData = await catRes.json();
                 if (catData.success) {
                     document.getElementById('stat-categories').textContent = catData.count;
                 }
-                
+
                 const planRes = await fetch('/api/planner');
                 const planData = await planRes.json();
                 if (planData.success) {
@@ -1803,7 +2011,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
                 }
             } catch (error) {
                 console.error('Error loading categories:', error);
-                document.getElementById('categories-list').innerHTML = 
+                document.getElementById('categories-list').innerHTML =
                     '<div class="col-span-full text-center py-6 sm:py-8 text-red-500 text-sm">Failed to load categories</div>';
             }
         }
@@ -1813,7 +2021,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
         // =============================================
         function renderCategories(categoryList) {
             const container = document.getElementById('categories-list');
-            
+
             if (categoryList.length === 0) {
                 container.innerHTML = `
                     <div class="col-span-full text-center py-8 sm:py-12 text-[#434654]">
@@ -1870,7 +2078,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
         function openEditCategoryModal(categoryId) {
             const cat = categories.find(c => c.category_id == categoryId);
             if (!cat) return;
-            
+
             document.getElementById('category-modal-title').textContent = 'Edit Category';
             document.getElementById('category-edit-id').value = cat.category_id;
             document.getElementById('category-name').value = cat.name;
@@ -1890,21 +2098,21 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
         // =============================================
         // 30. Save Category
         // =============================================
-        document.getElementById('category-form').addEventListener('submit', async function(e) {
+        document.getElementById('category-form').addEventListener('submit', async function (e) {
             e.preventDefault();
-            
+
             const id = document.getElementById('category-edit-id').value;
             const name = document.getElementById('category-name').value.trim();
             const description = document.getElementById('category-description').value.trim();
-            
+
             if (!name) {
                 showToast('Category name is required', 'error');
                 return;
             }
-            
+
             const url = id ? '/api/admin/categories/' + id : '/api/admin/categories';
             const method = id ? 'PUT' : 'POST';
-            
+
             try {
                 const res = await fetch(url, {
                     method: method,
@@ -1937,7 +2145,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
         async function deleteCategory(categoryId) {
             const cat = categories.find(c => c.category_id == categoryId);
             if (!confirm(`Are you sure you want to delete "${cat ? cat.name : 'this category'}"? This will also remove all places in this category.`)) return;
-            
+
             try {
                 const res = await fetch('/api/admin/categories/' + categoryId, {
                     method: 'DELETE',
@@ -1973,7 +2181,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
                 }
             } catch (error) {
                 console.error('Error loading places:', error);
-                document.getElementById('places-table-body').innerHTML = 
+                document.getElementById('places-table-body').innerHTML =
                     '<tr><td colspan="5" class="text-center py-6 sm:py-8 text-red-500 text-sm">Failed to load places</td></tr>';
             }
         }
@@ -1983,7 +2191,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
         // =============================================
         function renderPlacesTable(places) {
             const tbody = document.getElementById('places-table-body');
-            
+
             if (places.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="5" class="text-center py-6 sm:py-8 text-[#434654] text-sm">No places found</td></tr>';
                 return;
@@ -2019,7 +2227,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
         // =============================================
         // 34. Add Place - With Validation
         // =============================================
-        document.getElementById('add-place-form').addEventListener('submit', async function(e) {
+        document.getElementById('add-place-form').addEventListener('submit', async function (e) {
             e.preventDefault();
 
             const lat = document.getElementById('add-latitude').value;
@@ -2033,11 +2241,11 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
 
             let imageUrl = document.getElementById('add-image-url').value.trim();
             const imageFile = document.getElementById('add-image-file').files[0];
-            
+
             if (imageFile) {
                 const formData = new FormData();
                 formData.append('image', imageFile);
-                
+
                 try {
                     const uploadRes = await fetch('/api/admin/upload-image', {
                         method: 'POST',
@@ -2088,7 +2296,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
                 });
 
                 const result = await res.json();
-                
+
                 if (result.success) {
                     showToast('Place added successfully! 🎉', 'success');
                     this.reset();
@@ -2128,7 +2336,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
                 const data = await res.json();
                 if (data.success) {
                     const place = data.data;
-                    
+
                     document.getElementById('edit-id').value = place.place_id;
                     document.getElementById('edit-title').value = place.title;
                     document.getElementById('edit-description').value = place.description;
@@ -2143,18 +2351,18 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
                     document.getElementById('edit-duration').value = place.avg_duration;
                     document.getElementById('edit-parking').value = place.has_parking ? 1 : 0;
                     document.getElementById('edit-featured').value = place.is_featured ? 1 : 0;
-                    
+
                     const imageUrl = place.image_url || '';
                     document.getElementById('edit-image-url').value = imageUrl;
-                    
+
                     document.getElementById('edit-location-search').value = '';
                     document.getElementById('edit-location-url').value = '';
-                    
+
                     document.getElementById('edit-image-file').value = '';
                     document.getElementById('edit-image-preview-container').classList.add('hidden');
                     document.getElementById('edit-image-upload-placeholder').classList.remove('hidden');
                     document.getElementById('edit-image-status').textContent = '';
-                    
+
                     document.getElementById('edit-modal').classList.remove('hidden');
                     document.body.style.overflow = 'hidden';
                 }
@@ -2175,7 +2383,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
         // =============================================
         // 37. Edit Place
         // =============================================
-        document.getElementById('edit-form').addEventListener('submit', async function(e) {
+        document.getElementById('edit-form').addEventListener('submit', async function (e) {
             e.preventDefault();
 
             const lat = document.getElementById('edit-latitude').value;
@@ -2189,11 +2397,11 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
 
             let imageUrl = document.getElementById('edit-image-url').value.trim();
             const imageFile = document.getElementById('edit-image-file').files[0];
-            
+
             if (imageFile) {
                 const formData = new FormData();
                 formData.append('image', imageFile);
-                
+
                 try {
                     const uploadRes = await fetch('/api/admin/upload-image', {
                         method: 'POST',
@@ -2245,7 +2453,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
                 });
 
                 const result = await res.json();
-                
+
                 if (result.success) {
                     showToast('Place updated successfully! ✅', 'success');
                     closeEditModal();
@@ -2275,7 +2483,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
                 });
 
                 const result = await res.json();
-                
+
                 if (result.success) {
                     showToast('Place deleted successfully! 🗑️', 'info');
                     loadPlaces();
@@ -2306,14 +2514,14 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
                 }
             } catch (error) {
                 console.error('Error loading plans:', error);
-                document.getElementById('plans-table-body').innerHTML = 
+                document.getElementById('plans-table-body').innerHTML =
                     '<tr><td colspan="6" class="text-center py-6 sm:py-8 text-red-500 text-sm">Failed to load plans</td></tr>';
             }
         }
 
         function renderPlansTable(plans) {
             const tbody = document.getElementById('plans-table-body');
-            
+
             if (plans.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="6" class="text-center py-6 sm:py-8 text-[#434654] text-sm">No plans found</td></tr>';
                 return;
@@ -2366,7 +2574,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
 
         function displayPlanDetails(plan) {
             const container = document.getElementById('plan-details-content');
-            
+
             let placesHtml = '';
             if (plan.places && plan.places.length > 0) {
                 plan.places.forEach(place => {
@@ -2383,7 +2591,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
             } else {
                 placesHtml = '<p class="text-[#434654] text-sm">No places in this plan</p>';
             }
-            
+
             container.innerHTML = `
                 <div class="space-y-3 sm:space-y-4">
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
@@ -2417,7 +2625,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
                     </div>
                 </div>
             `;
-            
+
             document.getElementById('plan-modal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         }
@@ -2439,7 +2647,7 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
                 });
 
                 const result = await res.json();
-                
+
                 if (result.success) {
                     showToast('Plan deleted successfully! 🗑️', 'info');
                     loadPlans();
@@ -2456,28 +2664,28 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
         // =============================================
         // 40. Tab Switching
         // =============================================
-        document.getElementById('tab-places').addEventListener('click', function() {
+        document.getElementById('tab-places').addEventListener('click', function () {
             switchTab('places');
             const url = new URL(window.location);
             url.searchParams.set('tab', 'places');
             window.history.pushState({}, '', url);
         });
 
-        document.getElementById('tab-add').addEventListener('click', function() {
+        document.getElementById('tab-add').addEventListener('click', function () {
             switchTab('add');
             const url = new URL(window.location);
             url.searchParams.set('tab', 'add');
             window.history.pushState({}, '', url);
         });
 
-        document.getElementById('tab-categories').addEventListener('click', function() {
+        document.getElementById('tab-categories').addEventListener('click', function () {
             switchTab('categories');
             const url = new URL(window.location);
             url.searchParams.set('tab', 'categories');
             window.history.pushState({}, '', url);
         });
 
-        document.getElementById('tab-plans').addEventListener('click', function() {
+        document.getElementById('tab-plans').addEventListener('click', function () {
             switchTab('plans');
             const url = new URL(window.location);
             url.searchParams.set('tab', 'plans');
@@ -2532,19 +2740,19 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
         // =============================================
         // 41. Close modal on outside click
         // =============================================
-        document.getElementById('edit-modal').addEventListener('click', function(e) {
+        document.getElementById('edit-modal').addEventListener('click', function (e) {
             if (e.target === this) {
                 closeEditModal();
             }
         });
 
-        document.getElementById('category-modal').addEventListener('click', function(e) {
+        document.getElementById('category-modal').addEventListener('click', function (e) {
             if (e.target === this) {
                 closeCategoryModal();
             }
         });
 
-        document.getElementById('plan-modal').addEventListener('click', function(e) {
+        document.getElementById('plan-modal').addEventListener('click', function (e) {
             if (e.target === this) {
                 closePlanModal();
             }
@@ -2553,10 +2761,10 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
         // =============================================
         // 42. Initialize
         // =============================================
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             checkAuth();
-            
-            window.addEventListener('popstate', function() {
+
+            window.addEventListener('popstate', function () {
                 const tab = getUrlParameter('tab');
                 if (tab) {
                     switchTab(tab);
@@ -2596,4 +2804,5 @@ document.getElementById('mobile-menu-btn')?.addEventListener('click', function(e
     </script>
 
 </body>
+
 </html>

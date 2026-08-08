@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html class="scroll-smooth" lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Places List - Panadura Day Planner</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
@@ -15,21 +18,29 @@
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
+
         .material-symbols-outlined.fill {
             font-variation-settings: 'FILL' 1;
         }
-        
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
-        
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
         .card-hover {
             transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
+
         .card-hover:hover {
             transform: translateY(-6px);
             box-shadow: 0 20px 40px rgba(0, 63, 177, 0.15);
         }
-        
+
         .filter-btn {
             background: #e7eeff;
             color: #111c2d;
@@ -43,60 +54,114 @@
             white-space: nowrap;
             flex-shrink: 0;
         }
+
         @media (min-width: 640px) {
             .filter-btn {
                 padding: 8px 20px;
                 font-size: 14px;
             }
         }
+
         .filter-btn:hover {
             background: #1a56db;
             color: white;
             transform: scale(1.03);
         }
+
         .filter-btn.active {
             background: #003fb1;
             color: white;
             box-shadow: 0 4px 15px rgba(0, 63, 177, 0.3);
         }
-        
-        .bg-purple-100 { background: #f3e8ff; }
-        .text-purple-800 { color: #6b21a8; }
-        .bg-green-100 { background: #d1fae5; }
-        .text-green-800 { color: #065f46; }
-        .bg-orange-100 { background: #ffedd5; }
-        .text-orange-800 { color: #9a3412; }
-        .bg-blue-100 { background: #dbeafe; }
-        .text-blue-800 { color: #1e40af; }
-        .bg-yellow-100 { background: #fef3c7; }
-        .text-yellow-800 { color: #854d0e; }
-        .bg-pink-100 { background: #fce7f3; }
-        .text-pink-800 { color: #9d174d; }
-        .bg-gray-100 { background: #f3f4f6; }
-        .text-gray-800 { color: #1f2937; }
-        
+
+        .bg-purple-100 {
+            background: #f3e8ff;
+        }
+
+        .text-purple-800 {
+            color: #6b21a8;
+        }
+
+        .bg-green-100 {
+            background: #d1fae5;
+        }
+
+        .text-green-800 {
+            color: #065f46;
+        }
+
+        .bg-orange-100 {
+            background: #ffedd5;
+        }
+
+        .text-orange-800 {
+            color: #9a3412;
+        }
+
+        .bg-blue-100 {
+            background: #dbeafe;
+        }
+
+        .text-blue-800 {
+            color: #1e40af;
+        }
+
+        .bg-yellow-100 {
+            background: #fef3c7;
+        }
+
+        .text-yellow-800 {
+            color: #854d0e;
+        }
+
+        .bg-pink-100 {
+            background: #fce7f3;
+        }
+
+        .text-pink-800 {
+            color: #9d174d;
+        }
+
+        .bg-gray-100 {
+            background: #f3f4f6;
+        }
+
+        .text-gray-800 {
+            color: #1f2937;
+        }
+
         .line-clamp-1 {
             display: -webkit-box;
             -webkit-line-clamp: 1;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
+
         .line-clamp-2 {
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
-        
+
         .badge-pulse {
             animation: pulse 2s infinite;
         }
+
         @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.7; }
-            100% { opacity: 1; }
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+
+            100% {
+                opacity: 1;
+            }
         }
-        
+
         .sort-select {
             appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23434654' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
@@ -105,12 +170,14 @@
             background-size: 18px;
             padding-right: 36px;
         }
+
         .sort-select:focus {
             outline: none;
             ring: 2px solid #003fb1;
         }
     </style>
 </head>
+
 <body class="bg-[#f9f9ff] text-[#111c2d] min-h-screen flex flex-col antialiased overflow-x-hidden">
 
     <!-- ============================================= -->
@@ -124,24 +191,30 @@
     <section class="bg-gradient-to-b from-[#e7eeff] to-[#f9f9ff] pt-20 sm:pt-28 pb-6 sm:pb-10 px-4 sm:px-8 lg:px-16">
         <div class="max-w-7xl mx-auto text-center">
             <span class="text-[#003fb1] font-semibold text-xs sm:text-sm tracking-wider uppercase">Explore</span>
-            <h1 class="text-2xl sm:text-4xl md:text-5xl font-extrabold text-[#003fb1] mt-1 sm:mt-2">All Places in Panadura</h1>
-            <p class="text-xs sm:text-base md:text-lg text-[#434654] max-w-2xl mx-auto mt-2 sm:mt-3">Discover amazing destinations within a 25km radius. Curated spots for dining, nature, sports, and recreation.</p>
+            <h1 class="text-2xl sm:text-4xl md:text-5xl font-extrabold text-[#003fb1] mt-1 sm:mt-2">All Places in
+                Panadura</h1>
+            <p class="text-xs sm:text-base md:text-lg text-[#434654] max-w-2xl mx-auto mt-2 sm:mt-3">Discover amazing
+                destinations within a 25km radius. Curated spots for dining, nature, sports, and recreation.</p>
         </div>
     </section>
 
     <!-- ============================================= -->
     <!-- FILTER BAR -->
     <!-- ============================================= -->
-    <section class="px-4 sm:px-8 lg:px-16 py-3 sm:py-4 sticky top-16 sm:top-20 bg-[#f9f9ff]/95 backdrop-blur-sm z-40 border-b border-[#e7eeff]">
-        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 sm:gap-4">
+    <section
+        class="px-4 sm:px-8 lg:px-16 py-3 sm:py-4 sticky top-16 sm:top-20 bg-[#f9f9ff]/95 backdrop-blur-sm z-40 border-b border-[#e7eeff]">
+        <div
+            class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 sm:gap-4">
             <!-- Filter Pills Horizontal Scroll -->
             <div class="flex overflow-x-auto w-full sm:w-auto gap-2 pb-1 sm:pb-0 hide-scrollbar items-center">
-                <button class="filter-btn active" data-category="all" onclick="filterByCategory('all', this)">🏠 All</button>
+                <button class="filter-btn active" data-category="all" onclick="filterByCategory('all', this)">🏠
+                    All</button>
                 <div id="category-filters" class="flex gap-2"></div>
             </div>
             <!-- Sort Dropdown -->
             <div class="w-full sm:w-auto relative flex-shrink-0">
-                <select id="sort-select" class="sort-select w-full sm:w-48 bg-white border border-[#e7eeff] text-[#111c2d] py-2 pl-3.5 pr-9 rounded-xl focus:ring-2 focus:ring-[#003fb1] focus:border-transparent cursor-pointer font-medium text-xs sm:text-sm shadow-sm">
+                <select id="sort-select"
+                    class="sort-select w-full sm:w-48 bg-white border border-[#e7eeff] text-[#111c2d] py-2 pl-3.5 pr-9 rounded-xl focus:ring-2 focus:ring-[#003fb1] focus:border-transparent cursor-pointer font-medium text-xs sm:text-sm shadow-sm">
                     <option value="rating">⭐ Sort by: Rating</option>
                     <option value="name">📝 Sort by: Name</option>
                     <option value="fee">💰 Sort by: Price</option>
@@ -156,7 +229,9 @@
     <section class="px-4 sm:px-8 lg:px-16 py-6 sm:py-10 max-w-7xl mx-auto w-full">
         <div id="places-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             <div id="loading" class="col-span-full text-center py-12">
-                <div class="inline-block animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-4 border-[#003fb1] border-t-transparent"></div>
+                <div
+                    class="inline-block animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-4 border-[#003fb1] border-t-transparent">
+                </div>
                 <p class="mt-4 text-[#434654] font-medium text-xs sm:text-sm">Loading amazing places...</p>
             </div>
         </div>
@@ -194,25 +269,25 @@
         // 2. Load Footer Component
         // =============================================
         // =============================================
-// Load Footer Component & Execute Embedded Scripts
-// =============================================
-fetch('/components/footer.html')
-    .then(res => res.text())
-    .then(html => {
-        const placeholder = document.getElementById('footer-placeholder');
-        if (placeholder) {
-            placeholder.innerHTML = html;
+        // Load Footer Component & Execute Embedded Scripts
+        // =============================================
+        fetch('/components/footer.html')
+            .then(res => res.text())
+            .then(html => {
+                const placeholder = document.getElementById('footer-placeholder');
+                if (placeholder) {
+                    placeholder.innerHTML = html;
 
-            // Manually execute inline scripts from footer component
-            const scripts = placeholder.querySelectorAll('script');
-            scripts.forEach(oldScript => {
-                const newScript = document.createElement('script');
-                newScript.textContent = oldScript.textContent;
-                document.body.appendChild(newScript);
-            });
-        }
-    })
-    .catch(err => console.error('Failed to load footer component:', err));
+                    // Manually execute inline scripts from footer component
+                    const scripts = placeholder.querySelectorAll('script');
+                    scripts.forEach(oldScript => {
+                        const newScript = document.createElement('script');
+                        newScript.textContent = oldScript.textContent;
+                        document.body.appendChild(newScript);
+                    });
+                }
+            })
+            .catch(err => console.error('Failed to load footer component:', err));
 
         // =============================================
         // 3. State
@@ -246,7 +321,7 @@ fetch('/components/footer.html')
                         btn.className = 'filter-btn';
                         btn.dataset.category = cat.category_id;
                         btn.textContent = cat.name + ' (' + (cat.place_count || 0) + ')';
-                        btn.onclick = function() {
+                        btn.onclick = function () {
                             filterByCategory(this.dataset.category, this);
                         };
                         categoryFilters.appendChild(btn);
@@ -279,7 +354,7 @@ fetch('/components/footer.html')
                     }
                 });
             }
-            
+
             currentCategory = categoryId;
             renderPlaces();
         }
@@ -299,8 +374,8 @@ fetch('/components/footer.html')
                     const searchParam = urlParams.get('search');
                     if (searchParam) {
                         const query = searchParam.toLowerCase();
-                        allPlaces = allPlaces.filter(p => 
-                            p.title.toLowerCase().includes(query) || 
+                        allPlaces = allPlaces.filter(p =>
+                            p.title.toLowerCase().includes(query) ||
                             (p.description && p.description.toLowerCase().includes(query)) ||
                             (p.address && p.address.toLowerCase().includes(query))
                         );
@@ -321,7 +396,7 @@ fetch('/components/footer.html')
         // =============================================
         function renderPlaces() {
             let filtered = [...allPlaces];
-            
+
             // Filter by category
             if (currentCategory !== 'all') {
                 filtered = filtered.filter(p => p.category_id == currentCategory);
@@ -383,9 +458,9 @@ fetch('/components/footer.html')
                             <div class="absolute top-2.5 left-2.5 sm:top-3 sm:left-3">
                                 <span class="${color} px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[10px] sm:text-xs font-semibold backdrop-blur-sm">${place.category_name || 'Uncategorized'}</span>
                             </div>
-                            ${place.is_featured ? 
-                                '<div class="absolute top-2.5 right-2.5 sm:top-3 sm:right-3"><span class="bg-yellow-400 text-yellow-900 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold badge-pulse">★ Featured</span></div>' 
-                                : ''}
+                            ${place.is_featured ?
+                        '<div class="absolute top-2.5 right-2.5 sm:top-3 sm:right-3"><span class="bg-yellow-400 text-yellow-900 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold badge-pulse">★ Featured</span></div>'
+                        : ''}
                             <div class="absolute bottom-2.5 right-2.5 sm:bottom-3 sm:right-3 bg-black/60 backdrop-blur-sm text-white text-[10px] sm:text-xs px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full">
                                 ${place.avg_duration || 60} min
                             </div>
@@ -420,7 +495,7 @@ fetch('/components/footer.html')
         // 9. Sort Change Handler
         // =============================================
         if (sortSelect) {
-            sortSelect.addEventListener('change', function() {
+            sortSelect.addEventListener('change', function () {
                 currentSort = this.value;
                 renderPlaces();
             });
@@ -429,7 +504,7 @@ fetch('/components/footer.html')
         // =============================================
         // 10. Initialize
         // =============================================
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             fetchCategories();
             fetchPlaces();
         });
@@ -440,4 +515,5 @@ fetch('/components/footer.html')
     </script>
 
 </body>
+
 </html>

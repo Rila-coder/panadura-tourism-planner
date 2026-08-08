@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html class="light" lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Trip Planner - Panadura Day Planner</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
@@ -15,71 +18,89 @@
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
+
         .material-symbols-outlined.fill {
             font-variation-settings: 'FILL' 1;
         }
-        
+
         .card-hover {
             transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
+
         .card-hover:hover {
             transform: translateY(-4px);
             box-shadow: 0 10px 30px rgba(0, 63, 177, 0.15);
         }
-        
+
         .place-item {
             transition: all 0.3s ease;
         }
+
         .place-item:hover {
             background: #f0f3ff;
             transform: translateX(4px);
         }
+
         .place-item.selected {
             background: #003fb1 !important;
             color: white !important;
         }
+
         .place-item.selected .text-\[\#434654\] {
             color: white !important;
         }
-        
+
         .itinerary-item {
             animation: slideIn 0.3s ease;
         }
+
         @keyframes slideIn {
             from {
                 opacity: 0;
                 transform: translateX(-15px);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(0);
             }
         }
-        
+
         .badge-pulse {
             animation: pulse 2s infinite;
         }
+
         @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.7; }
-            100% { opacity: 1; }
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+
+            100% {
+                opacity: 1;
+            }
         }
-        
+
         .custom-scrollbar::-webkit-scrollbar {
             width: 5px;
         }
+
         .custom-scrollbar::-webkit-scrollbar-track {
             background: transparent;
         }
+
         .custom-scrollbar::-webkit-scrollbar-thumb {
             background-color: #c3c5d7;
             border-radius: 20px;
         }
-        
+
         .empty-state {
             background: repeating-linear-gradient(45deg, #f9f9ff, #f9f9ff 10px, #f0f3ff 10px, #f0f3ff 20px);
         }
-        
+
         /* Toast Notification */
         .toast {
             position: fixed;
@@ -95,6 +116,7 @@
             transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             backdrop-filter: blur(20px);
         }
+
         @media (min-width: 640px) {
             .toast {
                 top: 100px;
@@ -105,60 +127,110 @@
                 border-radius: 16px;
             }
         }
+
         .toast.show {
             transform: translateX(0);
         }
+
         .toast.success {
             background: linear-gradient(135deg, #d1fae5, #a7f3d0);
             border: 1px solid #6ee7b7;
             color: #065f46;
         }
+
         .toast.error {
             background: linear-gradient(135deg, #fecaca, #fca5a5);
             border: 1px solid #f87171;
             color: #991b1b;
         }
+
         .toast.info {
             background: linear-gradient(135deg, #dbeafe, #93c5fd);
             border: 1px solid #60a5fa;
             color: #1e40af;
         }
+
         .toast .toast-icon {
             font-size: 20px;
             margin-right: 8px;
         }
+
         @media (min-width: 640px) {
             .toast .toast-icon {
                 font-size: 24px;
                 margin-right: 12px;
             }
         }
+
         .toast .toast-close {
             cursor: pointer;
             padding: 4px;
             border-radius: 50%;
             transition: background 0.3s;
         }
+
         .toast .toast-close:hover {
             background: rgba(0, 0, 0, 0.1);
         }
 
-        .bg-purple-100 { background: #f3e8ff; }
-        .text-purple-800 { color: #6b21a8; }
-        .bg-green-100 { background: #d1fae5; }
-        .text-green-800 { color: #065f46; }
-        .bg-orange-100 { background: #ffedd5; }
-        .text-orange-800 { color: #9a3412; }
-        .bg-blue-100 { background: #dbeafe; }
-        .text-blue-800 { color: #1e40af; }
-        .bg-yellow-100 { background: #fef3c7; }
-        .text-yellow-800 { color: #854d0e; }
-        .bg-pink-100 { background: #fce7f3; }
-        .text-pink-800 { color: #9d174d; }
-        .bg-gray-100 { background: #f3f4f6; }
-        .text-gray-800 { color: #1f2937; }
+        .bg-purple-100 {
+            background: #f3e8ff;
+        }
+
+        .text-purple-800 {
+            color: #6b21a8;
+        }
+
+        .bg-green-100 {
+            background: #d1fae5;
+        }
+
+        .text-green-800 {
+            color: #065f46;
+        }
+
+        .bg-orange-100 {
+            background: #ffedd5;
+        }
+
+        .text-orange-800 {
+            color: #9a3412;
+        }
+
+        .bg-blue-100 {
+            background: #dbeafe;
+        }
+
+        .text-blue-800 {
+            color: #1e40af;
+        }
+
+        .bg-yellow-100 {
+            background: #fef3c7;
+        }
+
+        .text-yellow-800 {
+            color: #854d0e;
+        }
+
+        .bg-pink-100 {
+            background: #fce7f3;
+        }
+
+        .text-pink-800 {
+            color: #9d174d;
+        }
+
+        .bg-gray-100 {
+            background: #f3f4f6;
+        }
+
+        .text-gray-800 {
+            color: #1f2937;
+        }
     </style>
 </head>
+
 <body class="bg-[#f9f9ff] text-[#111c2d] min-h-screen flex flex-col antialiased overflow-x-hidden">
 
     <!-- ============================================= -->
@@ -186,7 +258,8 @@
         <div class="max-w-7xl mx-auto">
             <span class="text-[#003fb1] font-semibold text-xs sm:text-sm tracking-wider uppercase">Plan Your Trip</span>
             <h1 class="text-2xl sm:text-4xl md:text-5xl font-extrabold text-[#003fb1] mt-1">Plan Your One-Day Trip</h1>
-            <p class="text-xs sm:text-base md:text-lg text-[#434654] mt-1 sm:mt-2">Select places and build your perfect customized itinerary</p>
+            <p class="text-xs sm:text-base md:text-lg text-[#434654] mt-1 sm:mt-2">Select places and build your perfect
+                customized itinerary</p>
         </div>
     </section>
 
@@ -194,7 +267,8 @@
     <!-- USER DETAILS -->
     <!-- ============================================= -->
     <section class="px-4 sm:px-8 lg:px-16 py-3 sm:py-4 max-w-7xl mx-auto w-full">
-        <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-[#e7eeff] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 card-hover">
+        <div
+            class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-[#e7eeff] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 card-hover">
             <div>
                 <label class="block text-xs sm:text-sm font-semibold text-[#434654] mb-1 flex items-center gap-1">
                     <span class="material-symbols-outlined text-[#003fb1] text-xs sm:text-sm">person</span>
@@ -228,7 +302,7 @@
     <!-- MAIN LAYOUT -->
     <!-- ============================================= -->
     <section class="px-4 sm:px-8 lg:px-16 py-3 sm:py-4 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
-        
+
         <!-- Left: Available Places -->
         <div class="lg:col-span-7">
             <div class="flex justify-between items-center mb-3 sm:mb-4">
@@ -239,7 +313,8 @@
                 </h2>
                 <span class="text-[10px] sm:text-xs text-[#434654]">Click to add</span>
             </div>
-            <div id="places-list" class="space-y-2 max-h-[450px] sm:max-h-[600px] overflow-y-auto pr-1 sm:pr-2 custom-scrollbar">
+            <div id="places-list"
+                class="space-y-2 max-h-[450px] sm:max-h-[600px] overflow-y-auto pr-1 sm:pr-2 custom-scrollbar">
                 <div class="text-center py-8 text-[#434654] text-xs sm:text-sm">Loading places...</div>
             </div>
         </div>
@@ -252,12 +327,14 @@
                     Your Itinerary
                     <span id="itinerary-count" class="text-xs sm:text-sm font-normal text-[#434654]">(0)</span>
                 </h2>
-                <button id="clear-all" class="text-[10px] sm:text-xs text-red-500 hover:text-red-700 font-semibold hidden">
+                <button id="clear-all"
+                    class="text-[10px] sm:text-xs text-red-500 hover:text-red-700 font-semibold hidden">
                     Clear All
                 </button>
             </div>
-            
-            <div id="itinerary" class="bg-white rounded-2xl p-3 sm:p-4 shadow-sm border border-[#e7eeff] min-h-[220px] sm:min-h-[300px]">
+
+            <div id="itinerary"
+                class="bg-white rounded-2xl p-3 sm:p-4 shadow-sm border border-[#e7eeff] min-h-[220px] sm:min-h-[300px]">
                 <div class="text-center py-8 sm:py-12 text-[#434654] empty-state rounded-xl">
                     <span class="material-symbols-outlined text-4xl sm:text-5xl text-[#737686]">add_circle</span>
                     <p class="mt-2 sm:mt-3 font-medium text-xs sm:text-base">Click on places to add them</p>
@@ -266,7 +343,8 @@
             </div>
 
             <!-- Summary -->
-            <div id="summary" class="mt-4 bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-[#e7eeff] hidden card-hover">
+            <div id="summary"
+                class="mt-4 bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-[#e7eeff] hidden card-hover">
                 <h3 class="font-bold text-sm sm:text-base text-[#111c2d] mb-3 flex items-center gap-2">
                     <span class="material-symbols-outlined text-[#003fb1] text-base sm:text-xl">analytics</span>
                     Trip Summary
@@ -285,7 +363,7 @@
                         <p id="summary-budget" class="text-base sm:text-2xl font-bold text-[#006c4a] mt-0.5">Rs. 0</p>
                     </div>
                 </div>
-                
+
                 <!-- Budget Breakdown -->
                 <div class="mt-3">
                     <p class="text-[10px] sm:text-xs text-[#434654] mb-1">Budget Breakdown</p>
@@ -295,12 +373,15 @@
                         <div id="activity-bar" class="bg-[#694100] h-full" style="width: 25%;"></div>
                     </div>
                     <div class="flex flex-wrap gap-2 sm:gap-3 mt-1.5 text-[10px] sm:text-xs text-[#434654]">
-                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#003fb1]"></span> Transport</span>
-                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#006c4a]"></span> Food</span>
-                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#694100]"></span> Activities</span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#003fb1]"></span>
+                            Transport</span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#006c4a]"></span>
+                            Food</span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#694100]"></span>
+                            Activities</span>
                     </div>
                 </div>
-                
+
                 <button id="save-plan"
                     class="w-full mt-4 bg-[#003fb1] text-white py-2.5 sm:py-3 rounded-xl font-semibold hover:bg-[#1a56db] transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center gap-2 text-xs sm:text-sm">
                     <span class="material-symbols-outlined text-sm sm:text-base">save</span>
@@ -326,10 +407,10 @@
             const toast = document.getElementById('toast');
             const toastMessage = document.getElementById('toast-message');
             const toastIcon = document.getElementById('toast-icon');
-            
+
             toast.classList.remove('success', 'error', 'info', 'show');
             toast.classList.add(type);
-            
+
             const icons = {
                 success: 'check_circle',
                 error: 'error',
@@ -337,17 +418,17 @@
             };
             toastIcon.textContent = icons[type] || 'check_circle';
             toastMessage.textContent = message;
-            
+
             setTimeout(() => {
                 toast.classList.add('show');
             }, 100);
-            
+
             setTimeout(() => {
                 toast.classList.remove('show');
             }, 4000);
         }
 
-        document.getElementById('toast-close').addEventListener('click', function() {
+        document.getElementById('toast-close').addEventListener('click', function () {
             document.getElementById('toast').classList.remove('show');
         });
 
@@ -371,25 +452,25 @@
             .catch(err => console.error('Failed to load header component:', err));
 
         // =============================================
-// Load Footer Component & Execute Embedded Scripts
-// =============================================
-fetch('/components/footer.html')
-    .then(res => res.text())
-    .then(html => {
-        const placeholder = document.getElementById('footer-placeholder');
-        if (placeholder) {
-            placeholder.innerHTML = html;
+        // Load Footer Component & Execute Embedded Scripts
+        // =============================================
+        fetch('/components/footer.html')
+            .then(res => res.text())
+            .then(html => {
+                const placeholder = document.getElementById('footer-placeholder');
+                if (placeholder) {
+                    placeholder.innerHTML = html;
 
-            // Manually execute inline scripts from footer component
-            const scripts = placeholder.querySelectorAll('script');
-            scripts.forEach(oldScript => {
-                const newScript = document.createElement('script');
-                newScript.textContent = oldScript.textContent;
-                document.body.appendChild(newScript);
-            });
-        }
-    })
-    .catch(err => console.error('Failed to load footer component:', err));
+                    // Manually execute inline scripts from footer component
+                    const scripts = placeholder.querySelectorAll('script');
+                    scripts.forEach(oldScript => {
+                        const newScript = document.createElement('script');
+                        newScript.textContent = oldScript.textContent;
+                        document.body.appendChild(newScript);
+                    });
+                }
+            })
+            .catch(err => console.error('Failed to load footer component:', err));
 
         // =============================================
         // 4. State
@@ -433,7 +514,7 @@ fetch('/components/footer.html')
         // =============================================
         function loadFromLocalStorage() {
             const storedPlaces = JSON.parse(localStorage.getItem('itineraryPlaces')) || [];
-            
+
             if (storedPlaces.length > 0) {
                 storedPlaces.forEach(place => {
                     const exists = selectedPlaces.some(p => p.place_id === place.place_id);
@@ -442,7 +523,7 @@ fetch('/components/footer.html')
                     }
                 });
                 localStorage.removeItem('itineraryPlaces');
-                
+
                 renderPlaces();
                 renderItinerary();
                 updateCounts();
@@ -467,7 +548,7 @@ fetch('/components/footer.html')
                     'Outdoor Recreation & Nature': 'bg-green-100 text-green-800'
                 };
                 const color = categoryColors[place.category_name] || 'bg-gray-100 text-gray-800';
-                
+
                 html += `
                     <div class="place-item bg-white rounded-xl p-2.5 sm:p-3 shadow-sm border ${isSelected ? 'border-[#003fb1] selected' : 'border-[#e7eeff]'} flex justify-between items-center cursor-pointer transition-all" 
                          onclick="togglePlace(${place.place_id})">
@@ -562,7 +643,7 @@ fetch('/components/footer.html')
         // =============================================
         // 12. Clear All
         // =============================================
-        clearAllBtn.addEventListener('click', function() {
+        clearAllBtn.addEventListener('click', function () {
             if (selectedPlaces.length > 0 && confirm('Clear all places from your itinerary?')) {
                 selectedPlaces = [];
                 renderPlaces();
@@ -679,13 +760,13 @@ fetch('/components/footer.html')
         // =============================================
         // 17. Initialize
         // =============================================
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('visit-date').value = today;
 
             fetchPlaces();
             updateCounts();
-            
+
             setTimeout(loadFromLocalStorage, 500);
         });
 
@@ -697,4 +778,5 @@ fetch('/components/footer.html')
     </script>
 
 </body>
+
 </html>
